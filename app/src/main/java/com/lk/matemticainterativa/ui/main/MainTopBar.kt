@@ -14,7 +14,7 @@ fun MainTopBar(
     var expanded by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { Text("Main Screen") },
+        title = { Text("Matemática Interativa") },
         actions = {
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Menu")

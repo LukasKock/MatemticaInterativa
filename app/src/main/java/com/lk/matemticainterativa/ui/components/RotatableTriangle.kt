@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlin.math.*
 
 @Composable
@@ -48,25 +49,17 @@ fun RotatableTriangle(
     }
 
     var rotation by remember { mutableFloatStateOf(0f) }
-    var tilt by remember { mutableFloatStateOf(-1f) }
+    var tiltX by remember { mutableFloatStateOf(-1f) }
+    var tiltY by remember { mutableFloatStateOf(-1f) }
     var scale by remember { mutableFloatStateOf(1f) }
     // This state will now hold the accumulated pan/drag offset
     var panOffset by remember { mutableStateOf(Offset.Zero) }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // --- UI Controls ---
-        // ✅ Slider for scaling
         Spacer(modifier = Modifier.padding(48.dp))
 
-        // ✅ Slider for tilting
-        ControlSlider(
-            label = "Inclinar (Tilt)",
-            value = tilt,
-            onValueChange = { tilt = it },
-            range = -1f..1f, // From one side to the other
-            format = "%.2f"
-        )
-        AnimatedFloatSwitch {tilt = it}
+        AnimatedFloatSwitch ("Rotacionar em Y"){ tiltY = it}
+        AnimatedFloatSwitch("Rotacionar em X") { tiltX = it }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -117,9 +110,10 @@ fun RotatableTriangle(
                     val centeredPoint = (p - centroidModel)
 
                     // 2. Apply transformations: scale, tilt (squish), and rotate
-                    val scaledX = centeredPoint.x * scale
+                    var scaledX = centeredPoint.x * scale
                     var scaledY = centeredPoint.y * scale
-                    scaledY *= tilt // Apply vertical squish for tilt effect
+                    scaledY *= tiltY // Apply vertical squish for tilt effect
+                    scaledX *= tiltX // Apply horizontal squish for tilt effect ---- teste
 
                     val rotatedX = scaledX * cos(rotationRad) - scaledY * sin(rotationRad)
                     val rotatedY = scaledX * sin(rotationRad) + scaledY * cos(rotationRad)
@@ -242,7 +236,7 @@ fun ControlSlider(
     }
 }
 @Composable
-fun AnimatedFloatSwitch(onTiltChange: (Float) -> Unit) {
+fun AnimatedFloatSwitch(text: String, onTiltChange: (Float) -> Unit) {
     var toggled by remember { mutableStateOf(false) }
 
     // Animate between -1f and 1f when switch changes
@@ -259,10 +253,17 @@ fun AnimatedFloatSwitch(onTiltChange: (Float) -> Unit) {
         onTiltChange(animatedFloat)
     }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp), // optional spacing from screen edges
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        Text(
+            text = text,
+            fontSize = 14.sp
+        )
+        Spacer(Modifier.weight(1f))
         Switch(
             checked = toggled,
             onCheckedChange = { toggled = it }
