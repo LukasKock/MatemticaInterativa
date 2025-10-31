@@ -39,6 +39,7 @@ fun CartesianWithDistance() {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
+        Spacer(Modifier.height(12.dp))
         Text(
             "Arraste os pontos para verificar a distância entre eles.",
             style = MaterialTheme.typography.titleMedium
@@ -176,6 +177,11 @@ fun CartesianWithDistance() {
             drawLine(Color.Blue, pA, pB, strokeWidth = 5f)
             drawCircle(Color.Red, radius = 30f, center = pA)
             drawCircle(Color.Green, radius = 30f, center = pB)
+
+            // == Testing: completing (drawing) the triangle
+            drawLine(Color.Black, start = Offset(pA.x, pA.y), end = Offset(pA.x, pB.y), strokeWidth = 3f)
+            drawLine(Color.Black, start = Offset(pB.x, pB.y), end = Offset(pA.x, pB.y), strokeWidth = 3f)
+            //drawCircle(Color.Black, radius = 20f, center = Offset(pA.x, pB.y))
         }
     }
 }

@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -40,6 +42,7 @@ fun PolygonTransformWithSlider() {
         ) {
             Text("Escala: %.2f".format(scale))
         }
+        Spacer(modifier = Modifier.height(24.dp))
         Slider(
             value = scale,
             onValueChange = { scale = it },
@@ -67,7 +70,7 @@ fun PolygonTransformWithSlider() {
                     }
             ) {
                 // Polygon creation
-                val polygon = regularPolygon(6, 200f)
+                val polygon = regularPolygon(3, 200f)
                 // Apply transformations (scale + pan only)
                 val path = Path().apply {
                     val transformed = polygon.map { point ->
