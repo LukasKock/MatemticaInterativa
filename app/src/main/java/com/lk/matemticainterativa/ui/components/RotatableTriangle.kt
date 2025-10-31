@@ -58,8 +58,9 @@ fun RotatableTriangle(
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.padding(48.dp))
 
-        AnimatedFloatSwitch ("Rotacionar em Y"){ tiltY = it}
-        AnimatedFloatSwitch("Rotacionar em X") { tiltX = it }
+// test        ControlSlider("teste em X", tiltX, { tiltX = it }, -1f..1f, "%.2f")
+        AnimatedFloatSwitch ("Rotacionar em Y",{ tiltY = it })
+        AnimatedFloatSwitch("Rotacionar em X", { tiltX = it })
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -136,16 +137,17 @@ fun RotatableTriangle(
                     lineTo(pC.x, pC.y)
                     close()
                 }
+                if((pA.x - pB.x) * (pA.y - pC.y) >= 0f){
+                    drawPath(
+                        path = path,
+                        color = Color.Cyan)
 
-                drawPath(
-                    path = path,
-                    brush = Brush.linearGradient(
-                        colors = listOf(Color(0xFF00C853), Color(0xFFFFEB3B)), // green -> yellow
-                        start = pA,
-                        end = pC
-                    ),
-                    style = Fill
-                )
+                } else{
+                    drawPath(
+                        path = path,
+                        color = Color.Yellow)
+                }
+
 
                 drawPath(path = path, color = Color.Black, style = Stroke(width = 3f))
 
