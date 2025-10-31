@@ -137,7 +137,8 @@ fun RotatableTriangle(
                     lineTo(pC.x, pC.y)
                     close()
                 }
-                if((pA.x - pB.x) * (pA.y - pC.y) >= 0f){
+                val cross = (pB.x - pA.x) * (pC.y - pA.y) - (pB.y - pA.y) * (pC.x - pA.x)
+                if(cross > 0){
                     drawPath(
                         path = path,
                         color = Color.Cyan)
