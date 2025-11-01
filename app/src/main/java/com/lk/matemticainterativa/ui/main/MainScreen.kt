@@ -26,7 +26,7 @@ fun MainScreen(username: String,
         Column(Modifier.padding(innerPadding).padding(16.dp)) {
         }
 //        RotatableEquilateralTriangle()
-        RotatableTriangle(a = 500f, b = 600f, c = 600f)
+        RotatableTriangle(a = 400f, b = 500f, c = 800f)
 
     }
 }

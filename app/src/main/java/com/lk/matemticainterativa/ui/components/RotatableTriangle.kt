@@ -27,10 +27,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.center
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
@@ -49,8 +47,7 @@ fun RotatableTriangle(
     }
 
     var rotation by remember { mutableFloatStateOf(0f) }
-    var tiltX by remember { mutableFloatStateOf(-1f) }
-    var tiltY by remember { mutableFloatStateOf(-1f) }
+    var tilt by remember { mutableFloatStateOf(-1f) }
     var scale by remember { mutableFloatStateOf(1f) }
     // This state will now hold the accumulated pan/drag offset
     var panOffset by remember { mutableStateOf(Offset.Zero) }
@@ -58,9 +55,8 @@ fun RotatableTriangle(
     Column(modifier = Modifier.fillMaxSize()) {
         Spacer(modifier = Modifier.padding(48.dp))
 
-// test        ControlSlider("teste em X", tiltX, { tiltX = it }, -1f..1f, "%.2f")
-        AnimatedFloatSwitch ("Rotacionar em Y",{ tiltY = it })
-        AnimatedFloatSwitch("Rotacionar em X", { tiltX = it })
+//test        ControlSlider("teste", tilt, { tilt = it }, -1f..1f, "%.2f")
+        AnimatedFloatSwitch ("Rotacionar",{ tilt = it })
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,8 +64,6 @@ fun RotatableTriangle(
                     detectTransformGestures { centroid, pan, gestureZoom, gestureRotate ->
                         rotation += gestureRotate
                         scale = (scale * gestureZoom).coerceIn(0.3f, 6f)
-                        // Use vertical pan for tilt and horizontal pan for movement
-                        //tilt = (tilt + pan.y / 8f)/*.coerceIn(-80f, 80f)*/
                         panOffset += pan // Accumulate the pan gesture
                     }
                 }
@@ -111,10 +105,9 @@ fun RotatableTriangle(
                     val centeredPoint = (p - centroidModel)
 
                     // 2. Apply transformations: scale, tilt (squish), and rotate
-                    var scaledX = centeredPoint.x * scale
+                    val scaledX = centeredPoint.x * scale
                     var scaledY = centeredPoint.y * scale
-                    scaledY *= tiltY // Apply vertical squish for tilt effect
-                    scaledX *= tiltX // Apply horizontal squish for tilt effect ---- teste
+                    scaledY *= tilt // Apply vertical squish for tilt effect
 
                     val rotatedX = scaledX * cos(rotationRad) - scaledY * sin(rotationRad)
                     val rotatedY = scaledX * sin(rotationRad) + scaledY * cos(rotationRad)
@@ -185,10 +178,48 @@ fun RotatableTriangle(
                 val angleC = 180f - angleA - angleB
 
                 val labelOffset = 36f * scale
+
+                // --- Draw arcs for each angle ---
+                fun Offset.normalize(): Offset {
+                    val len = hypot(x, y)
+                    return if (len == 0f) this else Offset(x / len, y / len)
+                }
+
+                fun drawAngleArc(center: Offset, p1: Offset, p2: Offset, angleDeg: Float, radius: Float) {
+                    val v1 = (p1 - center).normalize()
+                    val v2 = (p2 - center).normalize()
+
+                    // Compute the direction of the first vector
+                    val startAngle = Math.toDegrees(atan2(v1.y, v1.x).toDouble()).toFloat()
+                    val sweepAngle = if ((v1.x * v2.y - v1.y * v2.x) < 0) -angleDeg else angleDeg
+
+                    // Make the arc elliptical according to the tilt factor
+                    val verticalRadius = radius * abs(tilt)
+
+                    drawArc(
+                        color = Color.Black,
+                        startAngle = startAngle,
+                        sweepAngle = sweepAngle,
+                        useCenter = false,
+                        topLeft = Offset(center.x - radius, center.y - verticalRadius),
+                        size = androidx.compose.ui.geometry.Size(radius * 2, verticalRadius * 2),
+                        style = Stroke(width = 2f)
+                    )
+                }
+
+                // Helper extension to normalize an Offset vector
+
+
+                // Draw the small arcs near vertices
+                val arcRadius = 40f * scale
+                drawAngleArc(pA, pB, pC, angleA, arcRadius)
+                drawAngleArc(pB, pA, pC, angleB, arcRadius)
+                drawAngleArc(pC, pA, pB, angleC, arcRadius)
+
                 drawContext.canvas.nativeCanvas.drawText(
                     "${angleA.roundToInt()}°",
-                    pA.x,
-                    pA.y - labelOffset * 0.5f,
+                    pA.x - labelOffset * 2f,
+                    pA.y + labelOffset * 0.8f,
                     paint
                 )
                 drawContext.canvas.nativeCanvas.drawText(
