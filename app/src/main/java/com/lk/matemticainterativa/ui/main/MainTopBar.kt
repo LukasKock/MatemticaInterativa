@@ -15,15 +15,16 @@ fun MainTopBar(
 ) {
     val isDark = isSystemInDarkTheme()
 
-    val containerColor = if (isDark) MaterialTheme.colorScheme.surfaceVariant else Color.White
+    val containerColor = if (isDark) Color.Black else Color.White
     val contentColor = if (isDark) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onPrimaryContainer
+    val textColor = if (isDark) Color.White else MaterialTheme.colorScheme.onPrimaryContainer
     var expanded by remember { mutableStateOf(false) }
 
     TopAppBar(
         title = { Text("Matemática Interativa") },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = containerColor,
-            titleContentColor = contentColor,
+            titleContentColor = textColor,
             actionIconContentColor = contentColor
         ),
         actions = {

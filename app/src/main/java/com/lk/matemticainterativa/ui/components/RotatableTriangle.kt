@@ -238,22 +238,36 @@ fun RotatableTriangle(
                 drawAngleArc(pB, pA, pC, angleB, arcRadius)
                 drawAngleArc(pC, pA, pB, angleC, arcRadius)
 
+                // --- Draw the angle labels INSIDE the triangle, following its rotation ---
+                val newCentroid = (pA + pB + pC) / 3f
+
+                fun Offset.moveToward(target: Offset, fraction: Float): Offset {
+                    return this + (target - this) * fraction
+                }
+
+                val labelFraction = 0.25f // how deep inside the triangle the label goes
+
+                val labelPosA = pA.moveToward(newCentroid, labelFraction)
+                val labelPosB = pB.moveToward(newCentroid, labelFraction)
+                val labelPosC = pC.moveToward(newCentroid, labelFraction)
+
+
                 drawContext.canvas.nativeCanvas.drawText(
                     "${angleA.roundToInt()}°",
-                    pA.x - labelOffset * 2f,
-                    pA.y + labelOffset * 0.8f,
+                    labelPosA.x,
+                    labelPosA.y,
                     paint
                 )
                 drawContext.canvas.nativeCanvas.drawText(
                     "${angleB.roundToInt()}°",
-                    pB.x - labelOffset * 0.7f,
-                    pB.y + labelOffset * 0.7f,
+                    labelPosB.x,
+                    labelPosB.y,
                     paint
                 )
                 drawContext.canvas.nativeCanvas.drawText(
                     "${angleC.roundToInt()}°",
-                    pC.x + labelOffset * 0.7f,
-                    pC.y + labelOffset * 0.7f,
+                    labelPosC.x,
+                    labelPosC.y,
                     paint
                 )
             }
