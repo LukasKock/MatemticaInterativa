@@ -91,7 +91,6 @@ fun RotatableTriangle(
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val canvasCenter = size.center
-                drawRect(backgroundColor) //change background color
 
                 if (!validTriangle) {
                     val paint = Paint().apply {
