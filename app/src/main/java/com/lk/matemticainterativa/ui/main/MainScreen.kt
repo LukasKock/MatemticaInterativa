@@ -25,8 +25,6 @@ fun MainScreen(username: String,
     ) { innerPadding ->
         Column(Modifier.padding(innerPadding).padding(16.dp)) {
         }
-//        RotatableEquilateralTriangle()
         RotatableTriangle(a = 400f, b = 500f, c = 800f)
-
     }
 }

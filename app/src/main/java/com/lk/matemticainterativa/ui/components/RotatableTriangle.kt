@@ -9,7 +9,9 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,10 +20,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -31,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,21 +49,35 @@ fun RotatableTriangle(
     b: Float, // side opposite vertex B (AC)
     c: Float  // side opposite vertex C (AB)
 ) {
+    val isDark = isSystemInDarkTheme()
+    val backgroundColor = if(isDark)  Color(0xFF121212) else Color(0xFFFFFFFF)
+    val triangleOutlineColor = if (isDark) Color(0xFFB0BEC5) else Color.Black
+    val textColor = if (isDark) Color(0xFFE0E0E0) else Color.Black
+    val triangle1Color = if(isDark) Color(0xFF0B3B4B) else Color.Cyan
+    val triangle2Color = if(isDark) Color(0xFF483E07) else Color.Yellow
+
     val validTriangle = remember(a, b, c) {
         (a + b > c) && (a + c > b) && (b + c > a)
     }
 
-    var rotation by remember { mutableFloatStateOf(0f) }
-    var tilt by remember { mutableFloatStateOf(-1f) }
-    var scale by remember { mutableFloatStateOf(1f) }
-    // This state will now hold the accumulated pan/drag offset
-    var panOffset by remember { mutableStateOf(Offset.Zero) }
+    var rotation by rememberSaveable { mutableFloatStateOf(0f) }
+    var tilt by rememberSaveable { mutableFloatStateOf(-1f) }
+    var scale by rememberSaveable { mutableFloatStateOf(1f) }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    // Offset isn't automatically saveable, so we need a custom Saver
+    val offsetSaver = listSaver(
+        save = { listOf(it.x, it.y) },
+        restore = { Offset(it[0], it[1]) }
+    )
+    // This state will now hold the accumulated pan/drag offset
+    var panOffset by rememberSaveable(stateSaver = offsetSaver) { mutableStateOf(Offset.Zero) }
+
+    Column(modifier = Modifier.fillMaxSize()
+        .background(color = backgroundColor)) {
         Spacer(modifier = Modifier.padding(48.dp))
 
 //test        ControlSlider("teste", tilt, { tilt = it }, -1f..1f, "%.2f")
-        AnimatedFloatSwitch ("Rotacionar",{ tilt = it })
+        AnimatedFloatSwitch ("\"Flip\""){ tilt = it }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -70,6 +91,7 @@ fun RotatableTriangle(
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val canvasCenter = size.center
+                drawRect(backgroundColor) //change background color
 
                 if (!validTriangle) {
                     val paint = Paint().apply {
@@ -87,15 +109,15 @@ fun RotatableTriangle(
                 }
 
                 // --- Build triangle in local model coordinates (ALWAYS THE SAME) ---
-                val A = Offset(0f, 0f)
-                val B = Offset(c, 0f)
+                val pointA = Offset(0f, 0f)
+                val pointB = Offset(c, 0f)
                 val xC = (b * b - a * a + c * c) / (2f * c)
                 val yCSq = (b * b - xC * xC).coerceAtLeast(0f)
                 val yC = -sqrt(yCSq) // Use negative so the triangle is initially upright
-                val C = Offset(xC, yC)
+                val pointC = Offset(xC, yC)
 
                 // Compute centroid of the ORIGINAL, UNMODIFIED model triangle
-                val centroidModel = (A + B + C) / 3f
+                val centroidModel = (pointA + pointB + pointC) / 3f
 
                 // --- Transformation Pipeline ---
                 val rotationRad = Math.toRadians(rotation.toDouble())
@@ -119,9 +141,9 @@ fun RotatableTriangle(
                     )
                 }
 
-                val pA = transform(A)
-                val pB = transform(B)
-                val pC = transform(C)
+                val pA = transform(pointA)
+                val pB = transform(pointB)
+                val pC = transform(pointC)
 
                 // --- Drawing Code (remains mostly the same) ---
                 val path = Path().apply {
@@ -134,21 +156,21 @@ fun RotatableTriangle(
                 if(cross > 0){
                     drawPath(
                         path = path,
-                        color = Color.Cyan)
+                        color = triangle1Color)
 
                 } else{
                     drawPath(
                         path = path,
-                        color = Color.Yellow)
+                        color = triangle2Color)
                 }
 
 
-                drawPath(path = path, color = Color.Black, style = Stroke(width = 3f))
+                drawPath(path = path, color = triangleOutlineColor, style = Stroke(width = 3f))
 
                 // ... (The rest of your label and angle drawing code can stay here without changes)
                 val baseTextSize = 28f
                 val paint = Paint().apply {
-                    color = android.graphics.Color.BLACK
+                    color = textColor.toArgb()
                     textSize = (baseTextSize * scale).coerceAtLeast(12f)
                     textAlign = Paint.Align.CENTER
                 }
@@ -197,7 +219,7 @@ fun RotatableTriangle(
                     val verticalRadius = radius * abs(tilt)
 
                     drawArc(
-                        color = Color.Black,
+                        color = textColor,
                         startAngle = startAngle,
                         sweepAngle = sweepAngle,
                         useCenter = false,
@@ -271,6 +293,7 @@ fun ControlSlider(
 }
 @Composable
 fun AnimatedFloatSwitch(text: String, onTiltChange: (Float) -> Unit) {
+
     var toggled by remember { mutableStateOf(false) }
 
     // Animate between -1f and 1f when switch changes
@@ -287,20 +310,31 @@ fun AnimatedFloatSwitch(text: String, onTiltChange: (Float) -> Unit) {
         onTiltChange(animatedFloat)
     }
 
+    // Theme colors
+    val colorScheme = MaterialTheme.colorScheme
+    val isDark = isSystemInDarkTheme()
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp), // optional spacing from screen edges
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 16.dp)
+            ,verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = text,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = if(isDark)colorScheme.secondaryContainer
+            else Color.Black,
         )
         Spacer(Modifier.weight(1f))
         Switch(
             checked = toggled,
-            onCheckedChange = { toggled = it }
+            onCheckedChange = { toggled = it },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = colorScheme.onPrimary,
+                checkedTrackColor = colorScheme.primary,
+                uncheckedThumbColor = colorScheme.onSurface,
+                uncheckedTrackColor = colorScheme.outlineVariant
+            )
         )
     }
 }
