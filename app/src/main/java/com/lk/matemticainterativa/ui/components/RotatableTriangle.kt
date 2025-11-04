@@ -74,7 +74,8 @@ fun RotatableTriangle(
     var panOffset by rememberSaveable(stateSaver = offsetSaver) { mutableStateOf(Offset.Zero) }
 
     Column(modifier = Modifier.fillMaxSize()
-        .background(color = backgroundColor)) {
+        .background(color = backgroundColor)
+    ) {
         Spacer(modifier = Modifier.padding(48.dp))
 
 //test        ControlSlider("teste", tilt, { tilt = it }, -1f..1f, "%.2f")
