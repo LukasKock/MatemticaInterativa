@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -222,7 +223,7 @@ fun RotatableTriangle(
                         sweepAngle = sweepAngle,
                         useCenter = false,
                         topLeft = Offset(center.x - radius, center.y - verticalRadius),
-                        size = androidx.compose.ui.geometry.Size(radius * 2, verticalRadius * 2),
+                        size = Size(radius * 2, verticalRadius * 2),
                         style = Stroke(width = 2f)
                     )
                 }
