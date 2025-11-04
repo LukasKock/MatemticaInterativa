@@ -198,7 +198,6 @@ fun RotatableTriangle(
                 val angleB = angleFromSides(b, a, c)
                 val angleC = 180f - angleA - angleB
 
-                val labelOffset = 36f * scale
 
                 // --- Draw arcs for each angle ---
                 fun Offset.normalize(): Offset {
