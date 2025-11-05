@@ -133,11 +133,13 @@ fun RotatableTriangle(
                         if (isPointInTriangle(tapOffset, pA1, pB1, pC1)) {
                             println("Tapped INSIDE the triangle!")
                             isTriangle1Selected = true
+                            isTriangle2Selected = false
                             // e.g. set a state variable: triangleSelected = true
                         } else if(isPointInTriangle(tapOffset, pA2, pB2, pC2)){
                             println("Tapped OUTSIDE the triangle.")
                             // triangleSelected = false
                             isTriangle2Selected = true
+                            isTriangle1Selected = false
                         } else{
                             isTriangle1Selected = false
                             isTriangle2Selected = false
