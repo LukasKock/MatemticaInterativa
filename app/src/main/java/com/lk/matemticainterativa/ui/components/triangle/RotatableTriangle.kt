@@ -93,13 +93,13 @@ fun RotatableTriangle(
     var panOffset1 by rememberSaveable(stateSaver = offsetSaver1) { mutableStateOf(Offset.Zero) }
     var panOffset2 by rememberSaveable(stateSaver = offsetSaver2) { mutableStateOf(Offset.Zero) }
 
-    var pA1: Offset = Offset.Zero
-    var pB1: Offset = Offset.Zero
-    var pC1: Offset = Offset.Zero
+    var pA1 by remember { mutableStateOf(Offset.Zero) }
+    var pB1 by remember { mutableStateOf(Offset.Zero) }
+    var pC1 by remember { mutableStateOf(Offset.Zero) }
 
-    var pA2: Offset = Offset.Zero
-    var pB2: Offset = Offset.Zero
-    var pC2: Offset = Offset.Zero
+    var pA2 by remember { mutableStateOf(Offset.Zero) }
+    var pB2 by remember { mutableStateOf(Offset.Zero) }
+    var pC2 by remember { mutableStateOf(Offset.Zero) }
 
 
     Column(modifier = Modifier.fillMaxSize()
@@ -108,11 +108,18 @@ fun RotatableTriangle(
         Spacer(modifier = Modifier.padding(48.dp))
 
 //test        ControlSlider("teste", tilt, { tilt = it }, -1f..1f, "%.2f")
-        AnimatedFloatSwitch ("\"Flip\""){ tilt1 = it }
+        AnimatedFloatSwitch(
+            enabled = isTriangle1Selected xor isTriangle2Selected
+        ){ newTilt ->
+            when {
+                isTriangle1Selected -> tilt1 = newTilt
+                isTriangle2Selected -> tilt2 = newTilt
+            }
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(Unit) {
+                .pointerInput(tilt1, tilt2) {
                     detectTransformGestures { centroid, pan, gestureZoom, gestureRotate ->
                         if(isTriangle1Selected) {
                             rotation1 += gestureRotate
@@ -250,15 +257,17 @@ fun ControlSlider(
     }
 }
 @Composable
-fun AnimatedFloatSwitch(text: String, onTiltChange: (Float) -> Unit) {
-
+fun AnimatedFloatSwitch(
+    enabled: Boolean,
+    onTiltChange: (Float) -> Unit
+) {
     var toggled by remember { mutableStateOf(false) }
 
     // Animate between -1f and 1f when switch changes
     val animatedFloat by animateFloatAsState(
         targetValue = if (toggled) 1f else -1f,
         animationSpec = tween(
-            durationMillis = 500, // 2 seconds
+            durationMillis = 500, // 500 milliseconds
             easing = LinearEasing
         ),
         label = "FloatAnimation"
@@ -278,7 +287,7 @@ fun AnimatedFloatSwitch(text: String, onTiltChange: (Float) -> Unit) {
             ,verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = text,
+            text = "\"Flip\"",
             fontSize = 14.sp,
             color = if(isDark)colorScheme.secondaryContainer
             else Color.Black,
@@ -287,6 +296,7 @@ fun AnimatedFloatSwitch(text: String, onTiltChange: (Float) -> Unit) {
         Switch(
             checked = toggled,
             onCheckedChange = { toggled = it },
+            enabled = enabled,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = colorScheme.onPrimary,
                 checkedTrackColor = colorScheme.primary,
