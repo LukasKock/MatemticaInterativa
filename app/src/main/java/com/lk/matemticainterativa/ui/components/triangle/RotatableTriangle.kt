@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.center
-import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -115,11 +114,11 @@ fun RotatableTriangle(
                 .fillMaxSize()
                 .pointerInput(Unit) {
                     detectTransformGestures { centroid, pan, gestureZoom, gestureRotate ->
-                        if(isTriangle1Selected == true) {
+                        if(isTriangle1Selected) {
                             rotation1 += gestureRotate
                             scale1 = (scale1 * gestureZoom).coerceIn(0.3f, 6f)
                             panOffset1 += pan // Accumulate the pan gesture
-                        } else if(isTriangle2Selected == true){
+                        } else if(isTriangle2Selected){
                             rotation2 += gestureRotate
                             scale2 = (scale2 * gestureZoom).coerceIn(0.3f, 6f)
                             panOffset2 += pan // Accumulate the pan gesture
@@ -134,10 +133,8 @@ fun RotatableTriangle(
                             println("Tapped INSIDE the triangle!")
                             isTriangle1Selected = true
                             isTriangle2Selected = false
-                            // e.g. set a state variable: triangleSelected = true
                         } else if(isPointInTriangle(tapOffset, pA2, pB2, pC2)){
                             println("Tapped OUTSIDE the triangle.")
-                            // triangleSelected = false
                             isTriangle2Selected = true
                             isTriangle1Selected = false
                         } else{
@@ -212,110 +209,11 @@ fun RotatableTriangle(
 
                 drawTriangle(pA1,pB1,pC1,triangle1Color,triangle2Color,triangleOutlineColor,
                     triangleOutlineColorSelected, isTriangle1Selected)
+                drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1)
+
                 drawTriangle(pA2,pB2,pC2,triangle2Color,triangle1Color,triangleOutlineColor,
                     triangleOutlineColorSelected, isTriangle2Selected)
-                // ... (The rest of your label and angle drawing code can stay here without changes)
-                val baseTextSize = 28f
-                val paint1 = Paint().apply {
-                    color = textColor.toArgb()
-                    textSize = (baseTextSize * scale1).coerceAtLeast(12f)
-                    textAlign = Paint.Align.CENTER
-                }
-
-                fun drawSideLabel(text: String, p1: Offset, p2: Offset, dyOffset: Float = 0f, paint: Paint) {
-                    val mid = (p1 + p2) / 2f
-                    drawContext.canvas.nativeCanvas.drawText(
-                        text,
-                        mid.x,
-                        mid.y + dyOffset * scale1,
-                        paint
-                    )
-                }
-
-                drawSideLabel("a=${a1.roundToInt()}", pB1, pC1, 15f, paint1)
-                drawSideLabel("b=${b1.roundToInt()}", pA1, pC1, 15f, paint1)
-                drawSideLabel("c=${c1.roundToInt()}", pA1, pB1, -15f, paint1)
-
-                fun angleFromSides(opposite: Float, side1: Float, side2: Float): Float {
-                    val cosVal = ((side1 * side1 + side2 * side2 - opposite * opposite) /
-                            (2f * side1 * side2)).coerceIn(-1f, 1f)
-                    return Math.toDegrees(acos(cosVal.toDouble())).toFloat()
-                }
-
-                val angleA1 = angleFromSides(a1, b1, c1)
-                val angleB1 = angleFromSides(b1, a1, c1)
-                val angleC1 = 180f - angleA1 - angleB1
-
-
-                // --- Draw arcs for each angle ---
-                fun Offset.normalize(): Offset {
-                    val len = hypot(x, y)
-                    return if (len == 0f) this else Offset(x / len, y / len)
-                }
-
-                fun drawAngleArc(center: Offset, p1: Offset, p2: Offset, angleDeg: Float, radius: Float) {
-                    val v1 = (p1 - center).normalize()
-                    val v2 = (p2 - center).normalize()
-
-                    // Compute the direction of the first vector
-                    val startAngle = Math.toDegrees(atan2(v1.y, v1.x).toDouble()).toFloat()
-                    val sweepAngle = if ((v1.x * v2.y - v1.y * v2.x) < 0) -angleDeg else angleDeg
-
-                    // Make the arc elliptical according to the tilt factor
-                    val verticalRadius = radius * abs(tilt1)
-
-                    drawArc(
-                        color = textColor,
-                        startAngle = startAngle,
-                        sweepAngle = sweepAngle,
-                        useCenter = false,
-                        topLeft = Offset(center.x - radius, center.y - verticalRadius),
-                        size = Size(radius * 2, verticalRadius * 2),
-                        style = Stroke(width = 2f)
-                    )
-                }
-
-                // Helper extension to normalize an Offset vector
-
-
-                // Draw the small arcs near vertices
-                val arcRadius = 40f * scale1
-                drawAngleArc(pA1, pB1, pC1, angleA1, arcRadius)
-                drawAngleArc(pB1, pA1, pC1, angleB1, arcRadius)
-                drawAngleArc(pC1, pA1, pB1, angleC1, arcRadius)
-
-                // --- Draw the angle labels INSIDE the triangle, following its rotation ---
-                val newCentroid = (pA1 + pB1 + pC1) / 3f
-
-                fun Offset.moveToward(target: Offset, fraction: Float): Offset {
-                    return this + (target - this) * fraction
-                }
-
-                val labelFraction = 0.25f // how deep inside the triangle the label goes
-
-                val labelPosA = pA1.moveToward(newCentroid, labelFraction)
-                val labelPosB = pB1.moveToward(newCentroid, labelFraction)
-                val labelPosC = pC1.moveToward(newCentroid, labelFraction)
-
-
-                drawContext.canvas.nativeCanvas.drawText(
-                    "${angleA1.roundToInt()}°",
-                    labelPosA.x,
-                    labelPosA.y,
-                    paint1
-                )
-                drawContext.canvas.nativeCanvas.drawText(
-                    "${angleB1.roundToInt()}°",
-                    labelPosB.x,
-                    labelPosB.y,
-                    paint1
-                )
-                drawContext.canvas.nativeCanvas.drawText(
-                    "${angleC1.roundToInt()}°",
-                    labelPosC.x,
-                    labelPosC.y,
-                    paint1
-                )
+                drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2)
             }
         }
     }
@@ -455,4 +353,107 @@ fun DrawScope.drawTriangle(A: Offset, B: Offset, C: Offset, color1: Color, color
     } else {
         drawPath(path = path, color = colorLine, style = Stroke(width = 3f))
     }
+}
+fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a: Float, b: Float, c: Float,
+                                  A: Offset, B: Offset, C: Offset){
+    val baseTextSize = 28f
+    val paint = Paint().apply {
+        color = textColor.toArgb()
+        textSize = (baseTextSize * scale).coerceAtLeast(12f)
+        textAlign = Paint.Align.CENTER
+    }
+
+    fun drawSideLabel(text: String, p1: Offset, p2: Offset, dyOffset: Float = 0f, paint: Paint) {
+        val mid = (p1 + p2) / 2f
+        drawContext.canvas.nativeCanvas.drawText(
+            text,
+            mid.x,
+            mid.y + dyOffset * scale,
+            paint
+        )
+    }
+    drawSideLabel("a=${a.roundToInt()}", B, C, 15f, paint)
+    drawSideLabel("b=${b.roundToInt()}", A, C, 15f, paint)
+    drawSideLabel("c=${c.roundToInt()}", A, B, -15f, paint)
+
+    fun angleFromSides(opposite: Float, side1: Float, side2: Float): Float {
+        val cosVal = ((side1 * side1 + side2 * side2 - opposite * opposite) /
+                (2f * side1 * side2)).coerceIn(-1f, 1f)
+        return Math.toDegrees(acos(cosVal.toDouble())).toFloat()
+    }
+
+    val angleA = angleFromSides(a, b, c)
+    val angleB = angleFromSides(b, a, c)
+    val angleC = 180f - angleA - angleB
+
+
+    // --- Draw arcs for each angle ---
+    fun Offset.normalize(): Offset {
+        val len = hypot(x, y)
+        return if (len == 0f) this else Offset(x / len, y / len)
+    }
+
+    fun drawAngleArc(center: Offset, p1: Offset, p2: Offset, angleDeg: Float, radius: Float) {
+        val v1 = (p1 - center).normalize()
+        val v2 = (p2 - center).normalize()
+
+        // Compute the direction of the first vector
+        val startAngle = Math.toDegrees(atan2(v1.y, v1.x).toDouble()).toFloat()
+        val sweepAngle = if ((v1.x * v2.y - v1.y * v2.x) < 0) -angleDeg else angleDeg
+
+        // Make the arc elliptical according to the tilt factor
+        val verticalRadius = radius * abs(tilt)
+
+        drawArc(
+            color = textColor,
+            startAngle = startAngle,
+            sweepAngle = sweepAngle,
+            useCenter = false,
+            topLeft = Offset(center.x - radius, center.y - verticalRadius),
+            size = Size(radius * 2, verticalRadius * 2),
+            style = Stroke(width = 2f)
+        )
+    }
+
+    // Helper extension to normalize an Offset vector
+
+
+    // Draw the small arcs near vertices
+    val arcRadius = 40f * scale
+    drawAngleArc(A, B, C, angleA, arcRadius)
+    drawAngleArc(B, A, C, angleB, arcRadius)
+    drawAngleArc(C, A, B, angleC, arcRadius)
+
+    // --- Draw the angle labels INSIDE the triangle, following its rotation ---
+    val newCentroid = (A + B + C) / 3f
+
+    fun Offset.moveToward(target: Offset, fraction: Float): Offset {
+        return this + (target - this) * fraction
+    }
+
+    val labelFraction = 0.25f // how deep inside the triangle the label goes
+
+    val labelPosA = A.moveToward(newCentroid, labelFraction)
+    val labelPosB = B.moveToward(newCentroid, labelFraction)
+    val labelPosC = C.moveToward(newCentroid, labelFraction)
+
+
+    drawContext.canvas.nativeCanvas.drawText(
+        "${angleA.roundToInt()}°",
+        labelPosA.x,
+        labelPosA.y,
+        paint
+    )
+    drawContext.canvas.nativeCanvas.drawText(
+        "${angleB.roundToInt()}°",
+        labelPosB.x,
+        labelPosB.y,
+        paint
+    )
+    drawContext.canvas.nativeCanvas.drawText(
+        "${angleC.roundToInt()}°",
+        labelPosC.x,
+        labelPosC.y,
+        paint
+    )
 }
