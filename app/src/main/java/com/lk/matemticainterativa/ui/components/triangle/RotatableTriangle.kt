@@ -214,13 +214,23 @@ fun RotatableTriangle(
 
 
 
-                drawTriangle(pA1,pB1,pC1,triangle1Color,triangle2Color,triangleOutlineColor,
-                    triangleOutlineColorSelected, isTriangle1Selected)
-                drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1)
+                if(isTriangle1Selected){
+                    drawTriangle(pA2,pB2,pC2,triangle2Color,triangle1Color,triangleOutlineColor,
+                        triangleOutlineColorSelected, isTriangle2Selected)
+                    drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2)
 
-                drawTriangle(pA2,pB2,pC2,triangle2Color,triangle1Color,triangleOutlineColor,
-                    triangleOutlineColorSelected, isTriangle2Selected)
-                drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2)
+                    drawTriangle(pA1,pB1,pC1,triangle1Color,triangle2Color,triangleOutlineColor,
+                        triangleOutlineColorSelected, isTriangle1Selected)
+                    drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1)
+                } else {
+                    drawTriangle(pA1,pB1,pC1,triangle1Color,triangle2Color,triangleOutlineColor,
+                        triangleOutlineColorSelected, isTriangle1Selected)
+                    drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1)
+                    drawTriangle(pA2,pB2,pC2,triangle2Color,triangle1Color,triangleOutlineColor,
+                        triangleOutlineColorSelected, isTriangle2Selected)
+                    drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2)
+                }
+
             }
         }
     }
