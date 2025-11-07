@@ -63,6 +63,8 @@ fun RotatableTriangle(
     val textColor = if (isDark) Color(0xFFE0E0E0) else Color.Black
     val triangle1Color = if(isDark) Color(0xFF0B3B4B) else Color.Cyan
     val triangle2Color = if(isDark) Color(0xFF483E07) else Color.Yellow
+    val triangle3Color = if(isDark) Color(0xFF57064B) else Color(0xFFE17E5C)
+    val triangle4Color = if(isDark) Color(0xFF620926) else Color(0xFFEA719A)
 
     val validTriangle = remember(a1, b1, c1, a2, b2, c2) {
         (a1 + b1 > c1) && (a1 + c1 > b1) && (b1 + c1 > a1)
@@ -219,12 +221,12 @@ fun RotatableTriangle(
                         triangleOutlineColorSelected, isTriangle2Selected)
                     drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2)
 
-                    drawTriangle(pA1,pB1,pC1,triangle1Color,triangle2Color,triangleOutlineColor,
+                    drawTriangle(pA1,pB1,pC1,triangle3Color,triangle4Color,triangleOutlineColor,
                         triangleOutlineColorSelected, isTriangle1Selected)
                     drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1)
                 } else {
-                    drawTriangle(pA1,pB1,pC1,triangle1Color,triangle2Color,triangleOutlineColor,
-                        triangleOutlineColorSelected, isTriangle1Selected)
+                    drawTriangle(pA1,pB1,pC1,triangle3Color,triangle4Color,triangleOutlineColor,
+                        triangleOutlineColorSelected, false)
                     drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1)
                     drawTriangle(pA2,pB2,pC2,triangle2Color,triangle1Color,triangleOutlineColor,
                         triangleOutlineColorSelected, isTriangle2Selected)
@@ -334,7 +336,7 @@ fun isPointInTriangle(p: Offset, a: Offset, b: Offset, c: Offset): Boolean {
     return (u >= 0) && (v >= 0) && (u + v <= 1)
 }
 
-data class TrianglePoints(val A: Offset, val B: Offset, val C: Offset)
+data class TrianglePoints(val pA: Offset, val pB: Offset, val pC: Offset)
 
 fun calculateTrianglePoints(a1: Float, b1: Float, c1: Float): TrianglePoints {
     val pointA = Offset(0f, 0f)
@@ -347,16 +349,16 @@ fun calculateTrianglePoints(a1: Float, b1: Float, c1: Float): TrianglePoints {
     return TrianglePoints(pointA, pointB, pointC)
 }
 
-fun DrawScope.drawTriangle(A: Offset, B: Offset, C: Offset, color1: Color, color2: Color, colorLine: Color,
+fun DrawScope.drawTriangle(pA: Offset, pB: Offset, pC: Offset, color1: Color, color2: Color, colorLine: Color,
                            colorLineSelected: Color, isTriangleSelected: Boolean = false){
     // --- Drawing Code (remains mostly the same) ---
     val path = Path().apply {
-        moveTo(A.x, A.y)
-        lineTo(B.x, B.y)
-        lineTo(C.x, C.y)
+        moveTo(pA.x, pA.y)
+        lineTo(pB.x, pB.y)
+        lineTo(pC.x, pC.y)
         close()
     }
-    val cross = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x)
+    val cross = (pB.x - pA.x) * (pC.y - pA.y) - (pB.y - pA.y) * (pC.x - pA.x)
     if(cross > 0){
         drawPath(
             path = path,
@@ -375,7 +377,7 @@ fun DrawScope.drawTriangle(A: Offset, B: Offset, C: Offset, color1: Color, color
     }
 }
 fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a: Float, b: Float, c: Float,
-                                  A: Offset, B: Offset, C: Offset){
+                                  pA: Offset, pB: Offset, pC: Offset){
     val baseTextSize = 28f
     val paint = Paint().apply {
         color = textColor.toArgb()
@@ -392,9 +394,9 @@ fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a
             paint
         )
     }
-    drawSideLabel("a=${a.roundToInt()}", B, C, 15f, paint)
-    drawSideLabel("b=${b.roundToInt()}", A, C, 15f, paint)
-    drawSideLabel("c=${c.roundToInt()}", A, B, -15f, paint)
+    drawSideLabel("a=${a.roundToInt()}", pB, pC, 15f, paint)
+    drawSideLabel("b=${b.roundToInt()}", pA, pC, 15f, paint)
+    drawSideLabel("c=${c.roundToInt()}", pA, pB, -15f, paint)
 
     fun angleFromSides(opposite: Float, side1: Float, side2: Float): Float {
         val cosVal = ((side1 * side1 + side2 * side2 - opposite * opposite) /
@@ -440,12 +442,12 @@ fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a
 
     // Draw the small arcs near vertices
     val arcRadius = 40f * scale
-    drawAngleArc(A, B, C, angleA, arcRadius)
-    drawAngleArc(B, A, C, angleB, arcRadius)
-    drawAngleArc(C, A, B, angleC, arcRadius)
+    drawAngleArc(pA, pB, pC, angleA, arcRadius)
+    drawAngleArc(pB, pA, pC, angleB, arcRadius)
+    drawAngleArc(pC, pA, pB, angleC, arcRadius)
 
     // --- Draw the angle labels INSIDE the triangle, following its rotation ---
-    val newCentroid = (A + B + C) / 3f
+    val newCentroid = (pA + pB + pC) / 3f
 
     fun Offset.moveToward(target: Offset, fraction: Float): Offset {
         return this + (target - this) * fraction
@@ -453,9 +455,9 @@ fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a
 
     val labelFraction = 0.25f // how deep inside the triangle the label goes
 
-    val labelPosA = A.moveToward(newCentroid, labelFraction)
-    val labelPosB = B.moveToward(newCentroid, labelFraction)
-    val labelPosC = C.moveToward(newCentroid, labelFraction)
+    val labelPosA = pA.moveToward(newCentroid, labelFraction)
+    val labelPosB = pB.moveToward(newCentroid, labelFraction)
+    val labelPosC = pC.moveToward(newCentroid, labelFraction)
 
 
     drawContext.canvas.nativeCanvas.drawText(
