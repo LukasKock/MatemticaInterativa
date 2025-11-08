@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
@@ -110,8 +112,11 @@ fun RotatableTriangle(
         Spacer(modifier = Modifier.padding(48.dp))
 
 //test        ControlSlider("teste", tilt, { tilt = it }, -1f..1f, "%.2f")
-        AnimatedFloatSwitch(
-            enabled = isTriangle1Selected xor isTriangle2Selected
+
+        AnimatedFloatButton(
+            isTriangle1Selected,
+            isTriangle2Selected,
+            if(isTriangle1Selected) tilt1 else tilt2
         ){ newTilt ->
             when {
                 isTriangle1Selected -> tilt1 = newTilt
@@ -269,15 +274,26 @@ fun ControlSlider(
     }
 }
 @Composable
-fun AnimatedFloatSwitch(
-    enabled: Boolean,
+fun AnimatedFloatButton(
+    isTriangle1Selected: Boolean,
+    isTriangle2Selected: Boolean,
+    tilt: Float,
     onTiltChange: (Float) -> Unit
 ) {
-    var toggled by remember { mutableStateOf(false) }
+    var toggled1 by remember { mutableStateOf(false) }
+    var toggled2 by remember { mutableStateOf(false) }
 
     // Animate between -1f and 1f when switch changes
-    val animatedFloat by animateFloatAsState(
-        targetValue = if (toggled) 1f else -1f,
+    val animatedFloat1 by animateFloatAsState(
+        targetValue = if (toggled1) 1f else -1f,
+        animationSpec = tween(
+            durationMillis = 500, // 500 milliseconds
+            easing = LinearEasing
+        ),
+        label = "FloatAnimation"
+    )
+    val animatedFloat2 by animateFloatAsState(
+        targetValue = if (toggled2) 1f else -1f,
         animationSpec = tween(
             durationMillis = 500, // 500 milliseconds
             easing = LinearEasing
@@ -285,8 +301,11 @@ fun AnimatedFloatSwitch(
         label = "FloatAnimation"
     )
     // Whenever the animation updates, assign it to your tilt
-    LaunchedEffect(animatedFloat) {
-        onTiltChange(animatedFloat)
+    LaunchedEffect(animatedFloat1) {
+        onTiltChange(animatedFloat1)
+    }
+    LaunchedEffect(animatedFloat2) {
+        onTiltChange(animatedFloat2)
     }
 
     // Theme colors
@@ -295,27 +314,31 @@ fun AnimatedFloatSwitch(
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            ,verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "\"Flip\"",
-            fontSize = 14.sp,
-            color = if(isDark)colorScheme.secondaryContainer
-            else Color.Black,
-        )
-        Spacer(Modifier.weight(1f))
-        Switch(
-            checked = toggled,
-            onCheckedChange = { toggled = it },
-            enabled = enabled,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = colorScheme.onPrimary,
-                checkedTrackColor = colorScheme.primary,
-                uncheckedThumbColor = colorScheme.onSurface,
-                uncheckedTrackColor = colorScheme.outlineVariant
+        Button(
+            onClick = {
+                if(isTriangle1Selected){
+                    toggled1 = !toggled1
+                    onTiltChange(tilt)
+                } else if(isTriangle2Selected){
+                    toggled2 = !toggled2
+                    onTiltChange(tilt)
+                }
+            },
+            enabled = isTriangle1Selected || isTriangle2Selected,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isDark) colorScheme.primary else colorScheme.secondary,
+                contentColor = colorScheme.onPrimary
             )
-        )
+        ){
+            Text(
+                text = "Flip",
+                fontSize = 14.sp
+            )
+        }
     }
 }
 fun isPointInTriangle(p: Offset, a: Offset, b: Offset, c: Offset): Boolean {
