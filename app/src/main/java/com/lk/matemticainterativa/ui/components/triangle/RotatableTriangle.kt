@@ -322,10 +322,10 @@ fun AnimatedFloatButton(
             onClick = {
                 if(isTriangle1Selected){
                     toggled1 = !toggled1
-                    onTiltChange(tilt)
+//                    onTiltChange(tilt) //Doesn't nee this
                 } else if(isTriangle2Selected){
                     toggled2 = !toggled2
-                    onTiltChange(tilt)
+//                    onTiltChange(tilt) //Doesn't nee this
                 }
             },
             enabled = isTriangle1Selected || isTriangle2Selected,
