@@ -116,7 +116,6 @@ fun RotatableTriangle(
         AnimatedFloatButton(
             isTriangle1Selected,
             isTriangle2Selected,
-            if(isTriangle1Selected) tilt1 else tilt2
         ){ newTilt ->
             when {
                 isTriangle1Selected -> tilt1 = newTilt
@@ -277,7 +276,6 @@ fun ControlSlider(
 fun AnimatedFloatButton(
     isTriangle1Selected: Boolean,
     isTriangle2Selected: Boolean,
-    tilt: Float,
     onTiltChange: (Float) -> Unit
 ) {
     var toggled1 by remember { mutableStateOf(false) }
