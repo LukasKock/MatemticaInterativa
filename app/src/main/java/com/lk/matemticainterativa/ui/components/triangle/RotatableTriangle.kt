@@ -146,12 +146,21 @@ fun RotatableTriangle(
                 }
                 .pointerInput(Unit){
                     detectTapGestures { tapOffset ->
-                        if (isPointInTriangle(tapOffset, pA1, pB1, pC1)) {
-                            println("Tapped INSIDE the triangle!")
+                        if (isPointInTriangle(tapOffset, pA1, pB1, pC1)
+                            && isPointInTriangle(tapOffset, pA2, pB2, pC2)) {
+                            if(isTriangle1Selected){
+                                isTriangle1Selected = false
+                                isTriangle2Selected = true
+                            } else{
+                                isTriangle1Selected = true
+                                isTriangle2Selected = false
+                            }
+                        } else if(isPointInTriangle(tapOffset, pA1, pB1, pC1) &&
+                            !isPointInTriangle(tapOffset, pA2, pB2, pC2)) {
                             isTriangle1Selected = true
                             isTriangle2Selected = false
-                        } else if(isPointInTriangle(tapOffset, pA2, pB2, pC2)){
-                            println("Tapped OUTSIDE the triangle.")
+                        } else if(isPointInTriangle(tapOffset, pA2, pB2, pC2) &&
+                            !isPointInTriangle(tapOffset, pA1, pB1, pC1)){
                             isTriangle2Selected = true
                             isTriangle1Selected = false
                         } else{
