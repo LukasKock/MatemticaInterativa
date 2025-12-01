@@ -456,10 +456,10 @@ fun DrawScope.drawTriangle(pA: Offset, pB: Offset, pC: Offset, color1: Color, co
 }
 fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a: Float, b: Float, c: Float,
                                   pA: Offset, pB: Offset, pC: Offset){
-    val baseTextSize = 28f
+    val baseTextSize = 32f
     val paint = Paint().apply {
         color = textColor.toArgb()
-        textSize = (baseTextSize * scale).coerceAtLeast(12f)
+        textSize = baseTextSize
         textAlign = Paint.Align.CENTER
     }
 
