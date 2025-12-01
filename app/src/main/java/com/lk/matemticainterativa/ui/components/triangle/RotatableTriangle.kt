@@ -2,6 +2,7 @@
 
 package com.lk.matemticainterativa.ui.components.triangle
 
+import android.content.res.Configuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import android.graphics.Paint
@@ -20,7 +21,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +47,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.*
@@ -238,6 +242,7 @@ fun RotatableTriangle(
                 }
 
             }
+            BottomButtons()
         }
     }
 }
@@ -320,16 +325,16 @@ fun AnimatedFloatButton(
             onClick = {
                 if(isTriangle1Selected){
                     toggled1 = !toggled1
-//                    onTiltChange(tilt) //Doesn't nee this
                 } else if(isTriangle2Selected){
                     toggled2 = !toggled2
-//                    onTiltChange(tilt) //Doesn't nee this
                 }
             },
             enabled = isTriangle1Selected || isTriangle2Selected,
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (isDark) colorScheme.primary else colorScheme.secondary,
-                contentColor = colorScheme.onPrimary
+                contentColor = colorScheme.onPrimary,
+                disabledContentColor = if(isDark) Color(0xFF131212) else Color(0xFF808080),
+                disabledContainerColor = if(isDark) Color(0xFF7F7F83) else Color(0xFFE1DEDE)
             )
         ){
             Text(
@@ -339,6 +344,58 @@ fun AnimatedFloatButton(
         }
     }
 }
+@Composable
+fun BottomButtons() {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+
+        if (isLandscape) {
+            // ⬇️ LANDSCAPE: buttons vertical at bottom-left
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .navigationBarsPadding(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Button(
+                    onClick = {}
+                ) { Text("button 1") }
+
+                Button(
+                    onClick = {}
+                ) { Text("button 2") }
+            }
+
+        } else {
+            // ⬇️ PORTRAIT: buttons side-by-side centered
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .navigationBarsPadding(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {}
+                ) { Text("button 1") }
+
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {}
+                ) { Text("button 2") }
+            }
+        }
+    }
+}
+
+
 fun isPointInTriangle(p: Offset, a: Offset, b: Offset, c: Offset): Boolean {
     val v0 = c - a
     val v1 = b - a
