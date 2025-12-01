@@ -472,9 +472,9 @@ fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a
             paint
         )
     }
-    drawSideLabel("a=${a.roundToInt()}", pB, pC, 15f, paint)
-    drawSideLabel("b=${b.roundToInt()}", pA, pC, 15f, paint)
-    drawSideLabel("c=${c.roundToInt()}", pA, pB, -15f, paint)
+    drawSideLabel("a=${(pC - pB).getDistance().roundToInt()}", pB, pC, 15f, paint)
+    drawSideLabel("b=${(pA - pC).getDistance().roundToInt()}", pA, pC, 15f, paint)
+    drawSideLabel("c=${(pB - pA).getDistance().roundToInt()}", pA, pB, -15f, paint)
 
     fun angleFromSides(opposite: Float, side1: Float, side2: Float): Float {
         val cosVal = ((side1 * side1 + side2 * side2 - opposite * opposite) /
