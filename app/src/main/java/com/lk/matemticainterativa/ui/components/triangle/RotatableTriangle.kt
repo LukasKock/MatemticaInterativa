@@ -264,8 +264,8 @@ fun AnimatedFloatButton(
     isTriangle2Selected: Boolean,
     onTiltChange: (Float) -> Unit
 ) {
-    var toggled1 by remember { mutableStateOf(false) }
-    var toggled2 by remember { mutableStateOf(false) }
+    var toggled1 by rememberSaveable { mutableStateOf(false) }
+    var toggled2 by rememberSaveable { mutableStateOf(false) }
 
     // Animate between -1f and 1f when switch changes
     val animatedFloat1 by animateFloatAsState(
