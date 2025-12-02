@@ -146,8 +146,10 @@ fun RotatableTriangle(
                 }
                 .pointerInput(Unit){
                     detectTapGestures { tapOffset ->
-                        if (isPointInTriangle(tapOffset, pA1, pB1, pC1)
-                            && isPointInTriangle(tapOffset, pA2, pB2, pC2)) {
+                        val isTapOnTriangle1 = isPointInTriangle(tapOffset, pA1, pB1, pC1)
+                        val isTapOnTriangle2 = isPointInTriangle(tapOffset, pA2, pB2, pC2)
+
+                        if (isTapOnTriangle1 && isTapOnTriangle2) {
                             if(isTriangle1Selected){
                                 isTriangle1Selected = false
                                 isTriangle2Selected = true
@@ -155,12 +157,10 @@ fun RotatableTriangle(
                                 isTriangle1Selected = true
                                 isTriangle2Selected = false
                             }
-                        } else if(isPointInTriangle(tapOffset, pA1, pB1, pC1) &&
-                            !isPointInTriangle(tapOffset, pA2, pB2, pC2)) {
+                        } else if(isTapOnTriangle1) {
                             isTriangle1Selected = true
                             isTriangle2Selected = false
-                        } else if(isPointInTriangle(tapOffset, pA2, pB2, pC2) &&
-                            !isPointInTriangle(tapOffset, pA1, pB1, pC1)){
+                        } else if(isTapOnTriangle2){
                             isTriangle2Selected = true
                             isTriangle1Selected = false
                         } else{
@@ -232,22 +232,23 @@ fun RotatableTriangle(
 
 
 
-
-                if(isTriangle1Selected){
-                    drawTriangle(pA2,pB2,pC2,triangle2Color,triangle1Color,triangleOutlineColor,
-                        triangleOutlineColorSelected, isTriangle2Selected)
-                    drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2)
-
+                fun drawTriangle1(){
                     drawTriangle(pA1,pB1,pC1,triangle3Color,triangle4Color,triangleOutlineColor,
                         triangleOutlineColorSelected, isTriangle1Selected)
                     drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1)
-                } else {
-                    drawTriangle(pA1,pB1,pC1,triangle3Color,triangle4Color,triangleOutlineColor,
-                        triangleOutlineColorSelected, false)
-                    drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1)
+                }
+                fun drawTriangle2() {
                     drawTriangle(pA2,pB2,pC2,triangle2Color,triangle1Color,triangleOutlineColor,
                         triangleOutlineColorSelected, isTriangle2Selected)
                     drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2)
+                }
+
+                if(isTriangle1Selected){
+                    drawTriangle2()
+                    drawTriangle1()
+                } else {
+                    drawTriangle1()
+                    drawTriangle2()
                 }
 
             }
