@@ -257,36 +257,7 @@ fun RotatableTriangle(
     }
 }
 
-/**
- * A helper composable to reduce boilerplate for sliders.
- */
-@Composable
-fun ControlSlider(
-    label: String,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    range: ClosedFloatingPointRange<Float>,
-    format: String
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("$label:")
-            Text(format.format(value))
-        }
-        Slider(
-            value = value,
-            onValueChange = onValueChange,
-            valueRange = range,
-        )
-    }
-}
+
 @Composable
 fun AnimatedFloatButton(
     isTriangle1Selected: Boolean,
@@ -366,7 +337,6 @@ fun BottomButtons() {
     ) {
 
         if (isLandscape) {
-            // ⬇️ LANDSCAPE: buttons vertical at bottom-left
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -383,7 +353,6 @@ fun BottomButtons() {
             }
 
         } else {
-            // ⬇️ PORTRAIT: buttons side-by-side centered
             Row(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
