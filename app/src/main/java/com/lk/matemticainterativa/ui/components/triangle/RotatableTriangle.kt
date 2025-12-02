@@ -117,15 +117,6 @@ fun RotatableTriangle(
 
 //test        ControlSlider("teste", tilt, { tilt = it }, -1f..1f, "%.2f")
 
-        AnimatedFloatButton(
-            isTriangle1Selected,
-            isTriangle2Selected,
-        ){ newTilt ->
-            when {
-                isTriangle1Selected -> tilt1 = newTilt
-                isTriangle2Selected -> tilt2 = newTilt
-            }
-        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -251,6 +242,15 @@ fun RotatableTriangle(
                     drawTriangle2()
                 }
 
+            }
+            AnimatedFloatButton(
+                isTriangle1Selected,
+                isTriangle2Selected,
+            ){ newTilt ->
+                when {
+                    isTriangle1Selected -> tilt1 = newTilt
+                    isTriangle2Selected -> tilt2 = newTilt
+                }
             }
             BottomButtons()
         }
