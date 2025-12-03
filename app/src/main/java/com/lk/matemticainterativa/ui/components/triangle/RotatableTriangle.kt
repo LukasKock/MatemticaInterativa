@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lk.matemticainterativa.ui.components.questionfeedback.QuestionFeedbackPopup
 import kotlin.math.*
 
 @Composable
@@ -359,6 +360,9 @@ fun BottomButtons() {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
+    var showFeedback by remember { mutableStateOf(false) }
+    var isAnswerCorrect by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -373,11 +377,17 @@ fun BottomButtons() {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
-                    onClick = {}
+                    onClick = {
+                        isAnswerCorrect = true
+                        showFeedback = true
+                    }
                 ) { Text("button 1") }
 
                 Button(
-                    onClick = {}
+                    onClick = {
+                        isAnswerCorrect = true
+                        showFeedback = true
+                    }
                 ) { Text("button 2") }
             }
 
@@ -391,15 +401,31 @@ fun BottomButtons() {
             ) {
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = {}
+                    onClick = {
+                        isAnswerCorrect = true
+                        showFeedback = true
+                    }
                 ) { Text("button 1") }
 
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = {}
+                    onClick = {
+                        isAnswerCorrect = false
+                        showFeedback = true
+                    }
                 ) { Text("button 2") }
             }
         }
+    }
+    if (showFeedback) {
+        QuestionFeedbackPopup(
+            isCorrect = isAnswerCorrect,
+            onDismiss = { showFeedback = false },
+            explanation = if (isAnswerCorrect)
+                "Great job! The Earth is not flat."
+            else
+                "Not quite. The Earth is actually an oblate spheroid."
+        )
     }
 }
 
