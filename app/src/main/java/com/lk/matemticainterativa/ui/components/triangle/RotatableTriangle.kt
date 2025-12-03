@@ -56,12 +56,14 @@ fun RotatableTriangle(
     a2: Float, // side opposite vertex A (BC)
     b2: Float, // side opposite vertex B (AC)
     c2: Float,  // side opposite vertex C (AB)
-    initialOffset1: Offset,
-    initialOffset2: Offset,
-    initialRotation1: Float,
-    initialRotation2: Float,
-    initialScale1: Float,
-    initialScale2: Float
+    initialOffset1: Offset = Offset.Zero,
+    initialOffset2: Offset = Offset.Zero,
+    initialRotation1: Float = 0f,
+    initialRotation2: Float = 0f,
+    initialScale1: Float = 1f,
+    initialScale2: Float = 1f,
+    initialTilt1: Float = -1f,
+    initialTilt2: Float = -1f
 
 ) {
     val isDark = isSystemInDarkTheme()
@@ -80,12 +82,12 @@ fun RotatableTriangle(
                 (a2 + b2 > c2) && (a2 + c2 > b2) && (b2 + c2 > a2)
     }
 
-    var rotation1 by rememberSaveable { mutableFloatStateOf(0f) }
-    var rotation2 by rememberSaveable { mutableFloatStateOf(0f) }
-    var tilt1 by rememberSaveable { mutableFloatStateOf(-1f) }
-    var tilt2 by rememberSaveable { mutableFloatStateOf(-1f) }
-    var scale1 by rememberSaveable { mutableFloatStateOf(1f) }
-    var scale2 by rememberSaveable { mutableFloatStateOf(1f) }
+    var rotation1 by rememberSaveable { mutableFloatStateOf(initialRotation1) }
+    var rotation2 by rememberSaveable { mutableFloatStateOf(initialRotation2) }
+    var tilt1 by rememberSaveable { mutableFloatStateOf(initialTilt1) }
+    var tilt2 by rememberSaveable { mutableFloatStateOf(initialTilt2) }
+    var scale1 by rememberSaveable { mutableFloatStateOf(initialScale1) }
+    var scale2 by rememberSaveable { mutableFloatStateOf(initialScale2) }
 
     var isTriangle1Selected by rememberSaveable { mutableStateOf(false) }
     var isTriangle2Selected by rememberSaveable { mutableStateOf(false) }
@@ -100,8 +102,8 @@ fun RotatableTriangle(
         restore = { Offset(it[0], it[1]) }
     )
     // This state will now hold the accumulated pan/drag offset
-    var panOffset1 by rememberSaveable(stateSaver = offsetSaver1) { mutableStateOf(Offset.Zero) }
-    var panOffset2 by rememberSaveable(stateSaver = offsetSaver2) { mutableStateOf(Offset.Zero) }
+    var panOffset1 by rememberSaveable(stateSaver = offsetSaver1) { mutableStateOf(initialOffset1) }
+    var panOffset2 by rememberSaveable(stateSaver = offsetSaver2) { mutableStateOf(initialOffset2) }
 
     var pA1 by remember { mutableStateOf(Offset.Zero) }
     var pB1 by remember { mutableStateOf(Offset.Zero) }
@@ -112,18 +114,6 @@ fun RotatableTriangle(
     var pC2 by remember { mutableStateOf(Offset.Zero) }
 
 
-    var hasRun by rememberSaveable { mutableStateOf(false)}
-    LaunchedEffect(Unit) {
-        if(!hasRun) {
-            panOffset1 = initialOffset1
-            panOffset2 = initialOffset2
-            rotation1 = initialRotation1
-            rotation2 = initialRotation2
-            scale1 = initialScale1
-            scale2 = initialScale2
-            hasRun = true
-        }
-    }
     Column(modifier = Modifier.fillMaxSize()
         .background(color = backgroundColor)
     ) {
