@@ -123,23 +123,16 @@ fun RotatableTriangle(
         .background(color = backgroundColor)
     ) {
         Spacer(modifier = Modifier.padding(16.dp))
-        if(!isLandscape) {
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text = "Verifique se os triângulos abaixo são semelhantes ",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                color = textColor
-            )
-        } else{
-            Text(
-                modifier = Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
-                text = "Verifique se os triângulos abaixo são semelhantes",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                color = textColor
-            )
-        }
+        Text(
+            modifier = if(!isLandscape)
+                Modifier.padding(8.dp)
+            else
+                Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+            text = "Verifique se os triângulos abaixo são semelhantes ",
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+            color = textColor
+        )
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -291,8 +284,8 @@ fun AnimatedFloatButton(
     initialTilt2: Float,
     onTiltChange: (Float) -> Unit
 ) {
-    val initToggle1 = if(initialTilt1 ==-1f) false else true
-    val initToggle2 = if(initialTilt2 ==-1f) false else true
+    val initToggle1 = initialTilt1 != -1f
+    val initToggle2 = initialTilt2 != -1f
 
     var toggled1 by rememberSaveable { mutableStateOf(initToggle1) }
     var toggled2 by rememberSaveable { mutableStateOf(initToggle2) }
