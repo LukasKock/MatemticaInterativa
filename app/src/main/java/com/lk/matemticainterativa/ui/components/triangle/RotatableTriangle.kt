@@ -248,6 +248,8 @@ fun RotatableTriangle(
             AnimatedFloatButton(
                 isTriangle1Selected,
                 isTriangle2Selected,
+                initialTilt1,
+                initialTilt2,
             ){ newTilt ->
                 when {
                     isTriangle1Selected -> tilt1 = newTilt
@@ -264,10 +266,15 @@ fun RotatableTriangle(
 fun AnimatedFloatButton(
     isTriangle1Selected: Boolean,
     isTriangle2Selected: Boolean,
+    initialTilt1: Float,
+    initialTilt2: Float,
     onTiltChange: (Float) -> Unit
 ) {
-    var toggled1 by rememberSaveable { mutableStateOf(false) }
-    var toggled2 by rememberSaveable { mutableStateOf(false) }
+    val initToggle1 = if(initialTilt1 ==-1f) false else true
+    val initToggle2 = if(initialTilt2 ==-1f) false else true
+
+    var toggled1 by rememberSaveable { mutableStateOf(initToggle1) }
+    var toggled2 by rememberSaveable { mutableStateOf(initToggle2) }
 
     // Animate between -1f and 1f when switch changes
     val animatedFloat1 by animateFloatAsState(
