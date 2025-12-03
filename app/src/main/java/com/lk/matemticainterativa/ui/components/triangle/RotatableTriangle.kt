@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.*
@@ -66,6 +67,9 @@ fun RotatableTriangle(
     initialTilt2: Float = -1f
 
 ) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     val isDark = isSystemInDarkTheme()
     val backgroundColor = if(isDark)  Color(0xFF121212) else Color(0xFFFFFFFF)
     val triangleOutlineColor = if (isDark) Color(0xFFB0BEC5) else Color.Black
@@ -117,8 +121,22 @@ fun RotatableTriangle(
     Column(modifier = Modifier.fillMaxSize()
         .background(color = backgroundColor)
     ) {
-        Spacer(modifier = Modifier.padding(48.dp))
-
+        Spacer(modifier = Modifier.padding(16.dp))
+        if(!isLandscape) {
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = "Verifique se os triângulos abaixo são semelhantes ",
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+            )
+        } else{
+            Text(
+                modifier = Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+                text = "Verifique se os triângulos abaixo são semelhantes ",
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()

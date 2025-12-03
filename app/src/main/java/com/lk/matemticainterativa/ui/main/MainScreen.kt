@@ -12,28 +12,15 @@ import com.lk.matemticainterativa.ui.components.triangle.RotatableTriangle
 
 
 @Composable
-fun MainScreen(username: String,
-               onLogout: () -> Unit = {},
-               onSettings: () -> Unit = {}) {
-    Scaffold(
-        topBar = {
-            MainTopBar(
-                onSettingsClick = onSettings,
-                onLogoutClick = onLogout
-            )
-        }
-    ) { innerPadding ->
-        Column(Modifier.padding(innerPadding).padding(16.dp)) {
-        }
-        RotatableTriangle(
-            a1 = 600f, b1 = 800f, c1 = 1000f,
-            a2 = 300f, b2 = 400f, c2 = 500f,
-            initialOffset1 = Offset(0f, -150f),
-            initialOffset2 = Offset(140f, -495f),
-            initialRotation1 = 100f,
-            initialRotation2 = 137f,
-            initialScale1 = 1.3f,
-            initialScale2 = 1.3f,
-            initialTilt2 = 1f)
-    }
+fun MainScreen(username: String) {
+    RotatableTriangle(
+        a1 = 600f, b1 = 800f, c1 = 1000f,
+        a2 = 300f, b2 = 400f, c2 = 500f,
+        initialOffset1 = Offset(0f, -150f),
+        initialOffset2 = Offset(140f, -495f),
+        initialRotation1 = 100f,
+        initialRotation2 = 137f,
+        initialScale1 = 1.3f,
+        initialScale2 = 1.3f,
+        initialTilt2 = 1f)
 }
