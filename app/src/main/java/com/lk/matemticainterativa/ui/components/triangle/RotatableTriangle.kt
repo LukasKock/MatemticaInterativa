@@ -23,13 +23,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.listSaver
@@ -59,7 +55,13 @@ fun RotatableTriangle(
     c1: Float,  // side opposite vertex C (AB)
     a2: Float, // side opposite vertex A (BC)
     b2: Float, // side opposite vertex B (AC)
-    c2: Float  // side opposite vertex C (AB)
+    c2: Float,  // side opposite vertex C (AB)
+    initialOffset1: Offset,
+    initialOffset2: Offset,
+    initialRotation1: Float,
+    initialRotation2: Float,
+    initialScale1: Float,
+    initialScale2: Float
 
 ) {
     val isDark = isSystemInDarkTheme()
@@ -110,12 +112,22 @@ fun RotatableTriangle(
     var pC2 by remember { mutableStateOf(Offset.Zero) }
 
 
+    var hasRun by rememberSaveable { mutableStateOf(false)}
+    LaunchedEffect(Unit) {
+        if(!hasRun) {
+            panOffset1 = initialOffset1
+            panOffset2 = initialOffset2
+            rotation1 = initialRotation1
+            rotation2 = initialRotation2
+            scale1 = initialScale1
+            scale2 = initialScale2
+            hasRun = true
+        }
+    }
     Column(modifier = Modifier.fillMaxSize()
         .background(color = backgroundColor)
     ) {
         Spacer(modifier = Modifier.padding(48.dp))
-
-//test        ControlSlider("teste", tilt, { tilt = it }, -1f..1f, "%.2f")
 
         Box(
             modifier = Modifier
