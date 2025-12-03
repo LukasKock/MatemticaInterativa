@@ -132,7 +132,7 @@ fun RotatableTriangle(
         } else{
             Text(
                 modifier = Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
-                text = "Verifique se os triângulos abaixo são semelhantes ",
+                text = "Verifique se os triângulos abaixo são semelhantes",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
             )
