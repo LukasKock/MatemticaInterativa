@@ -128,6 +128,7 @@ fun RotatableTriangle(
                 text = "Verifique se os triângulos abaixo são semelhantes ",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
+                color = textColor
             )
         } else{
             Text(
@@ -135,6 +136,7 @@ fun RotatableTriangle(
                 text = "Verifique se os triângulos abaixo são semelhantes",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
+                color = textColor
             )
         }
         Box(
