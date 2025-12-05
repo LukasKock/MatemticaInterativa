@@ -430,14 +430,14 @@ fun YesOrNoButtons() {
 }
 fun areTrianglesAligned(trianglePoints1: TrianglePoints, trianglePoints2: TrianglePoints): Boolean {
     val tolerance = 10f
-    return trianglePoints1.pA.getDistance() - trianglePoints2.pA.x < tolerance &&
-            trianglePoints1.pA.y - trianglePoints2.pA.y < tolerance &&
+    return abs(trianglePoints1.pA.x - trianglePoints2.pA.x) < tolerance &&
+            abs(trianglePoints1.pA.y - trianglePoints2.pA.y) < tolerance &&
 
-            trianglePoints1.pB.x - trianglePoints2.pB.x < tolerance &&
-            trianglePoints1.pB.y - trianglePoints2.pB.y < tolerance &&
+            abs(trianglePoints1.pB.x - trianglePoints2.pB.x) < tolerance &&
+            abs(trianglePoints1.pB.y - trianglePoints2.pB.y) < tolerance &&
 
-            trianglePoints1.pC.x - trianglePoints2.pC.x < tolerance &&
-            trianglePoints1.pC.y - trianglePoints2.pC.y < tolerance
+            abs(trianglePoints1.pC.x - trianglePoints2.pC.x) < tolerance &&
+            abs(trianglePoints1.pC.y - trianglePoints2.pC.y) < tolerance
 }
 
 fun isPointInTriangle(p: Offset, a: Offset, b: Offset, c: Offset): Boolean {
