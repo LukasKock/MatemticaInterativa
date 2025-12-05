@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.listSaver
@@ -118,6 +119,8 @@ fun RotatableTriangle(
     var pB2 by remember { mutableStateOf(Offset.Zero) }
     var pC2 by remember { mutableStateOf(Offset.Zero) }
 
+    var isYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
+
 
     Column(modifier = Modifier.fillMaxSize()
         .background(color = backgroundColor)
@@ -128,7 +131,7 @@ fun RotatableTriangle(
                 Modifier.padding(8.dp)
             else
                 Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
-            text = "Verifique se os triângulos abaixo são semelhantes ",
+            text = "Os triângulos a seguir são semelhantes?",
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             color = textColor
@@ -259,18 +262,24 @@ fun RotatableTriangle(
                 }
 
             }
-            AnimatedFloatButton(
-                isTriangle1Selected,
-                isTriangle2Selected,
-                initialTilt1,
-                initialTilt2,
-            ){ newTilt ->
-                when {
-                    isTriangle1Selected -> tilt1 = newTilt
-                    isTriangle2Selected -> tilt2 = newTilt
+            if(isYesOrNoButtonsPressed){
+                AnimatedFloatButton(
+                    isTriangle1Selected,
+                    isTriangle2Selected,
+                    initialTilt1,
+                    initialTilt2,
+                ){ newTilt ->
+                    when {
+                        isTriangle1Selected -> tilt1 = newTilt
+                        isTriangle2Selected -> tilt2 = newTilt
+                    }
                 }
+                //OtherButtons()
+            } else{
+                YesOrNoButtons()
             }
-            BottomButtons()
+            val triangle1 = TrianglePoints(pA1, pB1, pC1)
+            val triangle2 = TrianglePoints(pA2, pB2, pC2)
         }
     }
 }
@@ -316,7 +325,6 @@ fun AnimatedFloatButton(
     }
 
     // Theme colors
-    val colorScheme = MaterialTheme.colorScheme
     val isDark = isSystemInDarkTheme()
     Row (
         modifier = Modifier
@@ -349,18 +357,44 @@ fun AnimatedFloatButton(
     }
 }
 @Composable
-fun BottomButtons() {
+fun YesOrNoButtons() {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     var showFeedback by remember { mutableStateOf(false) }
     var isAnswerCorrect by remember { mutableStateOf(false) }
 
+    val isDark = isSystemInDarkTheme()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        val buttons: @Composable (Modifier) -> Unit = { buttonModifier ->
+            Button(
+                modifier = buttonModifier,
+                onClick = {
+                    isAnswerCorrect = true
+                    showFeedback = true
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isDark) colorScheme.primary else Color(0xFF2585D3),
+                    contentColor = colorScheme.onPrimary
+                )
+            ) { Text("Sim") }
+
+            Button(
+                modifier = buttonModifier,
+                onClick = {
+                    isAnswerCorrect = false
+                    showFeedback = true
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isDark) colorScheme.primary else Color(0xFF009688),
+                    contentColor = colorScheme.onPrimary
+                )
+            ) { Text("Não") }
+        }
 
         if (isLandscape) {
             Column(
@@ -369,21 +403,8 @@ fun BottomButtons() {
                     .navigationBarsPadding(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Button(
-                    onClick = {
-                        isAnswerCorrect = true
-                        showFeedback = true
-                    }
-                ) { Text("button 1") }
-
-                Button(
-                    onClick = {
-                        isAnswerCorrect = true
-                        showFeedback = true
-                    }
-                ) { Text("button 2") }
+                buttons(Modifier)
             }
-
         } else {
             Row(
                 modifier = Modifier
@@ -392,21 +413,7 @@ fun BottomButtons() {
                     .navigationBarsPadding(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Button(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        isAnswerCorrect = true
-                        showFeedback = true
-                    }
-                ) { Text("button 1") }
-
-                Button(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        isAnswerCorrect = false
-                        showFeedback = true
-                    }
-                ) { Text("button 2") }
+                buttons(Modifier.weight(1f))
             }
         }
     }
@@ -415,13 +422,23 @@ fun BottomButtons() {
             isCorrect = isAnswerCorrect,
             onDismiss = { showFeedback = false },
             explanation = if (isAnswerCorrect)
-                "Great job! The Earth is not flat."
+                "Sim! Os Triangulos são semelhantes (explicação...)."
             else
-                "Not quite. The Earth is actually an oblate spheroid."
+                "Os triângulos são SIM semelhantes."
         )
     }
 }
+fun areTrianglesAligned(trianglePoints1: TrianglePoints, trianglePoints2: TrianglePoints): Boolean {
+    val tolerance = 10f
+    return trianglePoints1.pA.getDistance() - trianglePoints2.pA.x < tolerance &&
+            trianglePoints1.pA.y - trianglePoints2.pA.y < tolerance &&
 
+            trianglePoints1.pB.x - trianglePoints2.pB.x < tolerance &&
+            trianglePoints1.pB.y - trianglePoints2.pB.y < tolerance &&
+
+            trianglePoints1.pC.x - trianglePoints2.pC.x < tolerance &&
+            trianglePoints1.pC.y - trianglePoints2.pC.y < tolerance
+}
 
 fun isPointInTriangle(p: Offset, a: Offset, b: Offset, c: Offset): Boolean {
     val v0 = c - a

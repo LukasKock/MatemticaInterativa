@@ -77,7 +77,7 @@ fun QuestionFeedbackPopup(
                     Spacer(modifier = Modifier.width(16.dp))
                     
                     Text(
-                        text = if (isCorrect) "Correct!" else "Incorrect",
+                        text = if (isCorrect) "Correto!" else "Errado",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = if (isCorrect) 
@@ -111,7 +111,7 @@ fun QuestionFeedbackPopup(
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text(
-                        text = "Continue",
+                        text = "Continuar",
                         modifier = Modifier.padding(vertical = 8.dp),
                         style = MaterialTheme.typography.titleMedium
                     )
