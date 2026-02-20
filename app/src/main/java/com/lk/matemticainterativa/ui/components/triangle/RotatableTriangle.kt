@@ -119,7 +119,8 @@ fun RotatableTriangle(
     var pB2 by remember { mutableStateOf(Offset.Zero) }
     var pC2 by remember { mutableStateOf(Offset.Zero) }
 
-    var isYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
+    var isYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(true) }
+    var isInMovingMode by rememberSaveable { mutableStateOf( false ) }
 
 
     Column(modifier = Modifier.fillMaxSize()
@@ -136,11 +137,20 @@ fun RotatableTriangle(
             textAlign = TextAlign.Center,
             color = textColor
         )
+        Button(
+            modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
+            onClick = { isInMovingMode = !isInMovingMode}
+        ) {
+            Text(if(isInMovingMode) "Stop" else "Start")
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .pointerInput(Unit) {
                     detectTransformGestures { centroid, pan, gestureZoom, gestureRotate ->
+                        if(!isInMovingMode){
+                            return@detectTransformGestures
+                        }
                         if(isTriangle1Selected) {
                             rotation1 += gestureRotate
                             scale1 = (scale1 * gestureZoom).coerceIn(0.3f, 6f)
@@ -156,6 +166,9 @@ fun RotatableTriangle(
                 }
                 .pointerInput(Unit){
                     detectTapGestures { tapOffset ->
+                        if(!isInMovingMode){
+                            return@detectTapGestures
+                        }
                         val isTapOnTriangle1 = isPointInTriangle(tapOffset, pA1, pB1, pC1)
                         val isTapOnTriangle2 = isPointInTriangle(tapOffset, pA2, pB2, pC2)
 
