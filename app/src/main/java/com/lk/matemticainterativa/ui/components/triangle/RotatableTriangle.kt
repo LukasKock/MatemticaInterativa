@@ -139,7 +139,7 @@ fun RotatableTriangle(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(tilt1, tilt2) {
+                .pointerInput(Unit) {
                     detectTransformGestures { centroid, pan, gestureZoom, gestureRotate ->
                         if(isTriangle1Selected) {
                             rotation1 += gestureRotate
