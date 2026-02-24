@@ -66,7 +66,9 @@ fun RotatableTriangle(
     initialScale2: Float = 1f,
     initialTilt1: Float = -1f,
     initialTilt2: Float = -1f,
-    areTrianglesSimilar: Boolean
+    areTrianglesSimilar: Boolean,
+    explanationCorrect: String,
+    explanationFalse: String
 ) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -118,7 +120,7 @@ fun RotatableTriangle(
     var pB2 by remember { mutableStateOf(Offset.Zero) }
     var pC2 by remember { mutableStateOf(Offset.Zero) }
 
-    var isYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
+    var wereYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
     var isInMovingMode by rememberSaveable { mutableStateOf( false ) }
 
 
@@ -269,7 +271,7 @@ fun RotatableTriangle(
                 }
 
             }
-            if(isYesOrNoButtonsPressed){
+            if(wereYesOrNoButtonsPressed){
                 AnimatedFloatButton(
                     isTriangle1Selected,
                     isTriangle2Selected,
@@ -281,9 +283,11 @@ fun RotatableTriangle(
                         isTriangle2Selected -> tilt2 = newTilt
                     }
                 }
-                //OtherButtons()
             } else{
-                YesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar)
+                wereYesOrNoButtonsPressed = (YesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
+                        explanationCorrect = explanationCorrect,
+                        explanationFalse = explanationFalse))
+                isInMovingMode = wereYesOrNoButtonsPressed
             }
             val triangle1 = TrianglePoints(pA1, pB1, pC1)
             val triangle2 = TrianglePoints(pA2, pB2, pC2)
@@ -364,12 +368,15 @@ fun AnimatedFloatButton(
     }
 }
 @Composable
-fun YesOrNoButtons(areTrianglesSimilar: Boolean) {
+fun YesOrNoButtons(areTrianglesSimilar: Boolean,
+                   explanationCorrect: String,
+                   explanationFalse: String): Boolean {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     var showFeedback by remember { mutableStateOf(false) }
-    var userAnswer by remember { mutableStateOf(false) }
+    var isUserAnswerCorrect by remember { mutableStateOf(false) }
+    var wasDialogDismissed by remember { mutableStateOf(false) }
 
     val isDark = isSystemInDarkTheme()
     Box(
@@ -381,6 +388,7 @@ fun YesOrNoButtons(areTrianglesSimilar: Boolean) {
             Button(
                 modifier = buttonModifier,
                 onClick = {
+                    if(areTrianglesSimilar) isUserAnswerCorrect = true
                     showFeedback = true
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -392,6 +400,7 @@ fun YesOrNoButtons(areTrianglesSimilar: Boolean) {
             Button(
                 modifier = buttonModifier,
                 onClick = {
+                    if(areTrianglesSimilar) isUserAnswerCorrect = false
                     showFeedback = true
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -424,14 +433,12 @@ fun YesOrNoButtons(areTrianglesSimilar: Boolean) {
     }
     if (showFeedback) {
         QuestionFeedbackPopup(
-            isCorrect = areTrianglesSimilar,
-            onDismiss = { showFeedback = false },
-            explanation = if (areTrianglesSimilar)
-                "Sim! Os Triangulos são semelhantes (explicação...)."
-            else
-                "Os triângulos são SIM semelhantes."
-        )
+            isCorrect = isUserAnswerCorrect,
+            onDismiss = { showFeedback = false
+                        wasDialogDismissed = true},
+            explanation = if (isUserAnswerCorrect) explanationCorrect else explanationFalse)
     }
+    return wasDialogDismissed
 }
 fun areTrianglesAligned(trianglePoints1: TrianglePoints, trianglePoints2: TrianglePoints): Boolean {
     val tolerance = 60f

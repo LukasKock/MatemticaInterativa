@@ -23,5 +23,7 @@ fun MainScreen(username: String) {
         initialScale1 = 1.3f,
         initialScale2 = 1.3f,
         initialTilt2 = 1f,
-        areTrianglesSimilar = true)
+        areTrianglesSimilar = true,
+        explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque seus ângulos são iguais",
+        explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais")
 }
