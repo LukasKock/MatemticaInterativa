@@ -22,5 +22,6 @@ fun MainScreen(username: String) {
         initialRotation2 = 137f,
         initialScale1 = 1.3f,
         initialScale2 = 1.3f,
-        initialTilt2 = 1f)
+        initialTilt2 = 1f,
+        areTrianglesSimilar = true)
 }

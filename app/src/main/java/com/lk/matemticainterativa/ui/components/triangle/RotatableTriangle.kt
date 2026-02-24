@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -66,8 +65,8 @@ fun RotatableTriangle(
     initialScale1: Float = 1f,
     initialScale2: Float = 1f,
     initialTilt1: Float = -1f,
-    initialTilt2: Float = -1f
-
+    initialTilt2: Float = -1f,
+    areTrianglesSimilar: Boolean
 ) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -119,7 +118,7 @@ fun RotatableTriangle(
     var pB2 by remember { mutableStateOf(Offset.Zero) }
     var pC2 by remember { mutableStateOf(Offset.Zero) }
 
-    var isYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(true) }
+    var isYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
     var isInMovingMode by rememberSaveable { mutableStateOf( false ) }
 
 
@@ -132,17 +131,12 @@ fun RotatableTriangle(
                 Modifier.padding(8.dp)
             else
                 Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
-            text = "Os triângulos a seguir são semelhantes?",
+            text = if(!isInMovingMode) "Os triângulos a seguir são semelhantes?" else "Mova os triângulos até que eles " +
+                    "fiquem do mesmo tamanho",
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             color = textColor
         )
-        Button(
-            modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
-            onClick = { isInMovingMode = !isInMovingMode}
-        ) {
-            Text(if(isInMovingMode) "Stop" else "Start")
-        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -289,7 +283,7 @@ fun RotatableTriangle(
                 }
                 //OtherButtons()
             } else{
-                YesOrNoButtons()
+                YesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar)
             }
             val triangle1 = TrianglePoints(pA1, pB1, pC1)
             val triangle2 = TrianglePoints(pA2, pB2, pC2)
@@ -370,12 +364,12 @@ fun AnimatedFloatButton(
     }
 }
 @Composable
-fun YesOrNoButtons() {
+fun YesOrNoButtons(areTrianglesSimilar: Boolean) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     var showFeedback by remember { mutableStateOf(false) }
-    var isAnswerCorrect by remember { mutableStateOf(false) }
+    var userAnswer by remember { mutableStateOf(false) }
 
     val isDark = isSystemInDarkTheme()
     Box(
@@ -387,7 +381,6 @@ fun YesOrNoButtons() {
             Button(
                 modifier = buttonModifier,
                 onClick = {
-                    isAnswerCorrect = true
                     showFeedback = true
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -399,7 +392,6 @@ fun YesOrNoButtons() {
             Button(
                 modifier = buttonModifier,
                 onClick = {
-                    isAnswerCorrect = false
                     showFeedback = true
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -432,9 +424,9 @@ fun YesOrNoButtons() {
     }
     if (showFeedback) {
         QuestionFeedbackPopup(
-            isCorrect = isAnswerCorrect,
+            isCorrect = areTrianglesSimilar,
             onDismiss = { showFeedback = false },
-            explanation = if (isAnswerCorrect)
+            explanation = if (areTrianglesSimilar)
                 "Sim! Os Triangulos são semelhantes (explicação...)."
             else
                 "Os triângulos são SIM semelhantes."

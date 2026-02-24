@@ -1,6 +1,7 @@
 package com.lk.matemticainterativa.ui.components.questionfeedback
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +39,8 @@ fun QuestionFeedbackPopup(
     onDismiss: () -> Unit,
     explanation: String
 ) {
+    val isDark = isSystemInDarkTheme()
+
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
@@ -48,11 +51,11 @@ fun QuestionFeedbackPopup(
         ) {
             Column(
                 modifier = Modifier
-                    .background(
-                        if (isCorrect) 
-                            Color(0xFFF0FDF4) 
-                        else 
-                            Color(0xFFFEF2F2)
+                    .background(if(isDark){
+                        if (isCorrect) Color(0xFF071307) else Color(0xFF1E0909)
+                    }else{
+                        if (isCorrect) Color(0xFFF0FDF4)else Color(0xFFFEF2F2)
+                    }
                     )
                     .padding(24.dp)
             ) {
@@ -80,10 +83,11 @@ fun QuestionFeedbackPopup(
                         text = if (isCorrect) "Correto!" else "Errado",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = if (isCorrect) 
-                            Color(0xFF22C55E) 
-                        else 
-                            Color(0xFFEF4444)
+                        color = if(isDark){
+                            if (isCorrect) Color(0xFF88DA78) else Color(0xFFEE7979)
+                        } else{
+                            if (isCorrect) Color(0xFF22C55E)else Color(0xFFEF4444)
+                        }
                     )
                 }
                 
@@ -93,7 +97,7 @@ fun QuestionFeedbackPopup(
                 Text(
                     text = explanation,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color(0xFF374151)
+                    color = if(isDark) Color(0xFFE0E0E0) else Color(0xFF374151)
                 )
                 
                 Spacer(modifier = Modifier.height(24.dp))
