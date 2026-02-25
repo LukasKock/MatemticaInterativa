@@ -124,6 +124,7 @@ fun RotatableTriangle(
     var wereYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
     var isInMovingMode by rememberSaveable { mutableStateOf( false ) }
     var showSuccess by rememberSaveable { mutableStateOf(false) }
+    var showCongratsMessage by rememberSaveable { mutableStateOf(false)}
 
 
     Column(modifier = Modifier.fillMaxSize()
@@ -136,11 +137,15 @@ fun RotatableTriangle(
             else
                 Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
             text = if(!isLandscape){
-                if(!isInMovingMode) "Os triângulos a seguir são semelhantes?" else "Toque num dos triângulos para selecioná-lo. " +
+                if(showSuccess || showCongratsMessage) "Os triângulos são semelhantes!"
+                else if(isInMovingMode) "Toque num dos triângulos para selecioná-lo. " +
                         "Mova e aumente ou diminua eles até que fiquem do mesmo tamanho"
+                else "Os triângulos a seguir são semelhantes?"
                 } else{
-                if(!isInMovingMode) "Os triângulos a seguir \nsão semelhantes?" else "Toque num dos triângulos para selecioná-lo. " +
-                        "Mova e aumente ou diminua eles até que fiquem do mesmo tamanho"
+                if(showSuccess || showCongratsMessage) "Os triângulos são semelhantes!"
+                else if(isInMovingMode) "Toque num dos triângulos \npara selecioná-lo. " +
+                        "Mova e aumente \nou diminua eles até que \nfiquem do mesmo tamanho"
+                else "Os triângulos a seguir \nsão semelhantes?"
                 },
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
@@ -309,7 +314,8 @@ fun RotatableTriangle(
                 }
             }
             BalloonAnimation(visible = showSuccess,
-                onFinished = { showSuccess = false })
+                onFinished = { showSuccess = false
+                showCongratsMessage = true})
         }
     }
 }
@@ -460,7 +466,7 @@ fun yesOrNoButtons(areTrianglesSimilar: Boolean,
     return wasDialogDismissed
 }
 fun areTrianglesAligned(trianglePoints1: TrianglePoints, trianglePoints2: TrianglePoints): Boolean {
-    val tolerance = 60f
+    val tolerance = 45f
     return abs(trianglePoints1.pA.x - trianglePoints2.pA.x) +
             abs(trianglePoints1.pA.y - trianglePoints2.pA.y) +
 
