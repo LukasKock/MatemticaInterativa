@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
-import com.lk.matemticainterativa.ui.components.triangle.RotatableTriangle
+import com.lk.matemticainterativa.ui.components.triangle.RotatableTriangles
 
 
 @Composable
 fun MainScreen(username: String) {
-    RotatableTriangle(
+    RotatableTriangles(
         a1 = 600f, b1 = 800f, c1 = 1000f,
         a2 = 300f, b2 = 400f, c2 = 500f,
         initialOffset1 = Offset(0f, -150f),
