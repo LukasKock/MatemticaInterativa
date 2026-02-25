@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 import com.lk.matemticainterativa.ui.components.questionfeedback.QuestionFeedbackPopup
 import kotlin.math.*
 
@@ -122,6 +123,7 @@ fun RotatableTriangle(
 
     var wereYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
     var isInMovingMode by rememberSaveable { mutableStateOf( false ) }
+    var showSuccess by rememberSaveable { mutableStateOf(false) }
 
 
     Column(modifier = Modifier.fillMaxSize()
@@ -133,8 +135,13 @@ fun RotatableTriangle(
                 Modifier.padding(8.dp)
             else
                 Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
-            text = if(!isInMovingMode) "Os triângulos a seguir são semelhantes?" else "Mova os triângulos até que eles " +
-                    "fiquem do mesmo tamanho",
+            text = if(!isLandscape){
+                if(!isInMovingMode) "Os triângulos a seguir são semelhantes?" else "Toque num dos triângulos para selecioná-lo. " +
+                        "Mova e aumente ou diminua eles até que fiquem do mesmo tamanho"
+                } else{
+                if(!isInMovingMode) "Os triângulos a seguir \nsão semelhantes?" else "Toque num dos triângulos para selecioná-lo. " +
+                        "Mova e aumente ou diminua eles até que fiquem do mesmo tamanho"
+                },
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             color = textColor
@@ -284,13 +291,25 @@ fun RotatableTriangle(
                     }
                 }
             } else{
-                wereYesOrNoButtonsPressed = (YesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
+                wereYesOrNoButtonsPressed = (yesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
                         explanationCorrect = explanationCorrect,
                         explanationFalse = explanationFalse))
                 isInMovingMode = wereYesOrNoButtonsPressed
             }
-            val triangle1 = TrianglePoints(pA1, pB1, pC1)
-            val triangle2 = TrianglePoints(pA2, pB2, pC2)
+
+            LaunchedEffect(isInMovingMode, pA1, pB1, pC1, pA2, pB2, pC2) {
+                if (isInMovingMode) {
+                    val triangle1 = TrianglePoints(pA1, pB1, pC1)
+                    val triangle2 = TrianglePoints(pA2, pB2, pC2)
+
+                    if (areTrianglesAligned(triangle1, triangle2)) {
+                        isInMovingMode = false
+                        showSuccess = true
+                    }
+                }
+            }
+            BalloonAnimation(visible = showSuccess,
+                onFinished = { showSuccess = false })
         }
     }
 }
@@ -368,7 +387,7 @@ fun AnimatedFloatButton(
     }
 }
 @Composable
-fun YesOrNoButtons(areTrianglesSimilar: Boolean,
+fun yesOrNoButtons(areTrianglesSimilar: Boolean,
                    explanationCorrect: String,
                    explanationFalse: String): Boolean {
     val configuration = LocalConfiguration.current
