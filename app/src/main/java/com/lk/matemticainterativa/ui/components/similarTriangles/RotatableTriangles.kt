@@ -289,17 +289,3 @@ fun RotatableTriangles(
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
