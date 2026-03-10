@@ -140,11 +140,13 @@ fun RotatableTriangles(
                 if(showSuccess || showCongratsMessage) "Os triângulos são semelhantes!"
                 else if(isInMovingMode) "Toque num dos triângulos para selecioná-lo. " +
                         "Mova e aumente ou diminua eles até que fiquem do mesmo tamanho"
+                else if(!isInMovingMode && wereYesOrNoButtonsPressed) "Atividade terminada"
                 else "Os triângulos a seguir são semelhantes?"
                 } else{
                 if(showSuccess || showCongratsMessage) "Os triângulos são semelhantes!"
                 else if(isInMovingMode) "Toque num dos triângulos \npara selecioná-lo. " +
                         "Mova e aumente \nou diminua eles até que \nfiquem do mesmo tamanho"
+                else if(!isInMovingMode && wereYesOrNoButtonsPressed) "Atividade terminada"
                 else "Os triângulos a seguir \nsão semelhantes?"
                 },
             fontSize = 20.sp,
@@ -299,7 +301,7 @@ fun RotatableTriangles(
                 wereYesOrNoButtonsPressed = (yesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
                         explanationCorrect = explanationCorrect,
                         explanationFalse = explanationFalse))
-                isInMovingMode = wereYesOrNoButtonsPressed
+                if(areTrianglesSimilar) isInMovingMode = wereYesOrNoButtonsPressed
             }
 
             LaunchedEffect(isInMovingMode, pA1, pB1, pC1, pA2, pB2, pC2) {
