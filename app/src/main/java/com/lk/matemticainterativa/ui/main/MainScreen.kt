@@ -26,4 +26,18 @@ fun MainScreen(username: String) {
         areTrianglesSimilar = true,
         explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque seus ângulos são iguais",
         explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais")
+
+//    RotatableTriangles(
+//        a1 = 500f, b1 = 700f, c1 = 900f,
+//        a2 = 400f, b2 = 560f, c2 = 600f,
+//        initialOffset1 = Offset(0f, -150f),
+//        initialOffset2 = Offset(-20f, -340f),
+//        initialRotation1 = 100f,
+//        initialRotation2 = 98f,
+//        initialScale1 = 1.3f,
+//        initialScale2 = 1.3f,
+//        initialTilt2 = -1f,
+//        areTrianglesSimilar = false,
+//        explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque seus ângulos são diferentes",
+//        explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes")
 }

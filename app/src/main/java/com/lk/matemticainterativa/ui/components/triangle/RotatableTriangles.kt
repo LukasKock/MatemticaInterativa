@@ -413,7 +413,7 @@ fun yesOrNoButtons(areTrianglesSimilar: Boolean,
             Button(
                 modifier = buttonModifier,
                 onClick = {
-                    if(areTrianglesSimilar) isUserAnswerCorrect = true
+                    if(areTrianglesSimilar) isUserAnswerCorrect = true else false
                     showFeedback = true
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -425,7 +425,7 @@ fun yesOrNoButtons(areTrianglesSimilar: Boolean,
             Button(
                 modifier = buttonModifier,
                 onClick = {
-                    if(areTrianglesSimilar) isUserAnswerCorrect = false
+                    if(!areTrianglesSimilar) isUserAnswerCorrect = true else false
                     showFeedback = true
                 },
                 colors = ButtonDefaults.buttonColors(
