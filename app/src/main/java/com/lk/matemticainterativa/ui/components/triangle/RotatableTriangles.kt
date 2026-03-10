@@ -134,8 +134,10 @@ fun RotatableTriangles(
         Text(
             modifier = if(!isLandscape)
                 Modifier.padding(8.dp)
+                    .align(Alignment.CenterHorizontally)
             else
-                Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+                Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
+                    .align(Alignment.CenterHorizontally),
             text = if(!isLandscape){
                 if(showSuccess || showCongratsMessage) "Os triângulos são semelhantes!"
                 else if(isInMovingMode) "Toque num dos triângulos para selecioná-lo. " +
