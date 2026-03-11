@@ -13,8 +13,12 @@ import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -35,7 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 
 @Composable
-fun RotatableTriangles(
+fun SimilarTriangles(
     a1: Float, // side opposite vertex A (BC)
     b1: Float, // side opposite vertex B (AC)
     c1: Float,  // side opposite vertex C (AB)
@@ -110,33 +114,22 @@ fun RotatableTriangles(
     var showCongratsMessage by rememberSaveable { mutableStateOf(false)}
 
 
-    Column(modifier = Modifier.fillMaxSize()
-        .background(color = backgroundColor)
+
+    val titleText = when {
+        showSuccess || showCongratsMessage ->
+            "Os triângulos são semelhantes!"
+        isInMovingMode ->
+            "Toque num dos triângulos para selecioná-lo. " +
+                    "Mova e aumente ou diminua eles até que fiquem do mesmo tamanho"
+        !isInMovingMode && wereYesOrNoButtonsPressed -> "Atividade terminada"
+        else ->
+            "Os triângulos a seguir são semelhantes?"
+    }
+
+    @Composable
+    fun TriangleCanvasContent(
+        /* pass needed states if necessary */
     ) {
-        Spacer(modifier = Modifier.padding(16.dp))
-        Text(
-            modifier = if(!isLandscape)
-                Modifier.padding(8.dp)
-                    .align(Alignment.CenterHorizontally)
-            else
-                Modifier.padding(start = 48.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
-            text = if(!isLandscape){
-                if(showSuccess || showCongratsMessage) "Os triângulos são semelhantes!"
-                else if(isInMovingMode) "Toque num dos triângulos para selecioná-lo. " +
-                        "Mova e aumente ou diminua eles até que fiquem do mesmo tamanho"
-                else if(!isInMovingMode && wereYesOrNoButtonsPressed) "Atividade terminada"
-                else "Os triângulos a seguir são semelhantes?"
-                } else{
-                if(showSuccess || showCongratsMessage) "Os triângulos são semelhantes!"
-                else if(isInMovingMode) "Toque num dos triângulos \npara selecioná-lo. " +
-                        "Mova e aumente \nou diminua eles até que \nfiquem do mesmo tamanho"
-                else if(!isInMovingMode && wereYesOrNoButtonsPressed) "Atividade terminada"
-                else "Os triângulos a seguir \nsão semelhantes?"
-                },
-            fontSize = 20.sp,
-            textAlign = TextAlign.Center,
-            color = textColor
-        )
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -187,6 +180,7 @@ fun RotatableTriangles(
                     }
                 }
         ) {
+
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val canvasCenter = size.center
 
@@ -251,6 +245,7 @@ fun RotatableTriangles(
                 }
 
             }
+
             if(wereYesOrNoButtonsPressed){
                 AnimatedFloatButton(
                     isTriangle1Selected,
@@ -265,8 +260,8 @@ fun RotatableTriangles(
                 }
             } else{
                 wereYesOrNoButtonsPressed = (yesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
-                        explanationCorrect = explanationCorrect,
-                        explanationFalse = explanationFalse))
+                    explanationCorrect = explanationCorrect,
+                    explanationFalse = explanationFalse))
                 if(areTrianglesSimilar) isInMovingMode = wereYesOrNoButtonsPressed
             }
 
@@ -283,9 +278,98 @@ fun RotatableTriangles(
             }
             BalloonAnimation(visible = showSuccess,
                 onFinished = { showSuccess = false
-                showCongratsMessage = true
-                isTriangle1Selected = false
-                isTriangle2Selected = false})
+                    showCongratsMessage = true
+                    isTriangle1Selected = false
+                    isTriangle2Selected = false})
+        }
+    }
+    if(!isLandscape){
+        PortraitLayout(
+            backgroundColor = backgroundColor,
+            text = titleText,
+            textColor = textColor
+        ) {
+            TriangleCanvasContent()
+        }
+    } else {
+        LandscapeLayout(
+            backgroundColor = backgroundColor,
+            text = titleText,
+            textColor = textColor
+        ) {
+            TriangleCanvasContent()
         }
     }
 }
+@Composable
+private fun PortraitLayout(
+    backgroundColor: Color,
+    text: String,
+    textColor: Color,
+    content: @Composable () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = text,
+            modifier = Modifier.padding(8.dp),
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+            color = textColor
+        )
+
+        Box(
+            modifier = Modifier
+                .weight(1f)   // IMPORTANT
+                .fillMaxWidth()
+        ) {
+            content()
+        }
+    }
+}
+
+@Composable
+private fun LandscapeLayout(
+    backgroundColor: Color,
+    text: String,
+    textColor: Color,
+    content: @Composable () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+    ) {
+
+        // LEFT PANEL
+        Box(
+            modifier = Modifier
+                .weight(0.35f)  // adjust this ratio
+                .fillMaxHeight()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = text,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                color = textColor
+            )
+        }
+
+        // RIGHT PANEL (Canvas)
+        Box(
+            modifier = Modifier
+                .weight(0.65f)
+                .fillMaxHeight()
+        ) {
+            content()
+        }
+    }
+}
+
