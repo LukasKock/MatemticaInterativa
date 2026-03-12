@@ -22,7 +22,7 @@ fun MainScreen(username: String) {
         explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque seus ângulos são iguais",
         explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais")
 
-//    RotatableTriangles(
+//    SimilarTriangles(
 //        a1 = 500f, b1 = 700f, c1 = 900f,
 //        a2 = 400f, b2 = 560f, c2 = 600f,
 //        initialOffset1 = Offset(100f, 0f),

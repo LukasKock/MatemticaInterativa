@@ -261,11 +261,6 @@ fun SimilarTriangles(
                 visible = wereYesOrNoButtonsPressed
             )
 
-            yesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
-                explanationCorrect = explanationCorrect,
-                explanationFalse = explanationFalse,
-                visible = !wereYesOrNoButtonsPressed,
-                onFinished = {wereYesOrNoButtonsPressed = true})
             if(areTrianglesSimilar) isInMovingMode = wereYesOrNoButtonsPressed
 
 
@@ -291,18 +286,26 @@ fun SimilarTriangles(
         PortraitLayout(
             backgroundColor = backgroundColor,
             text = titleText,
-            textColor = textColor
-        ) {
-            TriangleCanvasContent()
-        }
+            textColor = textColor,
+            content = { TriangleCanvasContent() },
+            buttonsContent = {YesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
+                explanationCorrect = explanationCorrect,
+                explanationFalse = explanationFalse,
+                visible = !wereYesOrNoButtonsPressed,
+                onFinished = {wereYesOrNoButtonsPressed = true})}
+        )
     } else {
         LandscapeLayout(
             backgroundColor = backgroundColor,
             text = titleText,
-            textColor = textColor
-        ) {
-            TriangleCanvasContent()
-        }
+            textColor = textColor,
+            content = { TriangleCanvasContent() },
+            buttonsContent = {YesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
+                explanationCorrect = explanationCorrect,
+                explanationFalse = explanationFalse,
+                visible = !wereYesOrNoButtonsPressed,
+                onFinished = {wereYesOrNoButtonsPressed = true})}
+        )
     }
 }
 @Composable
@@ -310,7 +313,8 @@ private fun PortraitLayout(
     backgroundColor: Color,
     text: String,
     textColor: Color,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
+    buttonsContent: @Composable () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -333,6 +337,7 @@ private fun PortraitLayout(
                 .fillMaxWidth()
         ) {
             content()
+            buttonsContent()
         }
     }
 }
@@ -342,7 +347,8 @@ private fun LandscapeLayout(
     backgroundColor: Color,
     text: String,
     textColor: Color,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
+    buttonsContent: @Composable () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -358,12 +364,15 @@ private fun LandscapeLayout(
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = text,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                color = textColor
-            )
+            Column {
+                Text(
+                    text = text,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    color = textColor
+                )
+                buttonsContent()
+            }
         }
 
         // RIGHT PANEL (Canvas)

@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.lk.matemticainterativa.ui.components.questionfeedback.QuestionFeedbackPopup
 
 @Composable
-fun yesOrNoButtons(areTrianglesSimilar: Boolean,
+fun YesOrNoButtons(areTrianglesSimilar: Boolean,
                    explanationCorrect: String,
                    explanationFalse: String,
                    visible: Boolean,
