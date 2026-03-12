@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
+import com.lk.matemticainterativa.ui.modes.EnableImmersiveMode
 
 @Composable
 fun SimilarTriangles(
@@ -321,7 +322,7 @@ private fun PortraitLayout(
             .fillMaxSize()
             .background(backgroundColor)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Text(
             text = text,
@@ -350,6 +351,8 @@ private fun LandscapeLayout(
     content: @Composable () -> Unit,
     buttonsContent: @Composable () -> Unit
 ) {
+    EnableImmersiveMode()
+
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -365,6 +368,7 @@ private fun LandscapeLayout(
             contentAlignment = Alignment.Center
         ) {
             Column {
+                Spacer(Modifier.height(16.dp))
                 Text(
                     text = text,
                     fontSize = 20.sp,
