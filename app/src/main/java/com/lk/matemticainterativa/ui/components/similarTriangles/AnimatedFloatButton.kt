@@ -30,8 +30,11 @@ fun AnimatedFloatButton(
     isTriangle2Selected: Boolean,
     initialTilt1: Float,
     initialTilt2: Float,
-    onTiltChange: (Float) -> Unit
+    onTiltChange: (Float) -> Unit,
+    visible: Boolean
 ) {
+    if(!visible) return
+
     val initToggle1 = initialTilt1 != -1f
     val initToggle2 = initialTilt2 != -1f
 

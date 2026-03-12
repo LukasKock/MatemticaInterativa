@@ -246,24 +246,28 @@ fun SimilarTriangles(
 
             }
 
-            if(wereYesOrNoButtonsPressed){
-                AnimatedFloatButton(
-                    isTriangle1Selected,
-                    isTriangle2Selected,
-                    initialTilt1,
-                    initialTilt2,
-                ){ newTilt ->
+            AnimatedFloatButton(
+                isTriangle1Selected,
+                isTriangle2Selected,
+                initialTilt1,
+                initialTilt2,
+                onTiltChange = {
+                        newTilt ->
                     when {
                         isTriangle1Selected -> tilt1 = newTilt
                         isTriangle2Selected -> tilt2 = newTilt
                     }
-                }
-            } else{
-                wereYesOrNoButtonsPressed = (yesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
-                    explanationCorrect = explanationCorrect,
-                    explanationFalse = explanationFalse))
-                if(areTrianglesSimilar) isInMovingMode = wereYesOrNoButtonsPressed
-            }
+                },
+                visible = wereYesOrNoButtonsPressed
+            )
+
+            yesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
+                explanationCorrect = explanationCorrect,
+                explanationFalse = explanationFalse,
+                visible = !wereYesOrNoButtonsPressed,
+                onFinished = {wereYesOrNoButtonsPressed = true})
+            if(areTrianglesSimilar) isInMovingMode = wereYesOrNoButtonsPressed
+
 
             LaunchedEffect(isInMovingMode, pA1, pB1, pC1, pA2, pB2, pC2) {
                 if (isInMovingMode) {

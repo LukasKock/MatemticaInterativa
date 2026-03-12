@@ -29,7 +29,12 @@ import com.lk.matemticainterativa.ui.components.questionfeedback.QuestionFeedbac
 @Composable
 fun yesOrNoButtons(areTrianglesSimilar: Boolean,
                    explanationCorrect: String,
-                   explanationFalse: String): Boolean {
+                   explanationFalse: String,
+                   visible: Boolean,
+                   onFinished: @Composable () -> Unit) {
+
+    if(!visible) return
+
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
@@ -94,8 +99,8 @@ fun yesOrNoButtons(areTrianglesSimilar: Boolean,
         QuestionFeedbackPopup(
             isCorrect = isUserAnswerCorrect,
             onDismiss = { showFeedback = false
-                wasDialogDismissed = true},
+                wasDialogDismissed = true },
             explanation = if (isUserAnswerCorrect) explanationCorrect else explanationFalse)
     }
-    return wasDialogDismissed
+    if(wasDialogDismissed) onFinished()
 }
