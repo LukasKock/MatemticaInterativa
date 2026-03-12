@@ -120,8 +120,8 @@ fun SimilarTriangles(
         showSuccess || showCongratsMessage ->
             "Os triângulos são semelhantes!"
         isInMovingMode ->
-            "Toque num dos triângulos para selecioná-lo. " +
-                    "Mova e aumente ou diminua eles até que fiquem do mesmo tamanho"
+            "Dê um toque rápido num dos triângulos para selecioná-lo. " +
+                    "Mova, aumente e/ou diminua-os até que fiquem sobrepostos"
         !isInMovingMode && wereYesOrNoButtonsPressed -> "Atividade terminada"
         else ->
             "Os triângulos a seguir são semelhantes?"
