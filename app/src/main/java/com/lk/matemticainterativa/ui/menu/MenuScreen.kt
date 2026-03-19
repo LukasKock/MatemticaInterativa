@@ -13,11 +13,6 @@ import androidx.navigation.NavController
 fun MenuScreen(navController: NavController) {
 
     LazyColumn(Modifier.padding(0.dp, 20.dp)) {
-        item {
-            MenuItem("Menu principal") {
-                navController.navigate("menu")
-            }
-        }
 
         item {
             MenuItem("Triângulos") {
