@@ -15,19 +15,15 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.lk.matemticainterativa.ui.components.CartesianCanvas
-import com.lk.matemticainterativa.ui.components.similarTriangles.SimilarTriangles
 import com.lk.matemticainterativa.ui.menu.MenuScreen
 
 
 @Composable
 fun MainScreen(username: String,
-               navController: NavController,
-               onLogout: () -> Unit = {},
-               onSettings: () -> Unit = {}) {
+               navController: NavController
+) {
     val isDark = isSystemInDarkTheme()
 
-    val containerColor = if (isDark) Color.Black else Color.White
     val contentColor = if (isDark) MaterialTheme.colorScheme.onSurfaceVariant else
         MaterialTheme.colorScheme.background
 
@@ -36,7 +32,7 @@ fun MainScreen(username: String,
         containerColor = contentColor,
         topBar = {
             MainTopBar(
-                onSettingsClick = onSettings,
+                onSettingsClick = { navController.navigate("menu") },
                 onLogoutClick = { navController.navigate("login") }
             )
         }

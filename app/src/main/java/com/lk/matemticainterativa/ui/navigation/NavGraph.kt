@@ -10,6 +10,7 @@ import com.lk.matemticainterativa.ui.components.similarTriangles.SimilarTriangle
 import com.lk.matemticainterativa.ui.login.LoginScreen
 import com.lk.matemticainterativa.ui.main.MainScreen
 import com.lk.matemticainterativa.ui.menu.MenuScreen
+import com.lk.matemticainterativa.ui.menu.SubMenuScreen
 
 @Composable
 fun AppNav(){
@@ -20,10 +21,10 @@ fun AppNav(){
             val username = backStackEntry.arguments?.getString("username") ?: "Usuário não encontrado"
             MainScreen(username = username, navController = navController)
         }
-        composable("menu"){
-            MenuScreen(navController)
+        composable("triangles/"){
+            SubMenuScreen(navController)
         }
-        composable("triangles"){
+        composable("triangles/1"){
             SimilarTriangles(
                 a1 = 600f, b1 = 800f, c1 = 1000f,
                 a2 = 300f, b2 = 400f, c2 = 500f,
@@ -38,7 +39,7 @@ fun AppNav(){
                 explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque seus ângulos são iguais",
                 explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais")
         }
-        composable("triangles2"){
+        composable("triangles/2"){
                 SimilarTriangles(
                 a1 = 500f, b1 = 700f, c1 = 900f,
                 a2 = 400f, b2 = 560f, c2 = 600f,
