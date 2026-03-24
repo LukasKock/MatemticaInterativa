@@ -36,6 +36,21 @@ fun SubMenuScreen(navController: NavController) {
                 navController.navigate("triangles/2")
             }
         }
+        item {
+            MenuItem("Exercício 3") {
+                navController.navigate("triangles/3")
+            }
+        }
+        item {
+            MenuItem("Exercício 4") {
+                navController.navigate("triangles/4")
+            }
+        }
+        item {
+            MenuItem("Exercício 5") {
+                navController.navigate("triangles/5")
+            }
+        }
 
     }
 }
