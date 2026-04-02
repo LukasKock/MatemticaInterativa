@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("")}
+    var email by remember { mutableStateOf("")}
     var message by remember { mutableStateOf("")}
 
     val scrollState = rememberScrollState()
@@ -43,19 +44,14 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
     {
         TextField(value = username, onValueChange = {username = it}, label = { Text("Usuário") })
         Spacer(Modifier.height(6.dp))
+        TextField(value = email, onValueChange = {email = it}, label = { Text("Email") })
+        Spacer(Modifier.height(6.dp))
         TextField(value = password, onValueChange = {password = it}, label = { Text("Senha") })
         Spacer(Modifier.height(6.dp))
 
         Button(onClick = {
-            viewModel.login(username, password){ success ->
-                if(success){
-                    navController.navigate("main/$username"){
-                        popUpTo("login") {inclusive = true}
-                    }
-                } else {
-                    message = "Usuário ou senha incorretos"
-                }
-            }
+            viewModel.login(username, password)
+            navController.navigate("main/$username")
         }) {
             Text("Login")
         }
@@ -63,7 +59,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
         Spacer(Modifier.height(8.dp))
 
         Button(onClick = {
-            viewModel.register(username, password)
+            viewModel.register(username, email, password)
             message = "Usuário registrado com sucesso"
         }) {
             Text("Cadastrar")

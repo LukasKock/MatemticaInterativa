@@ -13,7 +13,7 @@ import com.lk.matemticainterativa.ui.menu.SubMenuScreen
 @Composable
 fun AppNav(){
     val navController = rememberNavController()
-    NavHost(navController, startDestination = "main/"){
+    NavHost(navController, startDestination = "login"){
         composable("login") { LoginScreen(navController)}
         composable("main/{username}"){ backStackEntry ->
             val username = backStackEntry.arguments?.getString("username") ?: "Usuário não encontrado"
