@@ -9,10 +9,12 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.security.MessageDigest
+import java.util.UUID
 
 object ApiClient {
     private val client = OkHttpClient()
-    private const val BASE_URL = "http://172.31.59.52:3000"
+//    private const val BASE_URL = "http://172.31.59.52:3000"
+    private const val BASE_URL = "http://192.168.0.78:3000"
 
     suspend fun getUsers(): List<User> = withContext(Dispatchers.IO) {
         val request = Request.Builder()
@@ -31,6 +33,7 @@ object ApiClient {
     }
 
     fun createUser(
+        id: UUID,
         username: String,
         email: String,
         password: String  // plain text — will be hashed here
@@ -38,6 +41,7 @@ object ApiClient {
         return try {
             val json = Gson().toJson(
                 mapOf(
+                    "id" to id.toString(),
                     "username" to username,
                     "email" to email,
                     "password" to hashPassword(password)

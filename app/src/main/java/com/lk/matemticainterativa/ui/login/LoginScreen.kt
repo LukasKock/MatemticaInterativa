@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +31,9 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
     var password by remember { mutableStateOf("")}
     var email by remember { mutableStateOf("")}
     var message by remember { mutableStateOf("")}
+
+    val viewModel: LoginViewModel = viewModel()
+    val authState by viewModel.authState.collectAsState()
 
     val scrollState = rememberScrollState()
     val configuration = LocalConfiguration.current
@@ -60,11 +65,17 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
 
         Button(onClick = {
             viewModel.register(username, email, password)
-            message = "Usuário registrado com sucesso"
         }) {
             Text("Cadastrar")
         }
         Spacer(Modifier.height(8.dp))
+        // React to state
+        when (authState) {
+            is AuthState.Loading -> CircularProgressIndicator()
+            is AuthState.Success -> { navController.navigate("main/$username") }
+            is AuthState.Error   -> Text((authState as AuthState.Error).message)
+            else -> {}
+        }
         Text(message)
     }
 }

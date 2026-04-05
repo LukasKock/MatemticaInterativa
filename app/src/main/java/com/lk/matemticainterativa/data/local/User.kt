@@ -6,7 +6,7 @@ import java.util.UUID
 
 @Entity(tableName = "users")
 data class User(
-    @PrimaryKey val id: UUID = UUID.randomUUID(),
+    @PrimaryKey val id: UUID,
     val username: String,
     val password: String,
     val email: String

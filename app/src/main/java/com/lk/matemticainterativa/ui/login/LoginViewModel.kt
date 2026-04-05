@@ -9,6 +9,7 @@ import com.lk.matemticainterativa.data.local.User
 import com.lk.matemticainterativa.okhttpapi.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -28,6 +29,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     ).build()
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
+    val authState: StateFlow<AuthState> = _authState
 
 
 
@@ -45,11 +47,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
 
+            val id = UUID.randomUUID()
             // 2. Save locally in Room (with hashed password)
             withContext(Dispatchers.IO) {
                 db.userDao().insertUser(
                     User(
-                        id = UUID.randomUUID(),
+                        id = id,
                         username = username,
                         email = email,
                         password = ApiClient.hashPassword(password)
@@ -59,7 +62,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
             // 1. Send to remote MariaDB via OkHttp
             val remoteSuccess = withContext(Dispatchers.IO) {
-                ApiClient.createUser(username = username, email = email, password = password)
+                ApiClient.createUser(id = id, username = username, email = email, password = password)
             }
 
             if (!remoteSuccess) {
