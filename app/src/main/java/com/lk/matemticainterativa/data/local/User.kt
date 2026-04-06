@@ -8,6 +8,6 @@ import java.util.UUID
 data class User(
     @PrimaryKey val id: UUID,
     val username: String,
-    val password: String,
+    val password: String, //delete password
     val email: String
 )

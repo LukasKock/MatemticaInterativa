@@ -98,7 +98,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 when (serverResult) {
                     true -> { _authState.value = AuthState.Success; return@launch }
                     false -> { _authState.value = AuthState.Error("Usuário ou senha inválidos"); return@launch }
-                    null -> { /* server unreachable, fall through to local */ }
+                    null -> { /* server unreachable, fall through to local:
+                    -- create an AuthState.Error here and delete the offline login --
+                     */ }
                 }
             }
 
