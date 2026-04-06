@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
-import com.lk.matemticainterativa.data.local.AppDataBase
+import com.lk.matemticainterativa.data.local.AppDatabase
 import com.lk.matemticainterativa.data.local.User
 import com.lk.matemticainterativa.okhttpapi.ApiClient
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val db = Room.databaseBuilder(
         application,
-        AppDataBase::class.java,
+        AppDatabase::class.java,
         "app_database"
     ).build()
 
