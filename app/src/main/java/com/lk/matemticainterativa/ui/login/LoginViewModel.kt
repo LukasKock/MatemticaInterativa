@@ -36,11 +36,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     // REGISTER — sends to remote API + saves locally
     fun register(username: String, email: String, password: String) {
         if (username.isBlank() || email.isBlank() || password.isBlank()) {
-            _authState.value = AuthState.Error("Fill in all fields")
+            _authState.value = AuthState.Error("Preencha todos os campos")
             return
         }
         if (password.length < 6) {
-            _authState.value = AuthState.Error("Password must be at least 6 characters")
+            _authState.value = AuthState.Error("A senha deve conter no mínimo 6 caracteres")
             return
         }
 
@@ -66,7 +66,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             if (!remoteSuccess) {
-                _authState.value = AuthState.Error("Could not connect to server")
+                _authState.value = AuthState.Error("Não foi possível se conectar com o servidor")
                 return@launch
             }
 
@@ -77,9 +77,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // LOGIN — checks local Room DB
-    fun login(username: String, password: String) {
-        if (username.isBlank() || password.isBlank()) {
-            _authState.value = AuthState.Error("Fill in all fields")
+    fun login(username: String, email: String, password: String) {
+        if (username.isBlank() || password.isBlank() || email.isBlank()) {
+            _authState.value = AuthState.Error("Preencha todos os campos")
             return
         }
 
@@ -90,7 +90,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 db.userDao().login(username, hashedPassword)
             }
             _authState.value = if (user != null) AuthState.Success
-            else AuthState.Error("Invalid username or password")
+            else AuthState.Error("Usúário ou senha inválidos")
         }
     }
     fun resetState() {

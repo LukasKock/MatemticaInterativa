@@ -55,10 +55,9 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
         Spacer(Modifier.height(6.dp))
 
         Button(onClick = {
-            viewModel.login(username, password)
-            navController.navigate("main/$username")
+            viewModel.login(username, email, password)
         }) {
-            Text("Login")
+            Text("Fazer Login")
         }
 
         Spacer(Modifier.height(8.dp))
