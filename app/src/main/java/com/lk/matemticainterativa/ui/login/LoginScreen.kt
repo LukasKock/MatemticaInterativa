@@ -30,7 +30,6 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("")}
     var email by remember { mutableStateOf("")}
-    var message by remember { mutableStateOf("")}
 
     val viewModel: LoginViewModel = viewModel()
     val authState by viewModel.authState.collectAsState()
@@ -75,6 +74,5 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewMo
             is AuthState.Error   -> Text((authState as AuthState.Error).message)
             else -> {}
         }
-        Text(message)
     }
 }
