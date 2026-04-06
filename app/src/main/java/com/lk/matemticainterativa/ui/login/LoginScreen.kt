@@ -26,7 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
+fun LoginScreen(navController: NavController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("")}
     var email by remember { mutableStateOf("")}
