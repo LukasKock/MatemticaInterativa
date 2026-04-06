@@ -1,6 +1,9 @@
 package com.lk.matemticainterativa.ui.login
 
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
@@ -76,7 +79,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // LOGIN — checks local Room DB
+    // LOGIN — checks local Room DB and in server
     fun login(username: String, email: String, password: String) {
         if (username.isBlank() || password.isBlank() || email.isBlank()) {
             _authState.value = AuthState.Error("Preencha todos os campos")
@@ -85,14 +88,38 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch {
             _authState.value = AuthState.Loading
+
+            if (isOnline()) {
+                // Try server first — sends plain password, bcrypt compares on server
+                val serverResult = withContext(Dispatchers.IO) {
+                    ApiClient.loginUser(username, email, password)
+                }
+
+                when (serverResult) {
+                    true -> { _authState.value = AuthState.Success; return@launch }
+                    false -> { _authState.value = AuthState.Error("Usuário ou senha inválidos"); return@launch }
+                    null -> { /* server unreachable, fall through to local */ }
+                }
+            }
+
+            // Offline fallback — local Room DB with SHA-256 hash
             val hashedPassword = ApiClient.hashPassword(password)
             val user = withContext(Dispatchers.IO) {
                 db.userDao().login(username, hashedPassword)
             }
             _authState.value = if (user != null) AuthState.Success
-            else AuthState.Error("Usúário ou senha inválidos")
+            else AuthState.Error("Usuário ou senha inválidos")
         }
     }
+
+    private fun isOnline(): Boolean {
+        val cm = getApplication<Application>()
+            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val caps = cm.getNetworkCapabilities(network) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
     fun resetState() {
         _authState.value = AuthState.Idle
     }

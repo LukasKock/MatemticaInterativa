@@ -13,7 +13,7 @@ import java.util.UUID
 
 object ApiClient {
     private val client = OkHttpClient()
-    private const val BASE_URL = "http://172.31.120.230:3000" //rede prefeitura
+    private const val BASE_URL = "http://172.31.59.52:3000" //rede prefeitura
 //    private const val BASE_URL = "http://192.168.0.78:3000" //casa
 //    private const val BASE_URL = "http://10.173.218.74:3000" //android USB anchor
 
@@ -45,7 +45,7 @@ object ApiClient {
                     "id" to id.toString(),
                     "username" to username,
                     "email" to email,
-                    "password" to hashPassword(password)
+                    "password" to password
                 )
             )
             val body = json.toRequestBody("application/json".toMediaType())
@@ -57,6 +57,29 @@ object ApiClient {
             client.newCall(request).execute().use { it.isSuccessful }
         } catch (e: Exception) {
             false
+        }
+    }
+    /** Returns true if server authenticated the user, null if unreachable. */
+    fun loginUser(username: String, email: String, password: String): Boolean? {
+        return try {
+            val json = Gson().toJson(
+                mapOf("username" to username, "email" to email, "password" to password)
+            )
+            val body = json.toRequestBody("application/json".toMediaType())
+            val request = Request.Builder()
+                .url("$BASE_URL/login")
+                .post(body)
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                when {
+                    response.isSuccessful -> true
+                    response.code == 401 -> false
+                    else -> null // server error — treat as unreachable
+                }
+            }
+        } catch (e: Exception) {
+            null // network unreachable
         }
     }
 }
