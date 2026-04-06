@@ -13,8 +13,9 @@ import java.util.UUID
 
 object ApiClient {
     private val client = OkHttpClient()
-//    private const val BASE_URL = "http://172.31.59.52:3000"
-    private const val BASE_URL = "http://192.168.0.78:3000"
+    private const val BASE_URL = "http://172.31.59.52:3000" //rede prefeitura
+//    private const val BASE_URL = "http://192.168.0.78:3000" //casa
+//    private const val BASE_URL = "http://10.173.218.74:3000" //android USB anchor
 
     suspend fun getUsers(): List<User> = withContext(Dispatchers.IO) {
         val request = Request.Builder()
