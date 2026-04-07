@@ -81,9 +81,7 @@ object ApiClient {
                 .post(body)
                 .build()
 
-            val testRequest = request.toString() + body + json
             client.newCall(request).execute().use { response ->
-                val testResponse = response.toString()
                 when {
                     response.isSuccessful -> true
                     response.code == 401 -> false
