@@ -2,18 +2,28 @@ package com.lk.matemticainterativa.okhttpapi
 
 import com.google.gson.Gson
 import com.lk.matemticainterativa.data.local.User
+import com.lk.matemticainterativa.okhttpapi.ApiClient.client
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import java.security.MessageDigest
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 object ApiClient {
-    private val client = OkHttpClient()
-//    private const val BASE_URL = "http://172.31.59.52:3000" //rede prefeitura
+//    private val client = OkHttpClient()
+    var timeOut: Int = 100 //testing -
+    private val client: OkHttpClient = OkHttpClient().newBuilder()
+        .connectTimeout(timeOut.toLong(), TimeUnit.SECONDS)
+        .readTimeout(timeOut.toLong(), TimeUnit.SECONDS)
+        .writeTimeout(timeOut.toLong(), TimeUnit.SECONDS)
+        .build() //for testing - bigger Timeout
+
+    //    private const val BASE_URL = "http://172.31.59.52:3000" //rede prefeitura
     private const val BASE_URL = "http://192.168.0.78:3000" //casa
 //    private const val BASE_URL = "http://10.173.218.74:3000" //android USB anchor
 
@@ -71,7 +81,9 @@ object ApiClient {
                 .post(body)
                 .build()
 
+            val testRequest = request.toString() + body + json
             client.newCall(request).execute().use { response ->
+                val testResponse = response.toString()
                 when {
                     response.isSuccessful -> true
                     response.code == 401 -> false
