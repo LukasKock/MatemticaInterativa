@@ -7,8 +7,11 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 
@@ -78,7 +82,11 @@ fun BalloonAnimation(
             text = "🎉 Parabéns!",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Center)
-        )
+            modifier = Modifier
+                .align(Alignment.Center)
+                .background(Color.White, shape = RoundedCornerShape(8.dp)) // white box
+                .border(2.dp, Color.Black, shape =
+                    RoundedCornerShape(8.dp)) // border
+                .padding(horizontal = 16.dp, vertical = 8.dp)) // space inside box        )
     }
 }
