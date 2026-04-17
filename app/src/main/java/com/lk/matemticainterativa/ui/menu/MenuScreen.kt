@@ -19,6 +19,16 @@ fun MenuScreen(navController: NavController) {
                 navController.navigate("triangles/")
             }
         }
+        item {
+            MenuItem("Plano Cartesiano") {
+                navController.navigate("cartesian/")
+            }
+        }
+        item {
+            MenuItem("Vetores") {
+                navController.navigate("vectors/")
+            }
+        }
 
     }
 }

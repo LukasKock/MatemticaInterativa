@@ -5,10 +5,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.lk.matemticainterativa.ui.components.CombinedTest.CartesianWithDistance
 import com.lk.matemticainterativa.ui.components.similarTriangles.SimilarTriangles
+import com.lk.matemticainterativa.ui.components.vectors.Vectors
 import com.lk.matemticainterativa.ui.login.LoginScreen
 import com.lk.matemticainterativa.ui.main.MainScreen
-import com.lk.matemticainterativa.ui.menu.SubMenuScreen
+import com.lk.matemticainterativa.ui.menu.submenus.SubMenuScreen
 
 @Composable
 fun AppNav(){
@@ -100,5 +102,7 @@ fun AppNav(){
                 explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque seus ângulos são diferentes",
                 explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes")
         }
+        composable("cartesian/"){ CartesianWithDistance() }
+        composable("vectors/"){ Vectors() }
     }
 }
