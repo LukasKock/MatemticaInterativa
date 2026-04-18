@@ -2,11 +2,13 @@ package com.lk.matemticainterativa.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.lk.matemticainterativa.ui.components.CombinedTest.CartesianWithDistance
 import com.lk.matemticainterativa.ui.components.similarTriangles.SimilarTriangles
+import com.lk.matemticainterativa.ui.components.vectors.VectorPoints
 import com.lk.matemticainterativa.ui.components.vectors.Vectors
 import com.lk.matemticainterativa.ui.login.LoginScreen
 import com.lk.matemticainterativa.ui.main.MainScreen
@@ -103,6 +105,11 @@ fun AppNav(){
                 explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes")
         }
         composable("cartesian/"){ CartesianWithDistance() }
-        composable("vectors/"){ Vectors() }
+        composable("vectors/"){ Vectors(
+            vector1 = VectorPoints(Offset(400f, 1200f), Offset(800f, 1400f)),
+            vector2 = VectorPoints(Offset(400f, 1200f), Offset(700f, 1600f)),
+            color1 = Color.Red,
+            color2 = Color.Blue
+        ) }
     }
 }
