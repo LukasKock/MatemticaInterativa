@@ -1,5 +1,5 @@
 [versions]
-agp = "8.11.2"
+agp = "8.13.2"
 gson = "2.13.2"
 kotlin = "2.0.21" # can't upgrade because of the okhttp
 coreKtx = "1.18.0"
