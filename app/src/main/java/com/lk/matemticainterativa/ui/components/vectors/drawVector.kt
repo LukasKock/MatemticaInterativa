@@ -7,7 +7,15 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun DrawScope.drawVector(vector: VectorPoints, color: Color) {
+fun DrawScope.drawVector(vector: VectorPoints, color: Color, isVectorSelected: Int?) {
+    if(isVectorSelected != null){
+        drawLine(
+            color = color.copy(alpha = 0.4f),
+            start = vector.startPoint,
+            end = vector.endPoint,
+            strokeWidth = 12f
+        )
+    }
     drawLine(
         color = color,
         start = vector.startPoint,
@@ -31,6 +39,10 @@ fun DrawScope.drawVector(vector: VectorPoints, color: Color) {
         (vector.endPoint.y - arrowLength * sin(angle + angleOffset)).toFloat()
     )
 
+    if(isVectorSelected != null){
+        drawLine(color.copy(alpha = 0.4f), vector.endPoint, arrowPoint1, strokeWidth = 8f)
+        drawLine(color.copy(alpha = 0.4f), vector.endPoint, arrowPoint2, strokeWidth = 8f)
+    }
     drawLine(color, vector.endPoint, arrowPoint1, strokeWidth = 4f)
     drawLine(color, vector.endPoint, arrowPoint2, strokeWidth = 4f)
 }

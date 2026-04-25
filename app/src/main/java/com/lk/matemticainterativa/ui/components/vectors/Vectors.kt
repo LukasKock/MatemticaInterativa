@@ -3,6 +3,7 @@ package com.lk.matemticainterativa.ui.components.vectors
 import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,10 +23,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import com.lk.matemticainterativa.ui.components.vectors.drawVector
 
 @Composable
 fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2: Color){
@@ -65,6 +68,23 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                     onDragEnd = {
                         selectedVector = null
                     })
+            }
+            .pointerInput(Unit){
+                detectTapGestures {
+                    val threshold = 40f
+                    
+                    when {
+                        distanceToSegment(it, vector1) < threshold -> {
+                            selectedVector = 1
+                        }
+                        distanceToSegment(it, vector2) < threshold -> {
+                            selectedVector = 2
+                        }
+                        else -> {
+                            selectedVector = null
+                        }
+                    }
+                }
             }){
             Button(
                 modifier = Modifier.padding(60.dp).align(Alignment.BottomCenter),
@@ -76,10 +96,7 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
             }
             Canvas(modifier = Modifier
                 .fillMaxSize()){
-
-                drawVector(vector1, color1)
-                drawVector(vector2, color2)
-
+                drawTwoVectors(vector1, vector2, color1, color2, selectedVector)
             }
 
         }
@@ -109,5 +126,18 @@ fun LandscapeLayout(content: @Composable () -> Unit){
         Box(modifier = Modifier.fillMaxSize()){
             content()
         }
+    }
+}
+fun DrawScope.drawTwoVectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2: Color, selectedVector: Int?){
+    if(selectedVector == 1){
+        drawVector(vector1, color1, selectedVector)
+        drawVector(vector2, color2, null)
+    }
+    else if(selectedVector ==2){
+        drawVector(vector1, color1, null)
+        drawVector(vector2, color2, selectedVector)
+    } else{
+        drawVector(vector1, color1, selectedVector)
+        drawVector(vector2, color2, selectedVector)
     }
 }
