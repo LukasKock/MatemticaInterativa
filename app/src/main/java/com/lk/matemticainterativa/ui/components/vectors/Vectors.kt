@@ -72,7 +72,7 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
             .pointerInput(Unit){
                 detectTapGestures {
                     val threshold = 40f
-                    
+
                     when {
                         distanceToSegment(it, vector1) < threshold -> {
                             selectedVector = 1
@@ -89,14 +89,25 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
             Button(
                 modifier = Modifier.padding(60.dp).align(Alignment.BottomCenter),
                 onClick = {
-                    vector1 = invertVectorKeepStart(vector1)
+                    if(selectedVector == 1){
+                        vector1 = invertVectorKeepStart(vector1)
+                    }
+                    else if(selectedVector == 2){
+                        vector2 = invertVectorKeepStart(vector2)
+                    }
                 }
             ) {
-                Text("Invert vector 1")
+                Text("Invert vector")
             }
             Canvas(modifier = Modifier
                 .fillMaxSize()){
                 drawTwoVectors(vector1, vector2, color1, color2, selectedVector)
+                if(calculateDeltas(vector1,vector2)){
+                    drawSnapVectorsLine(vector1, vector2)
+                }
+                if(calculateDeltas(vector2,vector1)){
+                    drawSnapVectorsLine(vector2, vector1)
+                }
             }
 
         }
