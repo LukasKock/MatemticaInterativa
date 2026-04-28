@@ -35,6 +35,7 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
 
     var vector1 by remember { mutableStateOf(vector1) }
     var vector2 by remember { mutableStateOf(vector2) }
+    var initialized by remember { mutableStateOf(false) }
 
     var selectedVector by remember { mutableStateOf<Int?>(null) }
 
@@ -124,6 +125,19 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
             }
             Canvas(modifier = Modifier
                 .fillMaxSize()){
+                val center = this.center
+
+                if (!initialized) {
+                    vector1 = vector1.copy(
+                        startPoint = center,
+                        endPoint = center + (vector1.endPoint - vector1.startPoint)
+                    )
+                    vector2 = vector2.copy(
+                        startPoint = center,
+                        endPoint = center + (vector2.endPoint - vector2.startPoint)
+                    )
+                    initialized = true
+                }
                 drawTwoVectors(vector1, vector2, color1, color2, selectedVector)
                 if(calculateDeltasFloat(vector1,vector2)){
                     drawSnapVectorsLine(vector1, vector2)

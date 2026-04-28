@@ -106,8 +106,8 @@ fun AppNav(){
         }
         composable("cartesian/"){ CartesianWithDistance() }
         composable("vectors/"){ Vectors(
-            vector1 = VectorPoints(Offset(400f, 1200f), Offset(800f, 1400f)),
-            vector2 = VectorPoints(Offset(400f, 1200f), Offset(700f, 1600f)),
+            vector1 = VectorPoints(Offset(0f, 0f), Offset(300f, -200f)),
+            vector2 = VectorPoints(Offset(0f, 0f), Offset(400f, 300f)),
             color1 = Color.Red,
             color2 = Color.Blue
         ) }
