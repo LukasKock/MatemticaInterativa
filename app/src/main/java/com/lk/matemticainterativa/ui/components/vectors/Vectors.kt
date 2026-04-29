@@ -138,7 +138,7 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
 
                 if (!initialized) {
                     //initializing sum vector
-                    sumVectorStart = center
+                    sumVectorStart = center + (vector1.startPoint + vector2.startPoint)
                     sumVectorEnd = center + (vector1.endPoint + vector2.endPoint)
 
                     vector1 = vector1.copy(
