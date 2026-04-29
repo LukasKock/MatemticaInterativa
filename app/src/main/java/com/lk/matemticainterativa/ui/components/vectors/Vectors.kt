@@ -28,7 +28,8 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
 @Composable
-fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2: Color){
+fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2: Color, name1: String,
+            name2: String){
 
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -36,6 +37,9 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
     var vector1 by remember { mutableStateOf(vector1) }
     var vector2 by remember { mutableStateOf(vector2) }
     var initialized by remember { mutableStateOf(false) }
+
+    var name1 by remember { mutableStateOf(name1) }
+    var name2 by remember { mutableStateOf(name2) }
 
     var selectedVector by remember { mutableStateOf<Int?>(null) }
 
@@ -115,9 +119,11 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                 onClick = {
                     if(selectedVector == 1){
                         vector1 = invertVectorKeepStart(vector1)
+                        name1 = invertSignInName(name1)
                     }
                     else if(selectedVector == 2){
                         vector2 = invertVectorKeepStart(vector2)
+                        name2 = invertSignInName(name2)
                     }
                 }
             ) {
@@ -138,7 +144,7 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                     )
                     initialized = true
                 }
-                drawTwoVectors(vector1, vector2, color1, color2, selectedVector)
+                drawTwoVectors(vector1, vector2, color1, color2, name1, name2, selectedVector)
                 if(calculateDeltasFloat(vector1,vector2)){
                     drawSnapVectorsLine(vector1, vector2)
                 }
@@ -176,16 +182,17 @@ fun LandscapeLayout(content: @Composable () -> Unit){
         }
     }
 }
-fun DrawScope.drawTwoVectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2: Color, selectedVector: Int?){
+fun DrawScope.drawTwoVectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2: Color, name1: String,
+                             name2: String, selectedVector: Int?){
     if(selectedVector == 1){
-        drawVector(vector1, color1, selectedVector)
-        drawVector(vector2, color2, null)
+        drawVector(vector1, color1, selectedVector, name1)
+        drawVector(vector2, color2, null, name2)
     }
     else if(selectedVector ==2){
-        drawVector(vector1, color1, null)
-        drawVector(vector2, color2, selectedVector)
+        drawVector(vector1, color1, null, name1)
+        drawVector(vector2, color2, selectedVector, name2)
     } else{
-        drawVector(vector1, color1, null)
-        drawVector(vector2, color2, null)
+        drawVector(vector1, color1, null, name1)
+        drawVector(vector2, color2, null, name2)
     }
 }

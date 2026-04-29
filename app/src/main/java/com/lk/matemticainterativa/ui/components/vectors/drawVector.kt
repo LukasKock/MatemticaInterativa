@@ -3,11 +3,12 @@ package com.lk.matemticainterativa.ui.components.vectors
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.nativeCanvas
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun DrawScope.drawVector(vector: VectorPoints, color: Color, isVectorSelected: Int?) {
+fun DrawScope.drawVector(vector: VectorPoints, color: Color, isVectorSelected: Int?, name: String) {
     //Draw thicker line if vector is selected
     if(isVectorSelected != null){
         drawLine(
@@ -23,6 +24,19 @@ fun DrawScope.drawVector(vector: VectorPoints, color: Color, isVectorSelected: I
         start = vector.startPoint,
         end = vector.endPoint,
         strokeWidth = 6f
+    )
+    //Draw vector's letter
+    val paint = android.graphics.Paint().apply {
+        Color.Black
+        textSize = 50f
+        textAlign = android.graphics.Paint.Align.CENTER
+    }
+    val mid = (vector.startPoint + vector.endPoint) / 2f
+    drawContext.canvas.nativeCanvas.drawText(
+        name,
+        mid.x,
+        mid.y - 32f,
+        paint
     )
 
     // Arrow head

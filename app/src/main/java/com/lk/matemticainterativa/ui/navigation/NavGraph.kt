@@ -109,7 +109,9 @@ fun AppNav(){
             vector1 = VectorPoints(Offset(0f, 0f), Offset(300f, -200f)),
             vector2 = VectorPoints(Offset(0f, 0f), Offset(400f, 300f)),
             color1 = Color.Red,
-            color2 = Color.Blue
+            color2 = Color.Blue,
+            name1 = "u",
+            name2 = "v"
         ) }
     }
 }
