@@ -29,7 +29,7 @@ import kotlin.math.abs
 
 @Composable
 fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2: Color, name1: String,
-            name2: String){
+            name2: String, centerOffset: Offset){
 
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -40,6 +40,9 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
 
     var name1 by remember { mutableStateOf(name1) }
     var name2 by remember { mutableStateOf(name2) }
+
+    var sumVectorStart = Offset.Zero
+    var sumVectorEnd = Offset.Zero
 
     var selectedVector by remember { mutableStateOf<Int?>(null) }
 
@@ -131,9 +134,13 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
             }
             Canvas(modifier = Modifier
                 .fillMaxSize()){
-                val center = this.center
+                val center = this.center + centerOffset
 
                 if (!initialized) {
+                    //initializing sum vector
+                    sumVectorStart = center
+                    sumVectorEnd = center + (vector1.endPoint + vector2.endPoint)
+
                     vector1 = vector1.copy(
                         startPoint = center,
                         endPoint = center + (vector1.endPoint - vector1.startPoint)
@@ -151,6 +158,12 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                 if(calculateDeltasFloat(vector2,vector1)){
                     drawSnapVectorsLine(vector2, vector1)
                 }
+                drawVector(
+                    VectorPoints(
+                        startPoint = sumVectorStart,
+                        endPoint = sumVectorEnd
+                    )
+                    , Color.Cyan, null, "(u+v)")
             }
 
         }

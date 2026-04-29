@@ -111,7 +111,8 @@ fun AppNav(){
             color1 = Color.Red,
             color2 = Color.Blue,
             name1 = "u",
-            name2 = "v"
+            name2 = "v",
+            centerOffset = Offset(-300f, 0f)
         ) }
     }
 }
