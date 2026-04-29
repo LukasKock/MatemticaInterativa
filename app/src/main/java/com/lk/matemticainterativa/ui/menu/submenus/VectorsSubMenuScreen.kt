@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import com.lk.matemticainterativa.ui.menu.MenuItem
 
 @Composable
-fun TrianglesSubMenuScreen(navController: NavController) {
+fun VectorsSubMenuScreen(navController: NavController) {
 
     val isDark = isSystemInDarkTheme()
 
@@ -27,29 +27,23 @@ fun TrianglesSubMenuScreen(navController: NavController) {
 
         item {
             MenuItem("Exercício 1") {
-                navController.navigate("triangles/1")
+                navController.navigate("vectors/1")
             }
         }
         item {
             MenuItem("Exercício 2") {
-                navController.navigate("triangles/2")
+                navController.navigate("vectors/2")
             }
         }
         item {
             MenuItem("Exercício 3") {
-                navController.navigate("triangles/3")
+                navController.navigate("vectors/3")
             }
         }
         item {
             MenuItem("Exercício 4") {
-                navController.navigate("triangles/4")
+                navController.navigate("vectors/4")
             }
         }
-        item {
-            MenuItem("Exercício 5") {
-                navController.navigate("triangles/5")
-            }
-        }
-
     }
 }

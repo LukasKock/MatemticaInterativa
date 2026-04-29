@@ -22,14 +22,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
 @Composable
 fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2: Color, name1: String,
-            name2: String, centerOffset: Offset){
+            name2: String, centerOffset: Offset, operation: Operation){
 
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -41,8 +40,8 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
     var name1 by remember { mutableStateOf(name1) }
     var name2 by remember { mutableStateOf(name2) }
 
-    var sumVectorStart = Offset.Zero
-    var sumVectorEnd = Offset.Zero
+    var resultVectorStart = Offset.Zero
+    var resultVectorEnd = Offset.Zero
 
     var selectedVector by remember { mutableStateOf<Int?>(null) }
 
@@ -138,8 +137,13 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
 
                 if (!initialized) {
                     //initializing sum vector
-                    sumVectorStart = center + (vector1.startPoint + vector2.startPoint)
-                    sumVectorEnd = center + (vector1.endPoint + vector2.endPoint)
+                    if(operation == Operation.ADDITION){
+                        resultVectorStart = center + (vector1.startPoint + vector2.startPoint)
+                        resultVectorEnd = center + (vector1.endPoint + vector2.endPoint)
+                    } else if(operation == Operation.SUBTRACTION){
+                        resultVectorStart = center + (vector1.startPoint - vector2.startPoint)
+                        resultVectorEnd = center + (vector1.endPoint - vector2.endPoint)
+                    }
 
                     vector1 = vector1.copy(
                         startPoint = center,
@@ -160,10 +164,16 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                 }
                 drawVector(
                     VectorPoints(
-                        startPoint = sumVectorStart,
-                        endPoint = sumVectorEnd
+                        startPoint = resultVectorStart,
+                        endPoint = resultVectorEnd
                     )
-                    , Color.Cyan, null, "(u+v)")
+                    , Color.Magenta, null,
+                    if(operation == Operation.ADDITION) {
+                        onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
+                    }else {
+                        onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
+                    }
+                )
             }
 
         }

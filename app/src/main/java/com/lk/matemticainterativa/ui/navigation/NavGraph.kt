@@ -8,11 +8,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.lk.matemticainterativa.ui.components.CombinedTest.CartesianWithDistance
 import com.lk.matemticainterativa.ui.components.similarTriangles.SimilarTriangles
+import com.lk.matemticainterativa.ui.components.vectors.Operation
 import com.lk.matemticainterativa.ui.components.vectors.VectorPoints
 import com.lk.matemticainterativa.ui.components.vectors.Vectors
 import com.lk.matemticainterativa.ui.login.LoginScreen
 import com.lk.matemticainterativa.ui.main.MainScreen
-import com.lk.matemticainterativa.ui.menu.submenus.SubMenuScreen
+import com.lk.matemticainterativa.ui.menu.submenus.TrianglesSubMenuScreen
+import com.lk.matemticainterativa.ui.menu.submenus.VectorsSubMenuScreen
 
 @Composable
 fun AppNav(){
@@ -24,7 +26,7 @@ fun AppNav(){
             MainScreen(username = username, navController = navController)
         }
         composable("triangles/"){
-            SubMenuScreen(navController)
+            TrianglesSubMenuScreen(navController)
         }
         composable("triangles/1"){
             SimilarTriangles(
@@ -105,14 +107,46 @@ fun AppNav(){
                 explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes")
         }
         composable("cartesian/"){ CartesianWithDistance() }
-        composable("vectors/"){ Vectors(
+        composable("vectors/") { VectorsSubMenuScreen(navController) }
+        composable("vectors/1"){ Vectors(
             vector1 = VectorPoints(Offset(0f, 0f), Offset(300f, -200f)),
             vector2 = VectorPoints(Offset(0f, 0f), Offset(400f, 300f)),
             color1 = Color.Red,
             color2 = Color.Blue,
             name1 = "u",
             name2 = "v",
-            centerOffset = Offset(-300f, 0f)
+            centerOffset = Offset(-300f, 0f),
+            operation = Operation.ADDITION
+        ) }
+        composable("vectors/2"){ Vectors(
+            vector1 = VectorPoints(Offset(0f, 0f), Offset(-300f, 150f)),
+            vector2 = VectorPoints(Offset(0f, 0f), Offset(-300f, -400f)),
+            color1 = Color.Red,
+            color2 = Color.Blue,
+            name1 = "u",
+            name2 = "v",
+            centerOffset = Offset(100f, -60f),
+            operation = Operation.SUBTRACTION
+        ) }
+        composable("vectors/3"){ Vectors(
+            vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
+            vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
+            color1 = Color.Red,
+            color2 = Color.Blue,
+            name1 = "a",
+            name2 = "b",
+            centerOffset = Offset(-250f, 0f),
+            operation = Operation.ADDITION
+        ) }
+        composable("vectors/4"){ Vectors(
+            vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
+            vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
+            color1 = Color.Red,
+            color2 = Color.Blue,
+            name1 = "a",
+            name2 = "b",
+            centerOffset = Offset(-250f, 0f),
+            operation = Operation.SUBTRACTION
         ) }
     }
 }

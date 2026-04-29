@@ -1,10 +1,17 @@
 package com.lk.matemticainterativa.ui.components.vectors
 
 fun invertSignInName(name: String): String{
-    if(!name.contains("-")){
-        return "-${name}"
+    return if(!name.contains("-")){
+        "-${name}"
     } else {
-        return name.substring(1)
+        name.substring(1)
     }
 
+}
+fun onlyNameNoSign(name: String): String {
+    return if(name.contains("-")){
+        name.substring(1)
+    } else {
+        name
+    }
 }
