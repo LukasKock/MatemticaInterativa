@@ -185,7 +185,7 @@ fun DrawScope.drawTwoVectors(vector1: VectorPoints, vector2: VectorPoints, color
         drawVector(vector1, color1, null)
         drawVector(vector2, color2, selectedVector)
     } else{
-        drawVector(vector1, color1, selectedVector)
-        drawVector(vector2, color2, selectedVector)
+        drawVector(vector1, color1, null)
+        drawVector(vector2, color2, null)
     }
 }

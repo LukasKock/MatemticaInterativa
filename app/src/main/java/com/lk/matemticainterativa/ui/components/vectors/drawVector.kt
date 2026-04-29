@@ -8,6 +8,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 fun DrawScope.drawVector(vector: VectorPoints, color: Color, isVectorSelected: Int?) {
+    //Draw thicker line if vector is selected
     if(isVectorSelected != null){
         drawLine(
             color = color.copy(alpha = 0.4f),
@@ -16,6 +17,7 @@ fun DrawScope.drawVector(vector: VectorPoints, color: Color, isVectorSelected: I
             strokeWidth = 12f
         )
     }
+    //draw vector's line
     drawLine(
         color = color,
         start = vector.startPoint,
