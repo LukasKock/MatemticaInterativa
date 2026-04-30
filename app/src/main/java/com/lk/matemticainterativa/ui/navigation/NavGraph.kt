@@ -113,6 +113,7 @@ fun AppNav(){
             vector2 = VectorPoints(Offset(0f, 0f), Offset(400f, 300f)),
             color1 = Color.Red,
             color2 = Color.Blue,
+            colorResultVector = Color.Magenta,
             name1 = "u",
             name2 = "v",
             centerOffset = Offset(-300f, 0f),
@@ -123,16 +124,18 @@ fun AppNav(){
             vector2 = VectorPoints(Offset(0f, 0f), Offset(-300f, -400f)),
             color1 = Color.Red,
             color2 = Color.Blue,
+            colorResultVector = Color.Cyan,
             name1 = "u",
             name2 = "v",
             centerOffset = Offset(100f, -60f),
             operation = Operation.SUBTRACTION
         ) }
         composable("vectors/3"){ Vectors(
-            vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
-            vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
+            vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
+            vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
             color1 = Color.Red,
             color2 = Color.Blue,
+            colorResultVector = Color.Magenta,
             name1 = "a",
             name2 = "b",
             centerOffset = Offset(-250f, 0f),
@@ -143,9 +146,10 @@ fun AppNav(){
             vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
             color1 = Color.Red,
             color2 = Color.Blue,
+            colorResultVector = Color.Magenta,
             name1 = "a",
             name2 = "b",
-            centerOffset = Offset(-250f, 0f),
+            centerOffset = Offset(-200f, -80f),
             operation = Operation.SUBTRACTION
         ) }
     }
