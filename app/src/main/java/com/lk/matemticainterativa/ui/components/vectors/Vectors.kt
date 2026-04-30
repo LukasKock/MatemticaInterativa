@@ -40,8 +40,7 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
     var name1 by remember { mutableStateOf(name1) }
     var name2 by remember { mutableStateOf(name2) }
 
-    var resultVectorStart = Offset.Zero
-    var resultVectorEnd = Offset.Zero
+    var resultVector by remember { mutableStateOf(VectorPoints(startPoint = Offset.Zero, endPoint = Offset.Zero)) }
 
     var selectedVector by remember { mutableStateOf<Int?>(null) }
 
@@ -58,6 +57,9 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                         }
                         distanceToSegment(touch, vector2) < threshold -> {
                             selectedVector = 2
+                        }
+                        distanceToSegment(touch, resultVector) < threshold -> {
+                            selectedVector = 3
                         }
                     }},
                     onDrag = { change, dragAmount ->
@@ -90,6 +92,9 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                                     vector2 = vector2.copy(startPoint = vector2.startPoint - delta2, endPoint = vector2.endPoint - delta2)
                                 }
                             }
+                            3 -> {
+                                resultVector = resultVector.copy(startPoint = resultVector.startPoint + dragAmount, endPoint = resultVector.endPoint + dragAmount)
+                            }
                         }
 
 
@@ -109,6 +114,9 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                         }
                         distanceToSegment(it, vector2) < threshold -> {
                             selectedVector = 2
+                        }
+                        distanceToSegment(it, resultVector) < threshold -> {
+                            selectedVector = 3
                         }
                         else -> {
                             selectedVector = null
@@ -138,11 +146,11 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                 if (!initialized) {
                     //initializing sum vector
                     if(operation == Operation.ADDITION){
-                        resultVectorStart = center + (vector1.startPoint + vector2.startPoint)
-                        resultVectorEnd = center + (vector1.endPoint + vector2.endPoint)
+                        resultVector = resultVector.copy(startPoint = center + (vector1.startPoint + vector2.startPoint),
+                            endPoint = center + (vector1.endPoint + vector2.endPoint))
                     } else if(operation == Operation.SUBTRACTION){
-                        resultVectorStart = center + (vector1.startPoint - vector2.startPoint)
-                        resultVectorEnd = center + (vector1.endPoint - vector2.endPoint)
+                        resultVector = resultVector.copy(startPoint = center + (vector1.startPoint - vector2.startPoint),
+                            endPoint = center + (vector1.endPoint - vector2.endPoint))
                     }
 
                     vector1 = vector1.copy(
@@ -164,8 +172,8 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                 }
                 drawVector(
                     VectorPoints(
-                        startPoint = resultVectorStart,
-                        endPoint = resultVectorEnd
+                        startPoint = resultVector.startPoint,
+                        endPoint = resultVector.endPoint
                     )
                     , Color.Magenta, null,
                     if(operation == Operation.ADDITION) {
