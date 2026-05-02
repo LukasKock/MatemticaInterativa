@@ -168,18 +168,21 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                 detectTapGestures {
                     val threshold = 40f
 
-                    when {
+                    selectedVector = when {
                         distanceToSegment(it, vector1) < threshold -> {
-                            selectedVector = 1
+                            1
                         }
+
                         distanceToSegment(it, vector2) < threshold -> {
-                            selectedVector = 2
+                            2
                         }
+
                         distanceToSegment(it, resultVector) < threshold -> {
-                            selectedVector = 3
+                            3
                         }
+
                         else -> {
-                            selectedVector = null
+                            null
                         }
                     }
                 }
@@ -285,49 +288,55 @@ fun LandscapeLayout(content: @Composable () -> Unit){
 fun DrawScope.drawThreeVectors(vector1: VectorPoints, vector2: VectorPoints, resultVector: VectorPoints, operation: Operation,
                                color1: Color, color2: Color, colorResultVector: Color,
                                name1: String, name2: String, selectedVector: Int?){
-    if(selectedVector == 1){
-        drawVector(vector1, color1, selectedVector, name1)
-        drawVector(vector2, color2, null, name2)
-        drawVector( resultVector, colorResultVector, null,
-            if(operation == Operation.ADDITION) {
-                onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
-            }else {
-                onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
-            }
-        )
-    }
-    else if(selectedVector ==2){
-        drawVector(vector1, color1, null, name1)
-        drawVector(vector2, color2, selectedVector, name2)
-        drawVector( resultVector, colorResultVector, null,
-            if(operation == Operation.ADDITION) {
-                onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
-            }else {
-                onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
-            }
-        )
+    when (selectedVector) {
+        1 -> {
+            drawVector(vector1, color1, selectedVector, name1)
+            drawVector(vector2, color2, null, name2)
+            drawVector(
+                resultVector, colorResultVector, null,
+                if (operation == Operation.ADDITION) {
+                    onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
+                } else {
+                    onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
+                }
+            )
+        }
+        2 -> {
+            drawVector(vector1, color1, null, name1)
+            drawVector(vector2, color2, selectedVector, name2)
+            drawVector(
+                resultVector, colorResultVector, null,
+                if (operation == Operation.ADDITION) {
+                    onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
+                } else {
+                    onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
+                }
+            )
 
-    }
-    else if(selectedVector ==3){
-        drawVector(vector1, color1, null, name1)
-        drawVector(vector2, color2, null, name2)
-        drawVector( resultVector, colorResultVector, selectedVector,
-            if(operation == Operation.ADDITION) {
-                onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
-            }else {
-                onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
-            }
-        )
-    }
-    else{
-        drawVector(vector1, color1, null, name1)
-        drawVector(vector2, color2, null, name2)
-        drawVector( resultVector, colorResultVector, null,
-            if(operation == Operation.ADDITION) {
-                onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
-            }else {
-                onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
-            }
-        )
+        }
+        3 -> {
+            drawVector(vector1, color1, null, name1)
+            drawVector(vector2, color2, null, name2)
+            drawVector(
+                resultVector, colorResultVector, selectedVector,
+                if (operation == Operation.ADDITION) {
+                    onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
+                } else {
+                    onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
+                }
+            )
+        }
+        else -> {
+            drawVector(vector1, color1, null, name1)
+            drawVector(vector2, color2, null, name2)
+            drawVector(
+                resultVector, colorResultVector, null,
+                if (operation == Operation.ADDITION) {
+                    onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
+                } else {
+                    onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
+                }
+            )
+        }
     }
 }
