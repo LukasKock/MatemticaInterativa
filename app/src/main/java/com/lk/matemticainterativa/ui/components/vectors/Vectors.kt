@@ -144,6 +144,16 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                                     abs(dragAmount.x) < abs(delta6.x) && abs(dragAmount.y) < abs(delta6.y)){
                                     resultVector = resultVector.copy(startPoint = resultVector.startPoint + delta6, endPoint = resultVector.endPoint + delta6)
                                 }
+                                val delta7 = calculateDeltaStartEnd(vector1, resultVector)
+                                if(abs(delta7.x) < threshold && abs(delta7.y) < threshold &&
+                                    abs(dragAmount.x) < abs(delta7.x) && abs(dragAmount.y) < abs(delta7.y)){
+                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta7, endPoint = resultVector.endPoint - delta7)
+                                }
+                                val delta8 = calculateDeltaStartEnd(vector2, resultVector)
+                                if(abs(delta8.x) < threshold && abs(delta8.y) < threshold &&
+                                    abs(dragAmount.x) < abs(delta8.x) && abs(dragAmount.y) < abs(delta8.y)){
+                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta8, endPoint = resultVector.endPoint - delta8)
+                                }
                             }
                         }
 
@@ -225,6 +235,12 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                 }
                 if(calculateDeltaStartEndFloat(vector2,resultVector)){
                     drawSnapVectorsLineStartEnd(vector2, resultVector)
+                }
+                if(calculateDeltaStartEndFloat(resultVector,vector1)){
+                    drawSnapVectorsLineStartEnd(resultVector, vector1)
+                }
+                if(calculateDeltaStartEndFloat(resultVector,vector2)){
+                    drawSnapVectorsLineStartEnd(resultVector, vector2)
                 }
                 if(calculateDeltaStartStartFloat(vector2,vector1)){
                     drawSnapVectorsLineStartStart(vector2, vector1)
