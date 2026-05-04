@@ -48,7 +48,7 @@ fun BalloonAnimation(
         initialValue = 1000f,
         targetValue = -200f,
         animationSpec = infiniteRepeatable(
-            animation = tween(6000, easing = LinearEasing)
+            animation = tween(5000, easing = LinearEasing)
         ),
         label = ""
     )
@@ -56,27 +56,28 @@ fun BalloonAnimation(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.3f))
+            .background(Color.Black.copy(alpha = 0.15f))
     ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawCircle(
-                color = Color.Red,
-                radius = 40f,
-                center = Offset(size.width * 0.3f, offsetY)
-            )
+        // 🎈 Balloon 1
+        Balloon(
+            xFraction = 0.3f,
+            offsetY = offsetY - 200f,
+            color = Color.Red
+        )
 
-            drawCircle(
-                color = Color.Blue,
-                radius = 50f,
-                center = Offset(size.width * 0.7f, offsetY + 300)
-            )
+        // 🎈 Balloon 2
+        Balloon(
+            xFraction = 0.7f,
+            offsetY = offsetY - 400f,
+            color = Color.Blue
+        )
 
-            drawCircle(
-                color = Color.Green,
-                radius = 45f,
-                center = Offset(size.width * 0.5f, offsetY + 150)
-            )
-        }
+        // 🎈 Balloon 3
+        Balloon(
+            xFraction = 0.5f,
+            offsetY = offsetY - 600f,
+            color = Color.Green
+        )
 
         Text(
             text = "🎉 Parabéns!",
