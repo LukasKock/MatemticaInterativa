@@ -210,7 +210,7 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
                     }
                 }
             ) {
-                Text("Invert vector")
+                Text("Inverter vetor")
             }
             Canvas(modifier = Modifier
                 .fillMaxSize()){

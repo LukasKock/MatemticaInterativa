@@ -110,7 +110,7 @@ fun SimilarTriangles(
     var pC2 by remember { mutableStateOf(Offset.Zero) }
 
     var wereYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
-    var isInMovingMode by rememberSaveable { mutableStateOf( false ) }
+    var isInMovingMode by rememberSaveable { mutableStateOf( true ) }
     var showSuccess by rememberSaveable { mutableStateOf(false) }
     var showCongratsMessage by rememberSaveable { mutableStateOf(false)}
 
@@ -120,7 +120,7 @@ fun SimilarTriangles(
         showSuccess || showCongratsMessage ->
             "Os triângulos são semelhantes!"
         isInMovingMode ->
-            "Dê um toque rápido num dos triângulos para selecioná-lo. " +
+            "Os triângulos a seguir são semelhantes? " +
                     "Mova, aumente e/ou diminua-os até que fiquem sobrepostos"
         !isInMovingMode && wereYesOrNoButtonsPressed -> "Atividade terminada"
         else ->
@@ -259,10 +259,10 @@ fun SimilarTriangles(
                         isTriangle2Selected -> tilt2 = newTilt
                     }
                 },
-                visible = wereYesOrNoButtonsPressed
+                visible = true
             )
 
-            if(areTrianglesSimilar) isInMovingMode = wereYesOrNoButtonsPressed
+            if(areTrianglesSimilar) isInMovingMode = true
 
 
             LaunchedEffect(isInMovingMode, pA1, pB1, pC1, pA2, pB2, pC2) {
