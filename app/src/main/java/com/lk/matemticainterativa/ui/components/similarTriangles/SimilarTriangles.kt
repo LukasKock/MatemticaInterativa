@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import android.graphics.Paint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -36,6 +37,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 import com.lk.matemticainterativa.ui.modes.EnableImmersiveMode
 
@@ -57,7 +60,8 @@ fun SimilarTriangles(
     initialTilt2: Float = -1f,
     areTrianglesSimilar: Boolean,
     explanationCorrect: String,
-    explanationFalse: String
+    explanationFalse: String,
+    navController: NavController
 ) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -112,21 +116,20 @@ fun SimilarTriangles(
     var wereYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
     var isInMovingMode by rememberSaveable { mutableStateOf( true ) }
     var showSuccess by rememberSaveable { mutableStateOf(false) }
-    var showCongratsMessage by rememberSaveable { mutableStateOf(false)}
-
+    var wasCongratsMessageShowned by rememberSaveable { mutableStateOf(false)}
 
 
     val titleText = when {
-        showSuccess || showCongratsMessage ->
+        showSuccess  ->
             "Os triângulos são semelhantes!"
-        isInMovingMode ->
+        wereYesOrNoButtonsPressed -> "Atividade terminada"
+        wasCongratsMessageShowned -> "Agora responda: Os triângulos são semelhantes?"
+        else ->
             "Os triângulos a seguir são semelhantes? " +
                     "Mova, aumente e/ou diminua-os até que fiquem sobrepostos"
-        !isInMovingMode && wereYesOrNoButtonsPressed -> "Atividade terminada"
-        else ->
-            "Os triângulos a seguir são semelhantes?"
     }
 
+    BackHandler(enabled = true) { navController.navigate("triangles/")}
     @Composable
     fun TriangleCanvasContent(
         /* pass needed states if necessary */
@@ -262,11 +265,10 @@ fun SimilarTriangles(
                 visible = true
             )
 
-            if(areTrianglesSimilar) isInMovingMode = true
 
 
             LaunchedEffect(isInMovingMode, pA1, pB1, pC1, pA2, pB2, pC2) {
-                if (isInMovingMode) {
+                if (isInMovingMode && !wasCongratsMessageShowned) {
                     val triangle1 = TrianglePoints(pA1, pB1, pC1)
                     val triangle2 = TrianglePoints(pA2, pB2, pC2)
 
@@ -278,7 +280,8 @@ fun SimilarTriangles(
             }
             BalloonAnimation(visible = showSuccess,
                 onFinished = { showSuccess = false
-                    showCongratsMessage = true
+                    isInMovingMode = true
+                    wasCongratsMessageShowned = true
                     isTriangle1Selected = false
                     isTriangle2Selected = false})
         }
@@ -293,7 +296,8 @@ fun SimilarTriangles(
                 explanationCorrect = explanationCorrect,
                 explanationFalse = explanationFalse,
                 visible = !wereYesOrNoButtonsPressed,
-                onFinished = {wereYesOrNoButtonsPressed = true})}
+                onFinished = {wereYesOrNoButtonsPressed = true})},
+            nextQuestionButton = { NextQuestionButton(wereYesOrNoButtonsPressed, navController) }
         )
     } else {
         LandscapeLayout(
@@ -305,7 +309,8 @@ fun SimilarTriangles(
                 explanationCorrect = explanationCorrect,
                 explanationFalse = explanationFalse,
                 visible = !wereYesOrNoButtonsPressed,
-                onFinished = {wereYesOrNoButtonsPressed = true})}
+                onFinished = {wereYesOrNoButtonsPressed = true})},
+            nextQuestionButton = {NextQuestionButton(wereYesOrNoButtonsPressed, navController)}
         )
     }
 }
@@ -315,7 +320,8 @@ private fun PortraitLayout(
     text: String,
     textColor: Color,
     content: @Composable () -> Unit,
-    buttonsContent: @Composable () -> Unit
+    buttonsContent: @Composable () -> Unit,
+    nextQuestionButton: @Composable () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -339,6 +345,7 @@ private fun PortraitLayout(
         ) {
             content()
             buttonsContent()
+            nextQuestionButton()
         }
     }
 }
@@ -349,7 +356,8 @@ private fun LandscapeLayout(
     text: String,
     textColor: Color,
     content: @Composable () -> Unit,
-    buttonsContent: @Composable () -> Unit
+    buttonsContent: @Composable () -> Unit,
+    nextQuestionButton: @Composable () -> Unit
 ) {
     EnableImmersiveMode()
 
@@ -376,6 +384,7 @@ private fun LandscapeLayout(
                     color = textColor
                 )
                 buttonsContent()
+                nextQuestionButton()
             }
         }
 

@@ -41,7 +41,8 @@ fun AppNav(){
                 initialTilt2 = 1f,
                 areTrianglesSimilar = true,
                 explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque ele possui dois ângulos homólogos",
-                explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais")
+                explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais",
+                navController = navController)
         }
         composable("triangles/2"){
                 SimilarTriangles(
@@ -56,7 +57,8 @@ fun AppNav(){
                 initialTilt2 = -1f,
                 areTrianglesSimilar = false,
                 explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque seus ângulos são diferentes",
-                explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes")
+                explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes",
+                    navController = navController)
         }
         composable("triangles/3"){
             SimilarTriangles(
@@ -72,7 +74,8 @@ fun AppNav(){
                 initialTilt2 = 1f,
                 areTrianglesSimilar = true,
                 explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque ele possui dois ângulos homólogos",
-                explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais")
+                explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais",
+                navController = navController)
         }
         composable("triangles/4"){
             SimilarTriangles(
@@ -88,7 +91,8 @@ fun AppNav(){
                 initialTilt2 = 1f,
                 areTrianglesSimilar = true,
                 explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque ele possui dois ângulos homólogos",
-                explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais")
+                explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais",
+                navController = navController)
         }
         composable("triangles/5"){
             SimilarTriangles(
@@ -104,7 +108,8 @@ fun AppNav(){
                 initialTilt2 = 1f,
                 areTrianglesSimilar = false,
                 explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque seus ângulos são diferentes",
-                explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes")
+                explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes",
+                navController = navController)
         }
         composable("cartesian/"){ CartesianWithDistance() }
         composable("vectors/") { VectorsSubMenuScreen(navController) }
