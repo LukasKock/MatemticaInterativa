@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lk.matemticainterativa.R
 import kotlinx.coroutines.delay
 
 
@@ -48,7 +49,7 @@ fun BalloonAnimation(
         initialValue = 1000f,
         targetValue = -200f,
         animationSpec = infiniteRepeatable(
-            animation = tween(5000, easing = LinearEasing)
+            animation = tween(3500, easing = LinearEasing)
         ),
         label = ""
     )
@@ -62,21 +63,21 @@ fun BalloonAnimation(
         Balloon(
             xFraction = 0.3f,
             offsetY = offsetY - 200f,
-            color = Color.Red
+            id = R.drawable.ballon_green
         )
 
         // 🎈 Balloon 2
         Balloon(
-            xFraction = 0.7f,
+            xFraction = 0.1f,
             offsetY = offsetY - 400f,
-            color = Color.Blue
+            id = R.drawable.ballon_yellow
         )
 
         // 🎈 Balloon 3
         Balloon(
-            xFraction = 0.5f,
+            xFraction = 0.3f,
             offsetY = offsetY - 600f,
-            color = Color.Green
+            id = R.drawable.ballon_red
         )
 
         Text(
