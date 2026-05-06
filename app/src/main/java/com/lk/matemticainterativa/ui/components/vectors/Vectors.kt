@@ -1,6 +1,7 @@
 package com.lk.matemticainterativa.ui.components.vectors
 
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -24,11 +25,22 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
+import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 import kotlin.math.abs
 
 @Composable
-fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2: Color, colorResultVector: Color, name1: String,
-            name2: String, centerOffset: Offset, operation: Operation){
+fun Vectors(vector1: VectorPoints,
+            vector2: VectorPoints,
+            color1: Color,
+            color2: Color,
+            colorResultVector: Color,
+            name1: String,
+            name2: String,
+            centerOffset: Offset,
+            operation: Operation,
+            navController: NavController){
 
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -43,6 +55,13 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
     var resultVector by remember { mutableStateOf(VectorPoints(startPoint = Offset.Zero, endPoint = Offset.Zero)) }
 
     var selectedVector by remember { mutableStateOf<Int?>(null) }
+
+    var isTaskCompleted by remember { mutableStateOf(false) }
+    var showBallon by remember { mutableStateOf(false) }
+
+
+    BackHandler(enabled = true) { navController.navigate("vectors/") }
+
 
     @Composable
     fun VectorsContent(){
@@ -267,9 +286,21 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
             }
 
         }
+        BalloonAnimation(
+            visible = showBallon,
+            onFinished = {
+                showBallon = false
+                isTaskCompleted = true
+        })
+        if((isVectorSumCompleted(vector1, vector2, resultVector) ||
+            isVectorSumCompleted(vector2, vector1, resultVector))
+            && !isTaskCompleted){
+            showBallon = true
+        }
     }
     if(isPortrait){
-        PortraitLayout(content = { VectorsContent() })
+        PortraitLayout(content = { VectorsContent() },
+            nextQuestionButton = { NextQuestionButton(isTaskCompleted, navController) })
     }
     else{
         LandscapeLayout ( content = { VectorsContent() } )
@@ -278,11 +309,13 @@ fun Vectors(vector1: VectorPoints, vector2: VectorPoints, color1: Color, color2:
 }
 
 @Composable
-private fun PortraitLayout(content: @Composable () -> Unit){
+private fun PortraitLayout(content: @Composable () -> Unit,
+                           nextQuestionButton: @Composable () -> Unit){
     Column(modifier = Modifier.fillMaxSize()) {
         //Text
         Box(modifier = Modifier.fillMaxSize()){
             content()
+            nextQuestionButton()
         }
     }
 }

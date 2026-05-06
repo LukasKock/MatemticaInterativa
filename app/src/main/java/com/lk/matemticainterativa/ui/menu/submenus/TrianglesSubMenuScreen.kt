@@ -1,5 +1,6 @@
 package com.lk.matemticainterativa.ui.menu.submenus
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ fun TrianglesSubMenuScreen(navController: NavController) {
     val contentColor = if (isDark) MaterialTheme.colorScheme.onSurfaceVariant else
         MaterialTheme.colorScheme.background
 
+    BackHandler(enabled = true) { navController.navigate("main/") }
     LazyColumn(modifier = Modifier
         .background(contentColor)
         .fillMaxSize(),

@@ -122,7 +122,8 @@ fun AppNav(){
             name1 = "u",
             name2 = "v",
             centerOffset = Offset(-300f, 0f),
-            operation = Operation.ADDITION
+            operation = Operation.ADDITION,
+            navController = navController
         ) }
         composable("vectors/2"){ Vectors(
             vector1 = VectorPoints(Offset(0f, 0f), Offset(-300f, 150f)),
@@ -133,7 +134,8 @@ fun AppNav(){
             name1 = "u",
             name2 = "v",
             centerOffset = Offset(100f, -60f),
-            operation = Operation.SUBTRACTION
+            operation = Operation.SUBTRACTION,
+            navController = navController
         ) }
         composable("vectors/3"){ Vectors(
             vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
@@ -144,7 +146,8 @@ fun AppNav(){
             name1 = "a",
             name2 = "b",
             centerOffset = Offset(-250f, 0f),
-            operation = Operation.ADDITION
+            operation = Operation.ADDITION,
+            navController = navController
         ) }
         composable("vectors/4"){ Vectors(
             vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
@@ -155,7 +158,8 @@ fun AppNav(){
             name1 = "a",
             name2 = "b",
             centerOffset = Offset(-200f, -80f),
-            operation = Operation.SUBTRACTION
+            operation = Operation.SUBTRACTION,
+            navController = navController
         ) }
     }
 }

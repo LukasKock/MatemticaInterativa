@@ -5,7 +5,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,9 +33,9 @@ fun BalloonAnimation(
     if (!visible) return
 
     // Auto hide after 2 seconds
-    LaunchedEffect(visible) {
+    LaunchedEffect(Unit) {
         if (visible) {
-            delay(2000)
+            delay(1200)
             onFinished()
         }
     }
@@ -89,6 +87,6 @@ fun BalloonAnimation(
                 .background(Color.White, shape = RoundedCornerShape(8.dp)) // white box
                 .border(2.dp, Color.Black, shape =
                     RoundedCornerShape(8.dp)) // border
-                .padding(horizontal = 16.dp, vertical = 8.dp)) // space inside box        )
+                .padding(horizontal = 16.dp, vertical = 8.dp))
     }
 }
