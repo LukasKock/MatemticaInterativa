@@ -145,7 +145,7 @@ fun AppNav(){
             colorResultVector = Color.Magenta,
             name1 = "a",
             name2 = "b",
-            centerOffset = Offset(-250f, 0f),
+            centerOffset = Offset(-400f, 0f),
             operation = Operation.ADDITION,
             navController = navController
         ) }
