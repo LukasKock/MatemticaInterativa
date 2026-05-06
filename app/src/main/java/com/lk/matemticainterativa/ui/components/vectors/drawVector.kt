@@ -4,15 +4,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun DrawScope.drawVector(vector: VectorPoints, color: Color, isVectorSelected: Int?, name: String) {
+fun DrawScope.drawVector(vector: VectorPoints, vectorColor: Color, textColor: Color, isVectorSelected: Int?, name: String) {
     //Draw thicker line if vector is selected
     if(isVectorSelected != null){
         drawLine(
-            color = color.copy(alpha = 0.4f),
+            color = vectorColor.copy(alpha = 0.4f),
             start = vector.startPoint,
             end = vector.endPoint,
             strokeWidth = 12f
@@ -20,14 +21,14 @@ fun DrawScope.drawVector(vector: VectorPoints, color: Color, isVectorSelected: I
     }
     //draw vector's line
     drawLine(
-        color = color,
+        color = vectorColor,
         start = vector.startPoint,
         end = vector.endPoint,
         strokeWidth = 6f
     )
     //Draw vector's letter
     val paint = android.graphics.Paint().apply {
-        Color.Black
+        color = textColor.toArgb()
         textSize = 50f
         textAlign = android.graphics.Paint.Align.CENTER
     }
@@ -56,9 +57,9 @@ fun DrawScope.drawVector(vector: VectorPoints, color: Color, isVectorSelected: I
     )
 
     if(isVectorSelected != null){
-        drawLine(color.copy(alpha = 0.4f), vector.endPoint, arrowPoint1, strokeWidth = 8f)
-        drawLine(color.copy(alpha = 0.4f), vector.endPoint, arrowPoint2, strokeWidth = 8f)
+        drawLine(vectorColor.copy(alpha = 0.4f), vector.endPoint, arrowPoint1, strokeWidth = 8f)
+        drawLine(vectorColor.copy(alpha = 0.4f), vector.endPoint, arrowPoint2, strokeWidth = 8f)
     }
-    drawLine(color, vector.endPoint, arrowPoint1, strokeWidth = 4f)
-    drawLine(color, vector.endPoint, arrowPoint2, strokeWidth = 4f)
+    drawLine(vectorColor, vector.endPoint, arrowPoint1, strokeWidth = 4f)
+    drawLine(vectorColor, vector.endPoint, arrowPoint2, strokeWidth = 4f)
 }

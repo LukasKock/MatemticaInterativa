@@ -3,12 +3,16 @@ package com.lk.matemticainterativa.ui.components.vectors
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -21,10 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
@@ -62,6 +67,22 @@ fun Vectors(vector1: VectorPoints,
 
     BackHandler(enabled = true) { navController.navigate("vectors/") }
 
+    val isDark = isSystemInDarkTheme()
+    val backgroundColor = if(isDark)  Color(0xFF121212) else Color(0xFFFFFFFF)
+    val textColor = if (isDark) Color(0xFFE0E0E0) else Color.Black
+
+    val titleText = "Faça a soma dos vetores abaixo:"
+
+    val onInvertVector = {
+        if(selectedVector == 1){
+            vector1 = invertVectorKeepStart(vector1)
+            name1 = invertSignInName(name1)
+        }
+        else if(selectedVector == 2){
+            vector2 = invertVectorKeepStart(vector2)
+            name2 = invertSignInName(name2)
+        }
+    }
 
     @Composable
     fun VectorsContent(){
@@ -216,21 +237,6 @@ fun Vectors(vector1: VectorPoints,
                     }
                 }
             }){
-            Button(
-                modifier = Modifier.padding(60.dp).align(Alignment.BottomCenter),
-                onClick = {
-                    if(selectedVector == 1){
-                        vector1 = invertVectorKeepStart(vector1)
-                        name1 = invertSignInName(name1)
-                    }
-                    else if(selectedVector == 2){
-                        vector2 = invertVectorKeepStart(vector2)
-                        name2 = invertSignInName(name2)
-                    }
-                }
-            ) {
-                Text("Inverter vetor")
-            }
             Canvas(modifier = Modifier
                 .fillMaxSize()){
                 val center = this.center + centerOffset
@@ -255,7 +261,10 @@ fun Vectors(vector1: VectorPoints,
                     )
                     initialized = true
                 }
-                drawThreeVectors(vector1, vector2, resultVector, operation, color1, color2, colorResultVector, name1, name2, selectedVector)
+                //Draw the vectors:
+                drawThreeVectors(vector1, vector2, resultVector, operation, color1, color2, colorResultVector, textColor, name1, name2, selectedVector)
+
+                //Draw the dotted lines:
                 if(calculateDeltaStartEndFloat(vector1,vector2)){
                     drawSnapVectorsLineStartEnd(vector1, vector2)
                 }
@@ -299,7 +308,21 @@ fun Vectors(vector1: VectorPoints,
         }
     }
     if(isPortrait){
-        PortraitLayout(content = { VectorsContent() },
+        PortraitLayout(
+            text = titleText,
+            textColor = textColor,
+            backgroundColor = backgroundColor,
+            invertVectorButton = {
+                Box(modifier = Modifier.fillMaxSize()){
+                    Button(
+                        modifier = Modifier.padding(60.dp).align(Alignment.BottomCenter),
+                        onClick = { onInvertVector() }
+                    ) {
+                        Text("Inverter vetor")
+                    }
+                }
+            },
+            content = { VectorsContent() },
             nextQuestionButton = { NextQuestionButton(isTaskCompleted, navController) })
     }
     else{
@@ -309,12 +332,33 @@ fun Vectors(vector1: VectorPoints,
 }
 
 @Composable
-private fun PortraitLayout(content: @Composable () -> Unit,
-                           nextQuestionButton: @Composable () -> Unit){
-    Column(modifier = Modifier.fillMaxSize()) {
-        //Text
+private fun PortraitLayout(
+    backgroundColor: Color,
+    text: String,
+    textColor: Color,
+    invertVectorButton: @Composable () -> Unit,
+    content: @Composable () -> Unit,
+    nextQuestionButton: @Composable () -> Unit){
+
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .background(backgroundColor)
+    ) {
+        Spacer(modifier = Modifier.height(30.dp))
+        Text(
+            text = text,
+            modifier = Modifier.padding(8.dp),
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+            color = textColor
+        )
+
+
+
         Box(modifier = Modifier.fillMaxSize()){
             content()
+            invertVectorButton()
             nextQuestionButton()
         }
     }
@@ -325,61 +369,6 @@ fun LandscapeLayout(content: @Composable () -> Unit){
     Row(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()){
             content()
-        }
-    }
-}
-fun DrawScope.drawThreeVectors(vector1: VectorPoints, vector2: VectorPoints, resultVector: VectorPoints, operation: Operation,
-                               color1: Color, color2: Color, colorResultVector: Color,
-                               name1: String, name2: String, selectedVector: Int?){
-    when (selectedVector) {
-        1 -> {
-            drawVector(vector1, color1, selectedVector, name1)
-            drawVector(vector2, color2, null, name2)
-            drawVector(
-                resultVector, colorResultVector, null,
-                if (operation == Operation.ADDITION) {
-                    onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
-                } else {
-                    onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
-                }
-            )
-        }
-        2 -> {
-            drawVector(vector1, color1, null, name1)
-            drawVector(vector2, color2, selectedVector, name2)
-            drawVector(
-                resultVector, colorResultVector, null,
-                if (operation == Operation.ADDITION) {
-                    onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
-                } else {
-                    onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
-                }
-            )
-
-        }
-        3 -> {
-            drawVector(vector1, color1, null, name1)
-            drawVector(vector2, color2, null, name2)
-            drawVector(
-                resultVector, colorResultVector, selectedVector,
-                if (operation == Operation.ADDITION) {
-                    onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
-                } else {
-                    onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
-                }
-            )
-        }
-        else -> {
-            drawVector(vector1, color1, null, name1)
-            drawVector(vector2, color2, null, name2)
-            drawVector(
-                resultVector, colorResultVector, null,
-                if (operation == Operation.ADDITION) {
-                    onlyNameNoSign(name1) + " + " + onlyNameNoSign(name2)
-                } else {
-                    onlyNameNoSign(name1) + " - " + onlyNameNoSign(name2)
-                }
-            )
         }
     }
 }

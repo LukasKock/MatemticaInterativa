@@ -328,7 +328,7 @@ private fun PortraitLayout(
             .fillMaxSize()
             .background(backgroundColor)
     ) {
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         Text(
             text = text,
@@ -340,7 +340,6 @@ private fun PortraitLayout(
 
         Box(
             modifier = Modifier
-                .weight(1f)   // IMPORTANT
                 .fillMaxWidth()
         ) {
             content()
