@@ -3,6 +3,7 @@ package com.lk.matemticainterativa.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -153,7 +154,7 @@ fun AppNav(){
             vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
             vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
             color1 = Color.Red,
-            color2 = Color.Blue,
+            color2 = Color.Green,
             colorResultVector = Color.Magenta,
             name1 = "a",
             name2 = "b",
