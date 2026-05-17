@@ -142,6 +142,26 @@ fun SimilarTriangles(
                         if(!isInMovingMode){
                             return@detectTransformGestures
                         }
+                        if(gestureRotate == 0f && gestureZoom == 1f){
+                            val isCentroidOnTriangle1 = isPointInTriangle(centroid, pA1, pB1, pC1)
+                            val isCentroidOnTriangle2 = isPointInTriangle(centroid, pA2, pB2, pC2)
+                            if(isCentroidOnTriangle1 && !isCentroidOnTriangle2){
+                                isTriangle1Selected = true
+                                isTriangle2Selected = false
+                            } else if(isCentroidOnTriangle2 && !isCentroidOnTriangle1){
+                                isTriangle2Selected = true
+                                isTriangle1Selected = false
+                            } else if(isCentroidOnTriangle1){
+                                if(isTriangle1Selected){
+                                    isTriangle1Selected = true
+                                    isTriangle2Selected = false
+                                }
+                                else {
+                                    isTriangle1Selected = false
+                                    isTriangle2Selected = true
+                                }
+                            }
+                        }
                         if(isTriangle1Selected) {
                             rotation1 += gestureRotate
                             scale1 = (scale1 * gestureZoom).coerceIn(0.3f, 6f)
