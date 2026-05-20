@@ -239,25 +239,34 @@ fun Vectors(vector1: VectorPoints,
             }){
             Canvas(modifier = Modifier
                 .fillMaxSize()){
-                val center = this.center + centerOffset
+                val resultVectorCenter = this.center + centerOffset
 
                 if (!initialized) {
                     //initializing sum vector
+
+                    val initialVector1 = vector1
+                    val initialVector2 = vector2
+
+                    vector1 = vector1.copy(startPoint = vector1.startPoint - initialVector1.startPoint, endPoint = vector1.endPoint - initialVector1.startPoint)
+                    vector2 = vector2.copy(startPoint = vector2.startPoint - initialVector2.startPoint, endPoint = vector2.endPoint - initialVector2.startPoint)
+
+
+
                     if(operation == Operation.ADDITION){
-                        resultVector = resultVector.copy(startPoint = center + (vector1.startPoint + vector2.startPoint),
-                            endPoint = center + (vector1.endPoint + vector2.endPoint))
+                        resultVector = resultVector.copy(startPoint = resultVectorCenter,
+                            endPoint = resultVectorCenter + (vector1.endPoint + vector2.endPoint))
                     } else if(operation == Operation.SUBTRACTION){
-                        resultVector = resultVector.copy(startPoint = center + (vector1.startPoint - vector2.startPoint),
-                            endPoint = center + (vector1.endPoint - vector2.endPoint))
+                        resultVector = resultVector.copy(startPoint = resultVectorCenter,
+                            endPoint = resultVectorCenter + (vector1.endPoint - vector2.endPoint))
                     }
 
                     vector1 = vector1.copy(
-                        startPoint = center,
-                        endPoint = center + (vector1.endPoint - vector1.startPoint)
+                        startPoint = resultVectorCenter + initialVector1.startPoint,
+                        endPoint = resultVectorCenter + initialVector1.endPoint
                     )
                     vector2 = vector2.copy(
-                        startPoint = center,
-                        endPoint = center + (vector2.endPoint - vector2.startPoint)
+                        startPoint = resultVectorCenter + initialVector2.startPoint,
+                        endPoint = resultVectorCenter +initialVector2.endPoint
                     )
                     initialized = true
                 }

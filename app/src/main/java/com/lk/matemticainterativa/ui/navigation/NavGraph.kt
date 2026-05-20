@@ -115,8 +115,32 @@ fun AppNav(){
         composable("cartesian/"){ CartesianWithDistance() }
         composable("vectors/") { VectorsSubMenuScreen(navController) }
         composable("vectors/1"){ Vectors(
-            vector1 = VectorPoints(Offset(0f, 0f), Offset(300f, -200f)),
-            vector2 = VectorPoints(Offset(0f, 0f), Offset(400f, 300f)),
+            vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
+            vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
+            color1 = Color.Red,
+            color2 = Color.Blue,
+            colorResultVector = Color.Magenta,
+            name1 = "a",
+            name2 = "b",
+            centerOffset = Offset(-300f, -200f),
+            operation = Operation.ADDITION,
+            navController = navController
+        ) }
+        composable("vectors/2"){ Vectors(
+            vector1 = VectorPoints(Offset(0f, -100f), Offset(350f, -450f)),
+            vector2 = VectorPoints(Offset(50f, 100f), Offset(400f, 450f)),
+            color1 = Color.Red,
+            color2 = Color.Blue,
+            colorResultVector = Color.Magenta,
+            name1 = "a",
+            name2 = "b",
+            centerOffset = Offset(-300f, -200f),
+            operation = Operation.ADDITION,
+            navController = navController
+        ) }
+        composable("vectors/3"){ Vectors(
+            vector1 = VectorPoints(Offset(0f, -100f), Offset(300f, -300f)),
+            vector2 = VectorPoints(Offset(50f, 150f), Offset(450f, 450f)),
             color1 = Color.Red,
             color2 = Color.Blue,
             colorResultVector = Color.Magenta,
@@ -126,39 +150,27 @@ fun AppNav(){
             operation = Operation.ADDITION,
             navController = navController
         ) }
-        composable("vectors/2"){ Vectors(
-            vector1 = VectorPoints(Offset(0f, 0f), Offset(-300f, 150f)),
-            vector2 = VectorPoints(Offset(0f, 0f), Offset(-300f, -400f)),
+        composable("vectors/4"){ Vectors(
+            vector1 = VectorPoints(Offset(-100f, 0f), Offset(-400f, 150f)),
+            vector2 = VectorPoints(Offset(0f, -200f), Offset(-300f, -600f)),
             color1 = Color.Red,
             color2 = Color.Blue,
             colorResultVector = Color.Cyan,
             name1 = "u",
             name2 = "v",
-            centerOffset = Offset(100f, -60f),
+            centerOffset = Offset(100f, -200f),
             operation = Operation.SUBTRACTION,
             navController = navController
         ) }
-        composable("vectors/3"){ Vectors(
-            vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
-            vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
-            color1 = Color.Red,
-            color2 = Color.Blue,
-            colorResultVector = Color.Magenta,
-            name1 = "a",
-            name2 = "b",
-            centerOffset = Offset(-400f, 0f),
-            operation = Operation.ADDITION,
-            navController = navController
-        ) }
-        composable("vectors/4"){ Vectors(
-            vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
-            vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
+        composable("vectors/5"){ Vectors(
+            vector1 = VectorPoints(Offset(80f, -400f), Offset(430f, -50f)),
+            vector2 = VectorPoints(Offset(80f, 200f), Offset(430f, -150f)),
             color1 = Color.Red,
             color2 = Color.Green,
             colorResultVector = Color.Magenta,
             name1 = "a",
             name2 = "b",
-            centerOffset = Offset(-200f, -80f),
+            centerOffset = Offset(-300f, -80f),
             operation = Operation.SUBTRACTION,
             navController = navController
         ) }

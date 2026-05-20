@@ -47,5 +47,10 @@ fun VectorsSubMenuScreen(navController: NavController) {
                 navController.navigate("vectors/4")
             }
         }
+        item {
+            MenuItem("Exercício 5") {
+                navController.navigate("vectors/5")
+            }
+        }
     }
 }
