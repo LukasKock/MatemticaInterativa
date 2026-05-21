@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -17,7 +18,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun CartesianCanvas(moveEnabled: Boolean = true) {
-    var scale by remember { mutableStateOf(180f) }
+    var scale by remember { mutableFloatStateOf(180f) }
     var offset by remember { mutableStateOf(Offset.Zero)}
 
     Canvas(

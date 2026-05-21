@@ -3,10 +3,10 @@ package com.lk.matemticainterativa.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.lk.matemticainterativa.ui.components.CartesianCanvas
 import com.lk.matemticainterativa.ui.components.CombinedTest.CartesianWithDistance
 import com.lk.matemticainterativa.ui.components.similarTriangles.SimilarTriangles
 import com.lk.matemticainterativa.ui.components.vectors.Operation
@@ -174,5 +174,6 @@ fun AppNav(){
             operation = Operation.SUBTRACTION,
             navController = navController
         ) }
+        composable("cartesian/") { CartesianCanvas(moveEnabled = false) }
     }
 }
