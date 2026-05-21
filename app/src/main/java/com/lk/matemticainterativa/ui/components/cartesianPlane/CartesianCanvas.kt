@@ -1,5 +1,6 @@
-package com.lk.matemticainterativa.ui.components
+package com.lk.matemticainterativa.ui.components.cartesianPlane
 
+import android.graphics.Paint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +30,6 @@ fun CartesianCanvas(moveEnabled: Boolean = true) {
                     detectTransformGestures { centroid, pan, zoom, rotation ->
                         scale *= zoom
                         scale = scale.coerceIn(20f, 1000f)
-                        //offset = (offset + centroid) + (offset + centroid - (offset + centroid)) * (1f - zoom) + pan
                         offset += pan
                     }
                 }
@@ -37,7 +37,9 @@ fun CartesianCanvas(moveEnabled: Boolean = true) {
     ) {
         val w = size.width
         val h = size.height
-        val origin = Offset(w / 2f + offset.x - 350f, h / 2f + offset.y + 600f)
+        val origin = Offset(w / 2f, h / 2f)
+
+        val axisMargin = 30f
 
         // draw grid
         val unitsPerTick = 1f
@@ -67,11 +69,11 @@ fun CartesianCanvas(moveEnabled: Boolean = true) {
             }
         }
         // draw axes
-        drawLine(color = Color.Black, start = Offset(0f, origin.y), end = Offset(w, origin.y), strokeWidth = 3f)
-        drawLine(color = Color.Black, start = Offset(origin.x, 0f), end = Offset(origin.x, h), strokeWidth = 3f)
+        drawLine(color = Color.Black, start = Offset(0f, origin.y), end = Offset(w - axisMargin, origin.y), strokeWidth = 3f)
+        drawLine(color = Color.Black, start = Offset(origin.x, axisMargin), end = Offset(origin.x, h), strokeWidth = 3f)
 
         // ticks and labels using nativeCanvas for text
-        val textPaint = android.graphics.Paint().apply {
+        val textPaint = Paint().apply {
             color = android.graphics.Color.BLACK
             textSize = 14.sp.toPx()
             isAntiAlias = true
@@ -80,14 +82,19 @@ fun CartesianCanvas(moveEnabled: Boolean = true) {
         // x ticks
         var step = 1
         var x = origin.x + stepPx
-        while (x < w) {
+        while (x < w ) {
             drawLine(color = Color.Black, start = Offset(x, origin.y - 6f), end = Offset(x, origin.y + 6f), strokeWidth = 2f)
             val valX = step * unitsPerTick
             val label = if (valX == 0f) "0" else valX.toString()
-            drawContext.canvas.nativeCanvas.drawText(label, x - 10f, origin.y + 20f, textPaint)
+            drawContext.canvas.nativeCanvas.drawText(label, x - 10f, origin.y + 40f, textPaint)
             x += stepPx
             step++
         }
+        // X axis
+        drawArrow(
+            start = Offset(0f, origin.y),
+            end = Offset(w - axisMargin, origin.y)
+        )
         // negative x
         step = -1
         x = origin.x - stepPx
@@ -95,7 +102,7 @@ fun CartesianCanvas(moveEnabled: Boolean = true) {
             drawLine(color = Color.Black, start = Offset(x, origin.y - 6f), end = Offset(x, origin.y + 6f), strokeWidth = 2f)
             val valX = step * unitsPerTick
             val label = valX.toString()
-            drawContext.canvas.nativeCanvas.drawText(label, x - 10f, origin.y + 20f, textPaint)
+            drawContext.canvas.nativeCanvas.drawText(label, x - 10f, origin.y + 40f, textPaint)
             x -= stepPx
             step--
         }
@@ -110,6 +117,26 @@ fun CartesianCanvas(moveEnabled: Boolean = true) {
             y -= stepPx
             step++
         }
+        // Y axis
+        drawArrow(
+            start = Offset(origin.x, h),
+            end = Offset(origin.x, axisMargin)
+        )
+
+        // axis labels
+        drawContext.canvas.nativeCanvas.drawText(
+            "x",
+            w - axisMargin - 35f,
+            origin.y + 40f,
+            textPaint
+        )
+
+        drawContext.canvas.nativeCanvas.drawText(
+            "y",
+            origin.x + 25f,
+            axisMargin + 35f,
+            textPaint
+        )
         // y negative (down)
         step = -1
         y = origin.y + stepPx

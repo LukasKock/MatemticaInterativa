@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.lk.matemticainterativa.ui.components.CartesianCanvas
+import com.lk.matemticainterativa.ui.components.cartesianPlane.CartesianCanvas
 import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 import kotlin.math.abs
@@ -238,12 +238,13 @@ fun Vectors(vector1: VectorPoints,
                     }
                 }
             }){
+            CartesianCanvas(moveEnabled = false)
             Canvas(modifier = Modifier
                 .fillMaxSize()){
                 val resultVectorCenter = this.center + centerOffset
 
                 //Portrait: w=1080 h=2142
-                //Lanscape: w=2340 h=1080
+                //Landscape: w=2340 h=1080
                 val w = size.width
                 val h = size.height
 
