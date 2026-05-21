@@ -380,7 +380,7 @@ private fun PortraitLayout(
 }
 
 @Composable
-fun LandscapeLayout(content: @Composable () -> Unit){
+private fun LandscapeLayout(content: @Composable () -> Unit){
     Row(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()){
             content()
