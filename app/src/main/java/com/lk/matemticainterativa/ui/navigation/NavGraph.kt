@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.lk.matemticainterativa.ui.components.cartesianPlane.CartesianCanvas
+import com.lk.matemticainterativa.ui.components.cartesianPlane.CartesianPlane
 import com.lk.matemticainterativa.ui.components.CombinedTest.CartesianWithDistance
 import com.lk.matemticainterativa.ui.components.similarTriangles.SimilarTriangles
 import com.lk.matemticainterativa.ui.components.vectors.Operation
@@ -174,6 +174,6 @@ fun AppNav(){
             operation = Operation.SUBTRACTION,
             navController = navController
         ) }
-        composable("cartesian/") { CartesianCanvas(moveEnabled = false) }
+        composable("cartesian/") { CartesianPlane(moveEnabled = false) }
     }
 }

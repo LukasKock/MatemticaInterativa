@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.lk.matemticainterativa.ui.components.cartesianPlane.CartesianCanvas
+import com.lk.matemticainterativa.ui.components.cartesianPlane.CartesianPlane
 import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 import kotlin.math.abs
@@ -238,7 +238,7 @@ fun Vectors(vector1: VectorPoints,
                     }
                 }
             }){
-            CartesianCanvas(moveEnabled = false)
+            CartesianPlane(moveEnabled = false)
             Canvas(modifier = Modifier
                 .fillMaxSize()){
                 val resultVectorCenter = this.center + centerOffset
