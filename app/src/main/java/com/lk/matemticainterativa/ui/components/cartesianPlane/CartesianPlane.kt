@@ -18,7 +18,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CartesianCanvas(moveEnabled: Boolean = true) {
+fun CartesianPlane(moveEnabled: Boolean = true) {
     var scale by remember { mutableFloatStateOf(180f) }
     var offset by remember { mutableStateOf(Offset.Zero)}
 
