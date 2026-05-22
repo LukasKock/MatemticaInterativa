@@ -27,7 +27,7 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
             .fillMaxSize()
             .pointerInput(Unit){
                 if (moveEnabled){
-                    detectTransformGestures { centroid, pan, zoom, rotation ->
+                    detectTransformGestures { _, pan, zoom, _ ->
                         scale *= zoom
                         scale = scale.coerceIn(20f, 1000f)
                         offset += pan
@@ -148,25 +148,5 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
             y += stepPx
             step--
         }
-//        // Example: draw the function y = sin(x) in cartesian coords
-//        // map cartesian x to screen: screenX = origin.x + (cartX * scale)
-//        // screenY = origin.y - (cartY * scale)
-//        // we sample several cartesian x points
-//        val pathPoints = mutableListOf<Offset>()
-//        val cartXStart = - (origin.x / scale) - 2f
-//        val cartXEnd = ( (w - origin.x) / scale ) + 2f
-//        val samples = 500
-//        for (i in 0..samples) {
-//            val t = i / samples.toFloat()
-//            val cartX = cartXStart + t * (cartXEnd - cartXStart)
-//            val cartY = kotlin.math.sin(cartX) // example
-//            val sx = origin.x + cartX * scale
-//            val sy = origin.y - cartY * scale
-//            pathPoints.add(Offset(sx, sy))
-//        }
-//        // draw polyline
-//        for (i in 0 until pathPoints.lastIndex) {
-//            drawLine(color = Color.Blue, start = pathPoints[i], end = pathPoints[i+1], strokeWidth = 2f)
-//        }
     }
 }
