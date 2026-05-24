@@ -84,6 +84,20 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
             isAntiAlias = true
         }
 
+        //Draw Axis
+        // X axis
+        drawAxis(
+            start = Offset(axisMargin, origin.y),
+            end = Offset(w - axisMargin, origin.y),
+            color = textColor
+        )
+        // Y axis
+        drawAxis(
+            start = Offset(origin.x, h - axisMargin),
+            end = Offset(origin.x, axisMargin),
+            color = textColor
+        )
+
         // x ticks
         var step = 1
         var x = origin.x + stepPx
@@ -95,12 +109,6 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
             x += stepPx
             step++
         }
-        // X axis
-        drawArrow(
-            start = Offset(axisMargin, origin.y),
-            end = Offset(w - axisMargin, origin.y),
-            color = textColor
-        )
         // negative x
         step = -1
         x = origin.x - stepPx
@@ -123,13 +131,6 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
             y -= stepPx
             step++
         }
-        // Y axis
-        drawArrow(
-            start = Offset(origin.x, h - axisMargin),
-            end = Offset(origin.x, axisMargin),
-            color = textColor
-        )
-
         // axis labels
         drawContext.canvas.nativeCanvas.drawText(
             "x",

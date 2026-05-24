@@ -238,7 +238,7 @@ fun Vectors(vector1: VectorPoints,
                     }
                 }
             }){
-            CartesianPlane(moveEnabled = false)
+            //CartesianPlane(moveEnabled = false)
             Canvas(modifier = Modifier
                 .fillMaxSize()){
                 val resultVectorCenter = this.center + centerOffset
