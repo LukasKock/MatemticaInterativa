@@ -3,6 +3,7 @@ package com.lk.matemticainterativa.ui.components.cartesianPlane
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.sp
 
@@ -21,6 +23,11 @@ import androidx.compose.ui.unit.sp
 fun CartesianPlane(moveEnabled: Boolean = true) {
     var scale by remember { mutableFloatStateOf(180f) }
     var offset by remember { mutableStateOf(Offset.Zero)}
+
+    val isDark = isSystemInDarkTheme()
+    val backgroundColor = if(isDark)  Color(0xFF121212) else Color(0xFFFFFFFF)
+    val textColor = if (isDark) Color(0xFFE0E0E0) else Color.Black
+    val gridColor = if (isDark) Color(0xFF333333) else Color(0xFFE0E0E0)
 
     Canvas(
         modifier = Modifier
@@ -49,9 +56,9 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
             var x = origin.x % stepPx
             while (x < w) {
                 drawLine(
-                    color = Color(0xFFE0E0E0),
-                    start = Offset(x, 0f),
-                    end = Offset(x, h),
+                    color = gridColor,
+                    start = Offset(x, axisMargin),
+                    end = Offset(x, h - axisMargin),
                     strokeWidth = 1f
                 )
                 x += stepPx
@@ -60,21 +67,19 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
             var y = origin.y % stepPx
             while (y < h) {
                 drawLine(
-                    color = Color(0xFFE0E0E0),
-                    start = Offset(0f, y),
-                    end = Offset(w, y),
+                    color = gridColor,
+                    start = Offset(axisMargin, y),
+                    end = Offset(w - axisMargin, y),
                     strokeWidth = 1f
                 )
                 y += stepPx
             }
         }
-        // draw axes
-        drawLine(color = Color.Black, start = Offset(0f, origin.y), end = Offset(w - axisMargin, origin.y), strokeWidth = 3f)
-        drawLine(color = Color.Black, start = Offset(origin.x, axisMargin), end = Offset(origin.x, h), strokeWidth = 3f)
+
 
         // ticks and labels using nativeCanvas for text
         val textPaint = Paint().apply {
-            color = android.graphics.Color.BLACK
+            color = textColor.toArgb()
             textSize = 14.sp.toPx()
             isAntiAlias = true
         }
@@ -83,7 +88,7 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
         var step = 1
         var x = origin.x + stepPx
         while (x < w ) {
-            drawLine(color = Color.Black, start = Offset(x, origin.y - 6f), end = Offset(x, origin.y + 6f), strokeWidth = 2f)
+            drawLine(color = textColor, start = Offset(x, origin.y - 6f), end = Offset(x, origin.y + 6f), strokeWidth = 2f)
             val valX = step * unitsPerTick
             val label = if (valX == 0f) "0" else valX.toString()
             drawContext.canvas.nativeCanvas.drawText(label, x - 10f, origin.y + 40f, textPaint)
@@ -92,14 +97,15 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
         }
         // X axis
         drawArrow(
-            start = Offset(0f, origin.y),
-            end = Offset(w - axisMargin, origin.y)
+            start = Offset(axisMargin, origin.y),
+            end = Offset(w - axisMargin, origin.y),
+            color = textColor
         )
         // negative x
         step = -1
         x = origin.x - stepPx
         while (x > 0f) {
-            drawLine(color = Color.Black, start = Offset(x, origin.y - 6f), end = Offset(x, origin.y + 6f), strokeWidth = 2f)
+            drawLine(color = textColor, start = Offset(x, origin.y - 6f), end = Offset(x, origin.y + 6f), strokeWidth = 2f)
             val valX = step * unitsPerTick
             val label = valX.toString()
             drawContext.canvas.nativeCanvas.drawText(label, x - 10f, origin.y + 40f, textPaint)
@@ -110,7 +116,7 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
         step = 1
         var y = origin.y - stepPx
         while (y > 0f) {
-            drawLine(color = Color.Black, start = Offset(origin.x - 6f, y), end = Offset(origin.x + 6f, y), strokeWidth = 2f)
+            drawLine(color = textColor, start = Offset(origin.x - 6f, y), end = Offset(origin.x + 6f, y), strokeWidth = 2f)
             val valY = step * unitsPerTick
             val label = valY.toString()
             drawContext.canvas.nativeCanvas.drawText(label, origin.x + 10f, y + 6f, textPaint)
@@ -119,8 +125,9 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
         }
         // Y axis
         drawArrow(
-            start = Offset(origin.x, h),
-            end = Offset(origin.x, axisMargin)
+            start = Offset(origin.x, h - axisMargin),
+            end = Offset(origin.x, axisMargin),
+            color = textColor
         )
 
         // axis labels
@@ -141,7 +148,7 @@ fun CartesianPlane(moveEnabled: Boolean = true) {
         step = -1
         y = origin.y + stepPx
         while (y < h) {
-            drawLine(color = Color.Black, start = Offset(origin.x - 6f, y), end = Offset(origin.x + 6f, y), strokeWidth = 2f)
+            drawLine(color = textColor, start = Offset(origin.x - 6f, y), end = Offset(origin.x + 6f, y), strokeWidth = 2f)
             val valY = step * unitsPerTick
             val label = valY.toString()
             drawContext.canvas.nativeCanvas.drawText(label, origin.x + 10f, y + 6f, textPaint)

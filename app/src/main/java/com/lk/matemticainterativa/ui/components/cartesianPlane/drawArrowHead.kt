@@ -3,6 +3,7 @@ package com.lk.matemticainterativa.ui.components.cartesianPlane
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.platform.LocalConfiguration
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -11,10 +12,12 @@ fun DrawScope.drawArrow(
     start: Offset,
     end: Offset,
     color: Color = Color.Black,
-    strokeWidth: Float = 3f,
+    strokeWidth: Float = 4f,
     arrowLength: Float = 25f,
     arrowAngle: Float = 30f
 ) {
+
+
     // main line
     drawLine(
         color = color,
