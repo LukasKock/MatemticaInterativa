@@ -4,6 +4,8 @@ import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -88,158 +90,200 @@ fun Vectors(vector1: VectorPoints,
     fun VectorsContent(){
         Box(modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit){
-                detectDragGestures(onDragStart = { touch ->
-                    val threshold = 40f
-                    when {
-                        distanceToSegment(touch, vector1) < threshold -> {
-                            selectedVector = 1
-                        }
-                        distanceToSegment(touch, vector2) < threshold -> {
-                            selectedVector = 2
-                        }
-                        distanceToSegment(touch, resultVector) < threshold -> {
-                            selectedVector = 3
-                        }
-                    }},
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        val threshold = 17f
-                        when(selectedVector){
-                            1 -> {
-                                vector1 = vector1.copy(startPoint = vector1.startPoint + dragAmount,endPoint = vector1.endPoint + dragAmount)
-                                val delta1 = calculateDeltaStartEnd(vector1, vector2)
-                                val delta2 = calculateDeltaStartEnd(vector2, vector1)
-                                val delta3 = calculateDeltaStartStart(vector2, vector1)
-                                val delta4 = calculateDeltaStartStart(resultVector, vector1)
-                                val delta5 = calculateDeltaStartEnd(resultVector, vector1)
-                                val delta6 = calculateDeltaStartEnd(vector1, resultVector)
-                                if(abs(delta1.x) < threshold && abs(delta1.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta1.x) && abs(dragAmount.y) < abs(delta1.y)){
-                                    vector1 = vector2.copy(startPoint = vector1.startPoint + delta1, endPoint = vector1.endPoint + delta1)
+            .pointerInput(Unit) {
+                awaitEachGesture {
+                    do {
+                        val event = awaitPointerEvent()
+
+                        val fingers =
+                            event.changes.count { it.pressed }
+
+                        if (fingers >= 2) {
+
+                            val zoom =
+                                event.calculateZoom()
+
+                            if (zoom != 1f) {
+
+                                when(selectedVector){
+                                    1->{
+                                        vector1 =
+                                            scaleVectorKeepStart(
+                                                vector1,
+                                                zoom
+                                            )
+                                    }
+                                    2->{
+                                        vector2 =
+                                            scaleVectorKeepStart(
+                                                vector2,
+                                                zoom
+                                            )
+                                    }
                                 }
-                                else if(abs(delta2.x) < threshold && abs(delta2.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta2.x) && abs(dragAmount.y) < abs(delta2.y)){
-                                    vector1 = vector1.copy(startPoint = vector1.startPoint - delta2, endPoint = vector1.endPoint - delta2)
-                                }
-                                else if(abs(delta3.x) < threshold && abs(delta3.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta3.x) && abs(dragAmount.y) < abs(delta3.y)){
-                                    vector1 = vector1.copy(startPoint = vector1.startPoint - delta3, endPoint = vector1.endPoint - delta3)
-                                }
-                                else if(abs(delta4.x) < threshold && abs(delta4.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta4.x) && abs(dragAmount.y) < abs(delta4.y)){
-                                    vector1 = vector1.copy(startPoint = vector1.startPoint - delta4, endPoint = vector1.endPoint - delta4)
-                                }
-                                else if(abs(delta5.x) < threshold && abs(delta5.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta5.x) && abs(dragAmount.y) < abs(delta5.y)){
-                                    vector1 = vector1.copy(startPoint = vector1.startPoint - delta5, endPoint = vector1.endPoint - delta5)
-                                }
-                                else if(abs(delta6.x) < threshold && abs(delta6.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta6.x) && abs(dragAmount.y) < abs(delta6.y)){
-                                    vector1 = vector1.copy(startPoint = vector1.startPoint + delta6, endPoint = vector1.endPoint + delta6)
-                                }
-                            }
-                            2 ->{
-                                vector2 = vector2.copy(startPoint = vector2.startPoint + dragAmount, endPoint = vector2.endPoint + dragAmount)
-                                val delta1 = calculateDeltaStartEnd(vector2, vector1)
-                                val delta2 = calculateDeltaStartEnd(vector1, vector2)
-                                val delta3 = calculateDeltaStartStart(vector1, vector2)
-                                val delta4 = calculateDeltaStartStart(resultVector, vector2)
-                                val delta5 = calculateDeltaStartEnd(resultVector, vector2)
-                                val delta6 = calculateDeltaStartEnd(vector2, resultVector)
-                                if(abs(delta1.x) < threshold && abs(delta1.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta1.x) && abs(dragAmount.y) < abs(delta1.y)){
-                                    vector2 = vector1.copy(startPoint = vector2.startPoint + delta1, endPoint = vector2.endPoint + delta1)
-                                }
-                                else if(abs(delta2.x) < threshold && abs(delta2.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta2.x) && abs(dragAmount.y) < abs(delta2.y)){
-                                    vector2 = vector2.copy(startPoint = vector2.startPoint - delta2, endPoint = vector2.endPoint - delta2)
-                                }
-                                else if(abs(delta3.x) < threshold && abs(delta3.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta3.x) && abs(dragAmount.y) < abs(delta3.y)){
-                                    vector2 = vector2.copy(startPoint = vector2.startPoint - delta3, endPoint = vector2.endPoint - delta3)
-                                }
-                                else if(abs(delta4.x) < threshold && abs(delta4.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta4.x) && abs(dragAmount.y) < abs(delta4.y)){
-                                    vector2 = vector2.copy(startPoint = vector2.startPoint - delta4, endPoint = vector2.endPoint - delta4)
-                                }
-                                else if(abs(delta5.x) < threshold && abs(delta5.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta5.x) && abs(dragAmount.y) < abs(delta5.y)){
-                                    vector2 = vector2.copy(startPoint = vector2.startPoint - delta5, endPoint = vector2.endPoint - delta5)
-                                }
-                                else if(abs(delta6.x) < threshold && abs(delta6.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta6.x) && abs(dragAmount.y) < abs(delta6.y)){
-                                    vector2 = vector2.copy(startPoint = vector2.startPoint + delta6, endPoint = vector2.endPoint + delta6)
-                                }
-                            }
-                            3 -> {
-                                resultVector = resultVector.copy(startPoint = resultVector.startPoint + dragAmount, endPoint = resultVector.endPoint + dragAmount)
-                                val delta1 = calculateDeltaStartStart(vector2, resultVector)
-                                val delta2 = calculateDeltaStartStart(vector1, resultVector)
-                                val delta3 = calculateDeltaStartEnd(resultVector, vector1)
-                                val delta4 = calculateDeltaStartEnd(resultVector, vector2)
-                                val delta5 = calculateDeltaStartEnd(vector1, resultVector)
-                                val delta6 = calculateDeltaStartEnd(vector2, resultVector)
-                                if(abs(delta1.x) < threshold && abs(delta1.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta1.x) && abs(dragAmount.y) < abs(delta1.y)){
-                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta1, endPoint = resultVector.endPoint - delta1)
-                                }
-                                else if(abs(delta2.x) < threshold && abs(delta2.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta2.x) && abs(dragAmount.y) < abs(delta2.y)){
-                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta2, endPoint = resultVector.endPoint - delta2)
-                                }
-                                else if(abs(delta3.x) < threshold && abs(delta3.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta3.x) && abs(dragAmount.y) < abs(delta3.y)){
-                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint + delta3, endPoint = resultVector.endPoint + delta3)
-                                }
-                                else if(abs(delta4.x) < threshold && abs(delta4.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta4.x) && abs(dragAmount.y) < abs(delta4.y)){
-                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint + delta4, endPoint = resultVector.endPoint + delta4)
-                                }
-                                else if(abs(delta5.x) < threshold && abs(delta5.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta5.x) && abs(dragAmount.y) < abs(delta5.y)){
-                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta5, endPoint = resultVector.endPoint - delta5)
-                                }
-                                else if(abs(delta6.x) < threshold && abs(delta6.y) < threshold &&
-                                    abs(dragAmount.x) < abs(delta6.x) && abs(dragAmount.y) < abs(delta6.y)){
-                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta6, endPoint = resultVector.endPoint - delta6)
+                                event.changes.forEach {
+                                    it.consume()
                                 }
                             }
                         }
 
-
-
-                    },
-                    onDragEnd = {
-                        selectedVector = null
-                    })
-            }
-            .pointerInput(Unit){
-                detectTapGestures {
-                    val threshold = 40f
-
-                    selectedVector = when {
-                        distanceToSegment(it, vector1) < threshold -> {
-                            1
-                        }
-
-                        distanceToSegment(it, vector2) < threshold -> {
-                            2
-                        }
-
-                        distanceToSegment(it, resultVector) < threshold -> {
-                            3
-                        }
-
-                        else -> {
-                            null
-                        }
-                    }
+                    } while (
+                        event.changes.any { it.pressed }
+                    )
                 }
             }){
             //CartesianPlane(moveEnabled = false)
             Canvas(modifier = Modifier
-                .fillMaxSize()){
+                .fillMaxSize()
+                .pointerInput(Unit){
+                    detectDragGestures(onDragStart = { touch ->
+                        val threshold = 40f
+                        when {
+                            distanceToSegment(touch, vector1) < threshold -> {
+                                selectedVector = 1
+                            }
+                            distanceToSegment(touch, vector2) < threshold -> {
+                                selectedVector = 2
+                            }
+                            distanceToSegment(touch, resultVector) < threshold -> {
+                                selectedVector = 3
+                            }
+                        }},
+                        onDrag = { change, dragAmount ->
+                            change.consume()
+                            val threshold = 17f
+                            when(selectedVector){
+                                1 -> {
+                                    vector1 = vector1.copy(startPoint = vector1.startPoint + dragAmount,endPoint = vector1.endPoint + dragAmount)
+                                    val delta1 = calculateDeltaStartEnd(vector1, vector2)
+                                    val delta2 = calculateDeltaStartEnd(vector2, vector1)
+                                    val delta3 = calculateDeltaStartStart(vector2, vector1)
+                                    val delta4 = calculateDeltaStartStart(resultVector, vector1)
+                                    val delta5 = calculateDeltaStartEnd(resultVector, vector1)
+                                    val delta6 = calculateDeltaStartEnd(vector1, resultVector)
+                                    if(abs(delta1.x) < threshold && abs(delta1.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta1.x) && abs(dragAmount.y) < abs(delta1.y)){
+                                        vector1 = vector2.copy(startPoint = vector1.startPoint + delta1, endPoint = vector1.endPoint + delta1)
+                                    }
+                                    else if(abs(delta2.x) < threshold && abs(delta2.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta2.x) && abs(dragAmount.y) < abs(delta2.y)){
+                                        vector1 = vector1.copy(startPoint = vector1.startPoint - delta2, endPoint = vector1.endPoint - delta2)
+                                    }
+                                    else if(abs(delta3.x) < threshold && abs(delta3.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta3.x) && abs(dragAmount.y) < abs(delta3.y)){
+                                        vector1 = vector1.copy(startPoint = vector1.startPoint - delta3, endPoint = vector1.endPoint - delta3)
+                                    }
+                                    else if(abs(delta4.x) < threshold && abs(delta4.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta4.x) && abs(dragAmount.y) < abs(delta4.y)){
+                                        vector1 = vector1.copy(startPoint = vector1.startPoint - delta4, endPoint = vector1.endPoint - delta4)
+                                    }
+                                    else if(abs(delta5.x) < threshold && abs(delta5.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta5.x) && abs(dragAmount.y) < abs(delta5.y)){
+                                        vector1 = vector1.copy(startPoint = vector1.startPoint - delta5, endPoint = vector1.endPoint - delta5)
+                                    }
+                                    else if(abs(delta6.x) < threshold && abs(delta6.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta6.x) && abs(dragAmount.y) < abs(delta6.y)){
+                                        vector1 = vector1.copy(startPoint = vector1.startPoint + delta6, endPoint = vector1.endPoint + delta6)
+                                    }
+                                }
+                                2 ->{
+                                    vector2 = vector2.copy(startPoint = vector2.startPoint + dragAmount, endPoint = vector2.endPoint + dragAmount)
+                                    val delta1 = calculateDeltaStartEnd(vector2, vector1)
+                                    val delta2 = calculateDeltaStartEnd(vector1, vector2)
+                                    val delta3 = calculateDeltaStartStart(vector1, vector2)
+                                    val delta4 = calculateDeltaStartStart(resultVector, vector2)
+                                    val delta5 = calculateDeltaStartEnd(resultVector, vector2)
+                                    val delta6 = calculateDeltaStartEnd(vector2, resultVector)
+                                    if(abs(delta1.x) < threshold && abs(delta1.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta1.x) && abs(dragAmount.y) < abs(delta1.y)){
+                                        vector2 = vector1.copy(startPoint = vector2.startPoint + delta1, endPoint = vector2.endPoint + delta1)
+                                    }
+                                    else if(abs(delta2.x) < threshold && abs(delta2.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta2.x) && abs(dragAmount.y) < abs(delta2.y)){
+                                        vector2 = vector2.copy(startPoint = vector2.startPoint - delta2, endPoint = vector2.endPoint - delta2)
+                                    }
+                                    else if(abs(delta3.x) < threshold && abs(delta3.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta3.x) && abs(dragAmount.y) < abs(delta3.y)){
+                                        vector2 = vector2.copy(startPoint = vector2.startPoint - delta3, endPoint = vector2.endPoint - delta3)
+                                    }
+                                    else if(abs(delta4.x) < threshold && abs(delta4.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta4.x) && abs(dragAmount.y) < abs(delta4.y)){
+                                        vector2 = vector2.copy(startPoint = vector2.startPoint - delta4, endPoint = vector2.endPoint - delta4)
+                                    }
+                                    else if(abs(delta5.x) < threshold && abs(delta5.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta5.x) && abs(dragAmount.y) < abs(delta5.y)){
+                                        vector2 = vector2.copy(startPoint = vector2.startPoint - delta5, endPoint = vector2.endPoint - delta5)
+                                    }
+                                    else if(abs(delta6.x) < threshold && abs(delta6.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta6.x) && abs(dragAmount.y) < abs(delta6.y)){
+                                        vector2 = vector2.copy(startPoint = vector2.startPoint + delta6, endPoint = vector2.endPoint + delta6)
+                                    }
+                                }
+                                3 -> {
+                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint + dragAmount, endPoint = resultVector.endPoint + dragAmount)
+                                    val delta1 = calculateDeltaStartStart(vector2, resultVector)
+                                    val delta2 = calculateDeltaStartStart(vector1, resultVector)
+                                    val delta3 = calculateDeltaStartEnd(resultVector, vector1)
+                                    val delta4 = calculateDeltaStartEnd(resultVector, vector2)
+                                    val delta5 = calculateDeltaStartEnd(vector1, resultVector)
+                                    val delta6 = calculateDeltaStartEnd(vector2, resultVector)
+                                    if(abs(delta1.x) < threshold && abs(delta1.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta1.x) && abs(dragAmount.y) < abs(delta1.y)){
+                                        resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta1, endPoint = resultVector.endPoint - delta1)
+                                    }
+                                    else if(abs(delta2.x) < threshold && abs(delta2.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta2.x) && abs(dragAmount.y) < abs(delta2.y)){
+                                        resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta2, endPoint = resultVector.endPoint - delta2)
+                                    }
+                                    else if(abs(delta3.x) < threshold && abs(delta3.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta3.x) && abs(dragAmount.y) < abs(delta3.y)){
+                                        resultVector = resultVector.copy(startPoint = resultVector.startPoint + delta3, endPoint = resultVector.endPoint + delta3)
+                                    }
+                                    else if(abs(delta4.x) < threshold && abs(delta4.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta4.x) && abs(dragAmount.y) < abs(delta4.y)){
+                                        resultVector = resultVector.copy(startPoint = resultVector.startPoint + delta4, endPoint = resultVector.endPoint + delta4)
+                                    }
+                                    else if(abs(delta5.x) < threshold && abs(delta5.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta5.x) && abs(dragAmount.y) < abs(delta5.y)){
+                                        resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta5, endPoint = resultVector.endPoint - delta5)
+                                    }
+                                    else if(abs(delta6.x) < threshold && abs(delta6.y) < threshold &&
+                                        abs(dragAmount.x) < abs(delta6.x) && abs(dragAmount.y) < abs(delta6.y)){
+                                        resultVector = resultVector.copy(startPoint = resultVector.startPoint - delta6, endPoint = resultVector.endPoint - delta6)
+                                    }
+                                }
+                            }
+
+
+
+                        },
+                        onDragEnd = {
+                            selectedVector = null
+                        })
+                }
+                .pointerInput(Unit){
+                    detectTapGestures {
+                        val threshold = 40f
+
+                        selectedVector = when {
+                            distanceToSegment(it, vector1) < threshold -> {
+                                1
+                            }
+
+                            distanceToSegment(it, vector2) < threshold -> {
+                                2
+                            }
+
+                            distanceToSegment(it, resultVector) < threshold -> {
+                                3
+                            }
+
+                            else -> {
+                                null
+                            }
+                        }
+                    }
+                }){
                 val resultVectorCenter = this.center + centerOffset
 
                 //Portrait: w=1080 h=2142
