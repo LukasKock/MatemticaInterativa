@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.lk.matemticainterativa.ui.components.cartesianPlane.CartesianPlane
 import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 import kotlin.math.abs
@@ -257,6 +256,7 @@ fun Vectors(vector1: VectorPoints,
                     vector1 = vector1.copy(startPoint = vector1.startPoint - initialVector1.startPoint, endPoint = vector1.endPoint - initialVector1.startPoint)
                     vector2 = vector2.copy(startPoint = vector2.startPoint - initialVector2.startPoint, endPoint = vector2.endPoint - initialVector2.startPoint)
 
+                    //vector1 = vector1.copy(startPoint = vector1.startPoint, endPoint = vector1.endPoint*2f)
 
 
                     if(operation == Operation.ADDITION){
@@ -269,7 +269,7 @@ fun Vectors(vector1: VectorPoints,
 
                     vector1 = vector1.copy(
                         startPoint = resultVectorCenter + initialVector1.startPoint,
-                        endPoint = resultVectorCenter + initialVector1.endPoint
+                        endPoint = resultVectorCenter + initialVector1.endPoint/* *2f */
                     )
                     vector2 = vector2.copy(
                         startPoint = resultVectorCenter + initialVector2.startPoint,
