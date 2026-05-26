@@ -122,8 +122,8 @@ fun AppNav(){
             name1 = "a",
             name2 = "b",
             centerOffset = Offset(-300f, -200f),
-            k1 = 1.25f,
-            k2 = 1.5f,
+            k1 = 1f,
+            k2 = 1f,
             navController = navController
         ) }
         composable("vectors/2"){ Vectors(
@@ -192,16 +192,42 @@ fun AppNav(){
             navController = navController
         ) }
         composable("vectors/7"){ Vectors(
-            vector1 = VectorPoints(Offset(80f, -400f), Offset(430f, -50f)),
-            vector2 = VectorPoints(Offset(80f, 200f), Offset(430f, -150f)),
+            vector1 = VectorPoints(Offset(-120f, -500f), Offset(230f, -150f)),
+            vector2 = VectorPoints(Offset(-120f, 100f), Offset(230f, -250f)),
             color1 = Color.Red,
             color2 = Color.Green,
             colorResultVector = Color.Magenta,
             name1 = "a",
             name2 = "b",
-            centerOffset = Offset(-300f, -80f),
+            centerOffset = Offset(200f, -80f),
             k1 = -1f,
             k2 = -1f,
+            navController = navController
+        ) }
+        composable("vectors/8"){ Vectors(
+            vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
+            vector2 = VectorPoints(Offset(0f, 0f), Offset(350f, 350f)),
+            color1 = Color.Red,
+            color2 = Color.Blue,
+            colorResultVector = Color.Magenta,
+            name1 = "a",
+            name2 = "b",
+            centerOffset = Offset(-400f, -200f),
+            k1 = 1.5f,
+            k2 = 1f,
+            navController = navController
+        ) }
+        composable("vectors/9"){ Vectors(
+            vector1 = VectorPoints(Offset(0f, -100f), Offset(350f, -450f)),
+            vector2 = VectorPoints(Offset(50f, 100f), Offset(400f, 450f)),
+            color1 = Color.Red,
+            color2 = Color.Blue,
+            colorResultVector = Color.Magenta,
+            name1 = "a",
+            name2 = "b",
+            centerOffset = Offset(-450f, -200f),
+            k1 = 1.25f,
+            k2 = 1.5f,
             navController = navController
         ) }
         composable("cartesian/") { CartesianPlane(moveEnabled = false) }
