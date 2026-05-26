@@ -50,8 +50,8 @@ fun NextQuestionButton(visible: Boolean,
             }
         ){
             Text(
-                text = if(activityNumber?.toIntOrNull() == MainActivity.numberOfTriangleActivities
-                    || activityNumber?.toIntOrNull() == MainActivity.numberOfVectorActivities){
+                text = if((activity == "triangles" && activityNumber?.toIntOrNull() == MainActivity.numberOfTriangleActivities)
+                    || (activity == "vectors" && activityNumber?.toIntOrNull() == MainActivity.numberOfVectorActivities)){
                     "Finalizar"
                 } else {"Próxima pergunta"}
             )
