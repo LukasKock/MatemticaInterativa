@@ -17,7 +17,7 @@ fun isVectorSumCompleted(vector1: VectorPoints,
     val dy1r = vector1.startPoint.y - resultVector.startPoint.y
 
 
-    val threshold = 3f
+    val threshold = 6f
 
     return abs(dx12) < threshold && abs(dy12) < threshold &&
             abs(dx2r) < threshold && abs(dy2r) < threshold &&

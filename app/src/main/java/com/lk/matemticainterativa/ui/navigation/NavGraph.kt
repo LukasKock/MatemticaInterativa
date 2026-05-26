@@ -9,7 +9,6 @@ import androidx.navigation.compose.rememberNavController
 import com.lk.matemticainterativa.ui.components.cartesianPlane.CartesianPlane
 import com.lk.matemticainterativa.ui.components.CombinedTest.CartesianWithDistance
 import com.lk.matemticainterativa.ui.components.similarTriangles.SimilarTriangles
-import com.lk.matemticainterativa.ui.components.vectors.Operation
 import com.lk.matemticainterativa.ui.components.vectors.VectorPoints
 import com.lk.matemticainterativa.ui.components.vectors.Vectors
 import com.lk.matemticainterativa.ui.login.LoginScreen
@@ -123,7 +122,8 @@ fun AppNav(){
             name1 = "a",
             name2 = "b",
             centerOffset = Offset(-300f, -200f),
-            operation = Operation.ADDITION,
+            k1 = 1.25f,
+            k2 = 1.5f,
             navController = navController
         ) }
         composable("vectors/2"){ Vectors(
@@ -135,7 +135,8 @@ fun AppNav(){
             name1 = "a",
             name2 = "b",
             centerOffset = Offset(-300f, -200f),
-            operation = Operation.ADDITION,
+            k1 = 1f,
+            k2 = 1f,
             navController = navController
         ) }
         composable("vectors/3"){ Vectors(
@@ -147,7 +148,8 @@ fun AppNav(){
             name1 = "u",
             name2 = "v",
             centerOffset = Offset(-300f, 0f),
-            operation = Operation.ADDITION,
+            k1 = 1f,
+            k2 = 1f,
             navController = navController
         ) }
         composable("vectors/4"){ Vectors(
@@ -159,7 +161,8 @@ fun AppNav(){
             name1 = "u",
             name2 = "v",
             centerOffset = Offset(100f, -200f),
-            operation = Operation.SUBTRACTION,
+            k1 = 1f,
+            k2 = -1f,
             navController = navController
         ) }
         composable("vectors/5"){ Vectors(
@@ -171,7 +174,34 @@ fun AppNav(){
             name1 = "a",
             name2 = "b",
             centerOffset = Offset(-300f, -80f),
-            operation = Operation.SUBTRACTION,
+            k1 = 1f,
+            k2 = 1f,
+            navController = navController
+        ) }
+        composable("vectors/6"){ Vectors(
+            vector1 = VectorPoints(Offset(80f, -400f), Offset(430f, -50f)),
+            vector2 = VectorPoints(Offset(80f, 200f), Offset(430f, -150f)),
+            color1 = Color.Red,
+            color2 = Color.Green,
+            colorResultVector = Color.Magenta,
+            name1 = "a",
+            name2 = "b",
+            centerOffset = Offset(-300f, -80f),
+            k1 = -1f,
+            k2 = 1f,
+            navController = navController
+        ) }
+        composable("vectors/7"){ Vectors(
+            vector1 = VectorPoints(Offset(80f, -400f), Offset(430f, -50f)),
+            vector2 = VectorPoints(Offset(80f, 200f), Offset(430f, -150f)),
+            color1 = Color.Red,
+            color2 = Color.Green,
+            colorResultVector = Color.Magenta,
+            name1 = "a",
+            name2 = "b",
+            centerOffset = Offset(-300f, -80f),
+            k1 = -1f,
+            k2 = -1f,
             navController = navController
         ) }
         composable("cartesian/") { CartesianPlane(moveEnabled = false) }

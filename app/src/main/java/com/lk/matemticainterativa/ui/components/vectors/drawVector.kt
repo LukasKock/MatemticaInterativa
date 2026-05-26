@@ -9,7 +9,7 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun DrawScope.drawVector(vector: VectorPoints, vectorColor: Color, textColor: Color, isVectorSelected: Int?, name: String) {
+fun DrawScope.drawVector(vector: VectorPoints, vectorColor: Color, textColor: Color, isVectorSelected: Int?, name: String, k: Float) {
     //Draw thicker line if vector is selected
     if(isVectorSelected != null){
         drawLine(
@@ -32,9 +32,18 @@ fun DrawScope.drawVector(vector: VectorPoints, vectorColor: Color, textColor: Co
         textSize = 50f
         textAlign = android.graphics.Paint.Align.CENTER
     }
+    val nameWithConstant = when {
+        k != 1f -> {
+            "${k} $name"
+        }
+        else -> {
+            name
+        }
+    }
+
     val mid = (vector.startPoint + vector.endPoint) / 2f
     drawContext.canvas.nativeCanvas.drawText(
-        name,
+        nameWithConstant,
         mid.x,
         mid.y - 32f,
         paint

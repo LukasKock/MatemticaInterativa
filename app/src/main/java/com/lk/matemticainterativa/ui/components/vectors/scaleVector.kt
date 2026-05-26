@@ -1,13 +1,18 @@
 package com.lk.matemticainterativa.ui.components.vectors
 
-fun scaleVectorKeepStart(
+fun setVectorScale(
     vector: VectorPoints,
-    zoom: Float
+    scale: Float,
+    initialVector: VectorPoints
 ): VectorPoints {
+
+    val originalLength = initialVector.length()
+    val direction = vector.direction()
+
 
     return vector.copy(
         endPoint =
             vector.startPoint +
-                    (vector.endPoint - vector.startPoint) * zoom
+                    direction * (originalLength * scale)
     )
 }

@@ -20,6 +20,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,7 +48,8 @@ fun Vectors(vector1: VectorPoints,
             name1: String,
             name2: String,
             centerOffset: Offset,
-            operation: Operation,
+            k1: Float,
+            k2: Float,
             navController: NavController){
 
     val configuration = LocalConfiguration.current
@@ -66,6 +69,30 @@ fun Vectors(vector1: VectorPoints,
     var isTaskCompleted by remember { mutableStateOf(false) }
     var showBallon by remember { mutableStateOf(false) }
 
+    val initialVector1 = vector1
+    val initialVector2 = vector2
+
+    var vector1ScaleStep by remember { mutableIntStateOf(3) }
+    var vector2ScaleStep by remember { mutableIntStateOf(3) }
+
+    val scales = listOf(
+        0.25f,
+        0.5f,
+        0.75f,
+        1f,
+        1.25f,
+        1.5f,
+        1.75f,
+        2f,
+        2.25f,
+        2.5f,
+        2.75f,
+        3f,
+        3.5f,
+        4f
+    )
+
+    var zoomAccumulator by remember { mutableFloatStateOf(1f) }
 
     BackHandler(enabled = true) { navController.navigate("vectors/") }
 
@@ -92,6 +119,9 @@ fun Vectors(vector1: VectorPoints,
             .fillMaxSize()
             .pointerInput(Unit) {
                 awaitEachGesture {
+
+                    zoomAccumulator = 1f
+
                     do {
                         val event = awaitPointerEvent()
 
@@ -103,31 +133,82 @@ fun Vectors(vector1: VectorPoints,
                             val zoom =
                                 event.calculateZoom()
 
-                            if (zoom != 1f) {
+                            zoomAccumulator *= zoom
+
+                            if (zoomAccumulator > 1.15f) {
 
                                 when(selectedVector){
-                                    1->{
+
+                                    1 -> {
+                                        vector1ScaleStep =
+                                            (vector1ScaleStep + 1)
+                                                .coerceAtMost(scales.lastIndex)
+
                                         vector1 =
-                                            scaleVectorKeepStart(
+                                            setVectorScale(
                                                 vector1,
-                                                zoom
+                                                scales[vector1ScaleStep],
+                                                initialVector1
                                             )
                                     }
-                                    2->{
+
+                                    2 -> {
+                                        vector2ScaleStep =
+                                            (vector2ScaleStep + 1)
+                                                .coerceAtMost(scales.lastIndex)
+
                                         vector2 =
-                                            scaleVectorKeepStart(
+                                            setVectorScale(
                                                 vector2,
-                                                zoom
+                                                scales[vector2ScaleStep],
+                                                initialVector2
                                             )
                                     }
                                 }
-                                event.changes.forEach {
-                                    it.consume()
+
+                                zoomAccumulator = 1f
+                            }
+
+                            else if (zoomAccumulator < 0.85f){
+
+                                when(selectedVector){
+
+                                    1 -> {
+                                        vector1ScaleStep =
+                                            (vector1ScaleStep - 1)
+                                                .coerceAtLeast(0)
+
+                                        vector1 =
+                                            setVectorScale(
+                                                vector1,
+                                                scales[vector1ScaleStep],
+                                                initialVector1
+                                            )
+                                    }
+
+                                    2 -> {
+                                        vector2ScaleStep =
+                                            (vector2ScaleStep - 1)
+                                                .coerceAtLeast(0)
+
+                                        vector2 =
+                                            setVectorScale(
+                                                vector2,
+                                                scales[vector2ScaleStep],
+                                                initialVector2
+                                            )
+                                    }
                                 }
+
+                                zoomAccumulator = 1f
+                            }
+
+                            event.changes.forEach {
+                                it.consume()
                             }
                         }
 
-                    } while (
+                    } while(
                         event.changes.any { it.pressed }
                     )
                 }
@@ -294,26 +375,20 @@ fun Vectors(vector1: VectorPoints,
                 if (!initialized) {
                     //initializing sum vector
 
-                    val initialVector1 = vector1
-                    val initialVector2 = vector2
+
 
                     vector1 = vector1.copy(startPoint = vector1.startPoint - initialVector1.startPoint, endPoint = vector1.endPoint - initialVector1.startPoint)
                     vector2 = vector2.copy(startPoint = vector2.startPoint - initialVector2.startPoint, endPoint = vector2.endPoint - initialVector2.startPoint)
 
-                    //vector1 = vector1.copy(startPoint = vector1.startPoint, endPoint = vector1.endPoint*2f)
 
 
-                    if(operation == Operation.ADDITION){
-                        resultVector = resultVector.copy(startPoint = resultVectorCenter,
-                            endPoint = resultVectorCenter + (vector1.endPoint + vector2.endPoint))
-                    } else if(operation == Operation.SUBTRACTION){
-                        resultVector = resultVector.copy(startPoint = resultVectorCenter,
-                            endPoint = resultVectorCenter + (vector1.endPoint - vector2.endPoint))
-                    }
+                    resultVector = resultVector.copy(startPoint = resultVectorCenter,
+                            endPoint = resultVectorCenter + (vector1.endPoint*k1 + vector2.endPoint*k2))
+
 
                     vector1 = vector1.copy(
                         startPoint = resultVectorCenter + initialVector1.startPoint,
-                        endPoint = resultVectorCenter + initialVector1.endPoint/* *2f */
+                        endPoint = resultVectorCenter + initialVector1.endPoint
                     )
                     vector2 = vector2.copy(
                         startPoint = resultVectorCenter + initialVector2.startPoint,
@@ -322,7 +397,21 @@ fun Vectors(vector1: VectorPoints,
                     initialized = true
                 }
                 //Draw the vectors:
-                drawThreeVectors(vector1, vector2, resultVector, operation, color1, color2, colorResultVector, textColor, name1, name2, selectedVector)
+                drawThreeVectors(
+                    vector1 = vector1,
+                    vector2 = vector2,
+                    resultVector = resultVector,
+                    k1 = scales[vector1ScaleStep],
+                    k2 = scales[vector2ScaleStep],
+                    k1Display = k1,
+                    k2Display = k2,
+                    color1 = color1,
+                    color2 = color2,
+                    colorResultVector = colorResultVector,
+                    textColor = textColor,
+                    name1 = name1,
+                    name2 = name2,
+                    selectedVector = selectedVector)
 
                 //Draw the dotted lines:
                 if(calculateDeltaStartEndFloat(vector1,vector2)){
