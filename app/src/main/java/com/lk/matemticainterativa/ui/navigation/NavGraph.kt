@@ -230,6 +230,19 @@ fun AppNav(){
             k2 = 1.5f,
             navController = navController
         ) }
+        composable("vectors/10"){ Vectors(
+            vector1 = VectorPoints(Offset(0f, 0f), Offset(250f, -250f)),
+            vector2 = VectorPoints(Offset(0f, 0f), Offset(250f, 250f)),
+            color1 = Color.Red,
+            color2 = Color.Blue,
+            colorResultVector = Color.Magenta,
+            name1 = "v",
+            name2 = "w",
+            centerOffset = Offset(-200f, 0f),
+            k1 = 2f,
+            k2 = -2f,
+            navController = navController
+        ) }
         composable("cartesian/") { CartesianPlane(moveEnabled = false) }
     }
 }

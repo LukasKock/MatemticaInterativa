@@ -10,7 +10,7 @@ import com.lk.matemticainterativa.ui.navigation.AppNav
 class MainActivity : ComponentActivity() {
     companion object {
         const val numberOfTriangleActivities = 5
-        const val numberOfVectorActivities = 9
+        const val numberOfVectorActivities = 10
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

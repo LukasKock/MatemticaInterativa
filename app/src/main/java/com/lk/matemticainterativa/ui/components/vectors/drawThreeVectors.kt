@@ -13,7 +13,7 @@ fun DrawScope.drawThreeVectors(vector1: VectorPoints, vector2: VectorPoints, res
 
 
     val k1DisplayNo1f = when {
-        k1Display == 1f || k1Display == -1f-> {
+        k1Display == 1f || k1Display == -1f -> {
             ""
         }
         else -> {
@@ -32,11 +32,11 @@ fun DrawScope.drawThreeVectors(vector1: VectorPoints, vector2: VectorPoints, res
     val nameToDisplay = if (k1Display > 0f && k2Display > 0f) {
         "${k1DisplayNo1f} " + onlyNameNoSign(name1) + " + " + "${k2DisplayNo1f} " + onlyNameNoSign(name2)
     } else if (k1Display > 0f && k2Display < 0f){
-        "${k1DisplayNo1f} " + onlyNameNoSign(name1) + " - " + "${k2DisplayNo1f} " + onlyNameNoSign(name2)
+        "${k1DisplayNo1f} " + onlyNameNoSign(name1) + " - " + "${k2DisplayNo1f.toString().substringAfter("-")} " + onlyNameNoSign(name2)
     } else if (k1Display < 0f && k2Display > 0f){
-        "- ${k1DisplayNo1f} " + onlyNameNoSign(name1) + " + " + "${k2DisplayNo1f} " + onlyNameNoSign(name2)
+        "- ${k1DisplayNo1f.toString().substringAfter("-")} " + onlyNameNoSign(name1) + " + " + "${k2DisplayNo1f} " + onlyNameNoSign(name2)
     } else {
-        "- ${k1DisplayNo1f} " + onlyNameNoSign(name1) + " - " + "${k2DisplayNo1f} " +  onlyNameNoSign(name2)
+        "- ${k1DisplayNo1f.toString().substringAfter("-")} " + onlyNameNoSign(name1) + " - " + "${k2DisplayNo1f.toString().substringAfter("-")} " +  onlyNameNoSign(name2)
     }
 
     when (selectedVector) {
