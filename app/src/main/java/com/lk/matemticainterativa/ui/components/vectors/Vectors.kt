@@ -72,6 +72,9 @@ fun Vectors(vector1: VectorPoints,
     val initialVector1 = vector1
     val initialVector2 = vector2
 
+    var isVector1Inverted by remember { mutableStateOf(false) }
+    var isVector2Inverted by remember { mutableStateOf(false) }
+
     var vector1ScaleStep by remember { mutableIntStateOf(3) }
     var vector2ScaleStep by remember { mutableIntStateOf(3) }
 
@@ -105,11 +108,11 @@ fun Vectors(vector1: VectorPoints,
     val onInvertVector = {
         if(selectedVector == 1){
             vector1 = invertVectorKeepStart(vector1)
-            name1 = invertSignInName(name1)
+            isVector1Inverted = !isVector1Inverted
         }
         else if(selectedVector == 2){
             vector2 = invertVectorKeepStart(vector2)
-            name2 = invertSignInName(name2)
+            isVector2Inverted = !isVector2Inverted
         }
     }
 
@@ -403,15 +406,17 @@ fun Vectors(vector1: VectorPoints,
                     resultVector = resultVector,
                     k1 = scales[vector1ScaleStep],
                     k2 = scales[vector2ScaleStep],
-                    k1Display = k1,
-                    k2Display = k2,
+                    k1Initial = k1,
+                    k2Initial = k2,
                     color1 = color1,
                     color2 = color2,
                     colorResultVector = colorResultVector,
                     textColor = textColor,
                     name1 = name1,
                     name2 = name2,
-                    selectedVector = selectedVector)
+                    selectedVector = selectedVector,
+                    isVector1Inverted = isVector1Inverted,
+                    isVector2Inverted = isVector2Inverted)
 
                 //Draw the dotted lines:
                 if(calculateDeltaStartEndFloat(vector1,vector2)){

@@ -9,35 +9,41 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun DrawScope.drawVector(vector: VectorPoints, vectorColor: Color, textColor: Color, isVectorSelected: Int?, name: String, k: Float) {
-    //Draw thicker line if vector is selected
-    if(isVectorSelected != null){
-        drawLine(
-            color = vectorColor.copy(alpha = 0.4f),
-            start = vector.startPoint,
-            end = vector.endPoint,
-            strokeWidth = 12f
-        )
-    }
+fun DrawScope.drawVector(vector: VectorPoints, vectorColor: Color, textColor: Color, isVectorSelected: Int?,
+                         name: String, k: Float, isVectorInverted: Boolean) {
+
     //draw vector's line
     drawLine(
-        color = vectorColor,
+        color = if(isVectorSelected != null) vectorColor.copy(alpha = 0.6f) else vectorColor,
         start = vector.startPoint,
         end = vector.endPoint,
-        strokeWidth = 6f
+        strokeWidth = if(isVectorSelected != null) 16f else 6f
     )
     //Draw vector's letter
     val paint = android.graphics.Paint().apply {
         color = textColor.toArgb()
         textSize = 50f
         textAlign = android.graphics.Paint.Align.CENTER
+        typeface = if(isVectorSelected != null) android.graphics.Typeface.DEFAULT_BOLD else android.graphics.Typeface.DEFAULT
     }
-    val nameWithConstant = when {
-        k != 1f -> {
-            "${k} $name"
+    val nameWithConstant =
+        if(!isVectorInverted) {
+            when {
+                k != 1f -> {
+                    "${k} $name"
+                }
+                else -> {
+                    name
+                }
         }
-        else -> {
-            name
+    } else {
+        when {
+            k != 1f -> {
+                "-${k} $name"
+            }
+            else -> {
+                "- $name"
+            }
         }
     }
 
