@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -502,7 +503,7 @@ private fun PortraitLayout(
         Spacer(modifier = Modifier.height(30.dp))
         Text(
             text = text,
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(8.dp).fillMaxWidth(),
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             color = textColor

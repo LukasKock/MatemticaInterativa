@@ -352,7 +352,7 @@ private fun PortraitLayout(
 
         Text(
             text = text,
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(8.dp).fillMaxWidth(),
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             color = textColor
