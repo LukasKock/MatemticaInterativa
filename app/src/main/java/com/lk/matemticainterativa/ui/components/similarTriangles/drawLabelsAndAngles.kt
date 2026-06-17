@@ -15,7 +15,7 @@ import kotlin.math.hypot
 import kotlin.math.roundToInt
 
 fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a: Float, b: Float, c: Float,
-                                  pA: Offset, pB: Offset, pC: Offset){
+                                  pA: Offset, pB: Offset, pC: Offset, dpi: Float){
     val baseTextSize = 32f
     val paint = Paint().apply {
         color = textColor.toArgb()
@@ -26,15 +26,15 @@ fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a
     fun drawSideLabel(text: String, p1: Offset, p2: Offset, dyOffset: Float = 0f, paint: Paint) {
         val mid = (p1 + p2) / 2f
         drawContext.canvas.nativeCanvas.drawText(
-            text,
+            String.format("%s cm", text),
             mid.x,
             mid.y + dyOffset * scale,
             paint
         )
     }
-    drawSideLabel("${(pC - pB).getDistance().roundToInt()}", pB, pC, 15f, paint)
-    drawSideLabel("${(pA - pC).getDistance().roundToInt()}", pA, pC, 15f, paint)
-    drawSideLabel("${(pB - pA).getDistance().roundToInt()}", pA, pB, -15f, paint)
+    drawSideLabel("${((pC - pB).getDistance()/dpi * 2.54f).roundToInt()}", pB, pC, 15f, paint)
+    drawSideLabel("${((pA - pC).getDistance()/dpi * 2.54f).roundToInt()}", pA, pC, 15f, paint)
+    drawSideLabel("${((pB - pA).getDistance()/dpi * 2.54f).roundToInt()}", pA, pB, -15f, paint)
 
     fun angleFromSides(opposite: Float, side1: Float, side2: Float): Float {
         val cosVal = ((side1 * side1 + side2 * side2 - opposite * opposite) /

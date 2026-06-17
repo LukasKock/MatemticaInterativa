@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -128,6 +129,9 @@ fun SimilarTriangles(
             "Os triângulos a seguir são semelhantes? " +
                     "Mova, aumente e/ou diminua-os até que fiquem sobrepostos"
     }
+
+    val density = LocalDensity.current
+    val dpi = density.density * 160f
 
     BackHandler(enabled = true) { navController.navigate("triangles/")}
     @Composable
@@ -252,12 +256,12 @@ fun SimilarTriangles(
                 fun drawTriangle1(){
                     drawTriangle(pA1,pB1,pC1,triangle3Color,triangle4Color,triangleOutlineColor,
                         triangleOutlineColorSelected, isTriangle1Selected)
-                    drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1)
+                    drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1, dpi)
                 }
                 fun drawTriangle2() {
                     drawTriangle(pA2,pB2,pC2,triangle2Color,triangle1Color,triangleOutlineColor,
                         triangleOutlineColorSelected, isTriangle2Selected)
-                    drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2)
+                    drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2, dpi)
                 }
 
                 if(isTriangle1Selected){

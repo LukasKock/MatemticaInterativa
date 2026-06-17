@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
+import com.lk.matemticainterativa.ui.layout.TopBar
 import kotlin.math.abs
 
 @Composable
@@ -500,10 +502,10 @@ private fun PortraitLayout(
         modifier = Modifier.fillMaxSize()
             .background(backgroundColor)
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
         Text(
             text = text,
-            modifier = Modifier.padding(8.dp).fillMaxWidth(),
+            modifier = Modifier.padding(8.dp).fillMaxWidth()
+             .absoluteOffset(0.dp, -50.dp),
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             color = textColor

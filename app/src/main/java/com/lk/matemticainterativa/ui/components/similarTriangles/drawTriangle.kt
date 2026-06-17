@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 
 fun DrawScope.drawTriangle(pA: Offset, pB: Offset, pC: Offset, color1: Color, color2: Color, colorLine: Color,
                            colorLineSelected: Color, isTriangleSelected: Boolean = false){
-    // --- Drawing Code (remains mostly the same) ---
+
     val path = Path().apply {
         moveTo(pA.x, pA.y)
         lineTo(pB.x, pB.y)
