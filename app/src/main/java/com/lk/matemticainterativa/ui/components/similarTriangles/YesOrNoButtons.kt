@@ -24,23 +24,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import com.lk.matemticainterativa.ui.components.questionfeedback.AnswerFeedbackPanel
 import com.lk.matemticainterativa.ui.components.questionfeedback.QuestionFeedbackPopup
 
 @Composable
-fun YesOrNoButtons(areTrianglesSimilar: Boolean,
-                   explanationCorrect: String,
-                   explanationFalse: String,
-                   visible: Boolean,
-                   onFinished: @Composable () -> Unit) {
+fun YesOrNoButtons(visible: Boolean,
+                   areTrianglesSimilar: Boolean,
+                   onAnswerCorrect: () -> Unit,
+                   onAnswerWrong: () -> Unit) {
 
     if(!visible) return
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    var showFeedback by remember { mutableStateOf(false) }
-    var isUserAnswerCorrect by remember { mutableStateOf(false) }
-    var wasDialogDismissed by remember { mutableStateOf(false) }
 
     val isDark = isSystemInDarkTheme()
     Box(
@@ -52,8 +49,10 @@ fun YesOrNoButtons(areTrianglesSimilar: Boolean,
             Button(
                 modifier = buttonModifier,
                 onClick = {
-                    if(areTrianglesSimilar) isUserAnswerCorrect = true
-                    showFeedback = true
+                    if(areTrianglesSimilar)
+                        onAnswerCorrect()
+                    else
+                        onAnswerWrong()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (isDark) colorScheme.primary else Color(0xFF2585D3),
@@ -64,8 +63,10 @@ fun YesOrNoButtons(areTrianglesSimilar: Boolean,
             Button(
                 modifier = buttonModifier,
                 onClick = {
-                    if(!areTrianglesSimilar) isUserAnswerCorrect = true
-                    showFeedback = true
+                    if(!areTrianglesSimilar)
+                        onAnswerCorrect()
+                    else
+                        onAnswerWrong()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (isDark) colorScheme.primary else Color(0xFF009688),
@@ -95,12 +96,4 @@ fun YesOrNoButtons(areTrianglesSimilar: Boolean,
             }
         }
     }
-    if (showFeedback) {
-        QuestionFeedbackPopup(
-            isCorrect = isUserAnswerCorrect,
-            onDismiss = { showFeedback = false
-                wasDialogDismissed = true },
-            explanation = if (isUserAnswerCorrect) explanationCorrect else explanationFalse)
-    }
-    if(wasDialogDismissed) onFinished()
 }

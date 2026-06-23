@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
+import com.lk.matemticainterativa.ui.components.questionfeedback.AnswerFeedbackPanel
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 import com.lk.matemticainterativa.ui.modes.EnableImmersiveMode
 
@@ -117,14 +118,19 @@ fun SimilarTriangles(
     var wereYesOrNoButtonsPressed by rememberSaveable{ mutableStateOf(false) }
     var isInMovingMode by rememberSaveable { mutableStateOf( true ) }
     var showSuccess by rememberSaveable { mutableStateOf(false) }
-    var wasCongratsMessageShowned by rememberSaveable { mutableStateOf(false)}
+    var wasCongratsMessageShowed by rememberSaveable { mutableStateOf(false)}
+
+    var showFeedback by remember { mutableStateOf(false) }
+    var isUserAnswerCorrect by remember { mutableStateOf(false) }
+
+
 
 
     val titleText = when {
         showSuccess  ->
             "Os triângulos são semelhantes!"
         wereYesOrNoButtonsPressed -> "Atividade terminada"
-        wasCongratsMessageShowned -> "Agora responda: Os triângulos são semelhantes?"
+        wasCongratsMessageShowed -> "Agora responda: Os triângulos são semelhantes?"
         else ->
             "Os triângulos a seguir são semelhantes? " +
                     "Mova, aumente e/ou diminua-os até que fiquem sobrepostos"
@@ -292,7 +298,7 @@ fun SimilarTriangles(
 
 
             LaunchedEffect(isInMovingMode, pA1, pB1, pC1, pA2, pB2, pC2) {
-                if (isInMovingMode && !wasCongratsMessageShowned) {
+                if (isInMovingMode && !wasCongratsMessageShowed) {
                     val triangle1 = TrianglePoints(pA1, pB1, pC1)
                     val triangle2 = TrianglePoints(pA2, pB2, pC2)
 
@@ -305,9 +311,20 @@ fun SimilarTriangles(
             BalloonAnimation(visible = showSuccess,
                 onFinished = { showSuccess = false
                     isInMovingMode = true
-                    wasCongratsMessageShowned = true
+                    wasCongratsMessageShowed = true
                     isTriangle1Selected = false
                     isTriangle2Selected = false})
+
+            AnswerFeedbackPanel(
+                visible = showFeedback,
+                isCorrect = isUserAnswerCorrect,
+                explanation = if(isUserAnswerCorrect) explanationCorrect else explanationFalse,
+                onContinue = {
+                    wereYesOrNoButtonsPressed = true
+                    showFeedback = false
+                    isUserAnswerCorrect = false
+                }
+            )
         }
     }
     if(!isLandscape){
@@ -316,11 +333,13 @@ fun SimilarTriangles(
             text = titleText,
             textColor = textColor,
             content = { TriangleCanvasContent() },
-            buttonsContent = {YesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
-                explanationCorrect = explanationCorrect,
-                explanationFalse = explanationFalse,
+            buttonsContent = {YesOrNoButtons(
                 visible = !wereYesOrNoButtonsPressed,
-                onFinished = {wereYesOrNoButtonsPressed = true})},
+                areTrianglesSimilar = areTrianglesSimilar,
+                onAnswerCorrect = {isUserAnswerCorrect = true
+                                  showFeedback = true },
+                onAnswerWrong = {isUserAnswerCorrect = false
+                                showFeedback = true})},
             nextQuestionButton = { NextQuestionButton(wereYesOrNoButtonsPressed, navController) }
         )
     } else {
@@ -329,11 +348,13 @@ fun SimilarTriangles(
             text = titleText,
             textColor = textColor,
             content = { TriangleCanvasContent() },
-            buttonsContent = {YesOrNoButtons(areTrianglesSimilar = areTrianglesSimilar,
-                explanationCorrect = explanationCorrect,
-                explanationFalse = explanationFalse,
+            buttonsContent = {YesOrNoButtons(
                 visible = !wereYesOrNoButtonsPressed,
-                onFinished = {wereYesOrNoButtonsPressed = true})},
+                areTrianglesSimilar = areTrianglesSimilar,
+                onAnswerCorrect = {isUserAnswerCorrect = true
+                    showFeedback = true},
+                onAnswerWrong = {isUserAnswerCorrect = false
+                    showFeedback = true})},
             nextQuestionButton = {NextQuestionButton(wereYesOrNoButtonsPressed, navController)}
         )
     }
