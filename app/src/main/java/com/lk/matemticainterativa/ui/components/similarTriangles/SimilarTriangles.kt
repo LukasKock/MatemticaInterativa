@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -43,6 +44,7 @@ import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
 import com.lk.matemticainterativa.ui.components.questionfeedback.AnswerFeedbackPanel
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 import com.lk.matemticainterativa.ui.modes.EnableImmersiveMode
+import okhttp3.internal.wait
 
 @Composable
 fun SimilarTriangles(
@@ -319,10 +321,10 @@ fun SimilarTriangles(
                 isCorrect = isUserAnswerCorrect,
                 explanation = if(isUserAnswerCorrect) explanationCorrect else explanationFalse,
                 onContinue = {
-                    wereYesOrNoButtonsPressed = true
                     showFeedback = false
-                    isUserAnswerCorrect = false
-                }
+                },
+                modifier = Modifier.align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
             )
         }
     }
@@ -336,10 +338,12 @@ fun SimilarTriangles(
                 visible = !wereYesOrNoButtonsPressed,
                 areTrianglesSimilar = areTrianglesSimilar,
                 onAnswerCorrect = {isUserAnswerCorrect = true
-                                  showFeedback = true },
+                                    showFeedback = true
+                                    wereYesOrNoButtonsPressed = true},
                 onAnswerWrong = {isUserAnswerCorrect = false
-                                showFeedback = true})},
-            nextQuestionButton = { NextQuestionButton(wereYesOrNoButtonsPressed, navController) }
+                                    showFeedback = true
+                                    wereYesOrNoButtonsPressed = true})},
+            nextQuestionButton = { NextQuestionButton(wereYesOrNoButtonsPressed && !showFeedback, navController) }
         )
     } else {
         LandscapeLayout(
@@ -351,9 +355,11 @@ fun SimilarTriangles(
                 visible = !wereYesOrNoButtonsPressed,
                 areTrianglesSimilar = areTrianglesSimilar,
                 onAnswerCorrect = {isUserAnswerCorrect = true
-                    showFeedback = true},
+                                    showFeedback = true
+                                    wereYesOrNoButtonsPressed = true},
                 onAnswerWrong = {isUserAnswerCorrect = false
-                    showFeedback = true})},
+                                    showFeedback = true
+                                    wereYesOrNoButtonsPressed = true})},
             nextQuestionButton = {NextQuestionButton(wereYesOrNoButtonsPressed, navController)}
         )
     }
