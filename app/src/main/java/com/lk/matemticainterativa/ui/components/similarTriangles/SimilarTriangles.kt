@@ -121,7 +121,7 @@ fun SimilarTriangles(
     var wasCongratsMessageShowed by rememberSaveable { mutableStateOf(false)}
 
     var showFeedback by remember { mutableStateOf(false) }
-    var isUserAnswerCorrect by remember { mutableStateOf(false) }
+    var isUserAnswerCorrect by remember { mutableStateOf(false) } //Shouldn't this be controlled inside the YesOrNoButtons?
 
 
 
@@ -141,9 +141,8 @@ fun SimilarTriangles(
 
     BackHandler(enabled = true) { navController.navigate("triangles/")}
     @Composable
-    fun TriangleCanvasContent(
-        /* pass needed states if necessary */
-    ) {
+    fun TriangleCanvasContent()
+    {
         Box(
             modifier = Modifier
                 .fillMaxSize()
