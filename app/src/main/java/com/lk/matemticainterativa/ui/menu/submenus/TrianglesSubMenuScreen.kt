@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.lk.matemticainterativa.MainActivity.Companion.numberOfTriangleActivities
 import com.lk.matemticainterativa.ui.menu.MenuItem
 
 @Composable
@@ -27,31 +28,12 @@ fun TrianglesSubMenuScreen(navController: NavController) {
         .fillMaxSize(),
         contentPadding = contentPadding(16.dp, 30.dp)) {
 
-        item {
-            MenuItem("Exercício 1") {
-                navController.navigate("triangles/1")
+        for(triangleActivityNumber in 1..numberOfTriangleActivities){
+            item {
+                MenuItem("Exercício ${triangleActivityNumber}") {
+                    navController.navigate("triangles/${triangleActivityNumber}")
+                }
             }
         }
-        item {
-            MenuItem("Exercício 2") {
-                navController.navigate("triangles/2")
-            }
-        }
-        item {
-            MenuItem("Exercício 3") {
-                navController.navigate("triangles/3")
-            }
-        }
-        item {
-            MenuItem("Exercício 4") {
-                navController.navigate("triangles/4")
-            }
-        }
-        item {
-            MenuItem("Exercício 5") {
-                navController.navigate("triangles/5")
-            }
-        }
-
     }
 }

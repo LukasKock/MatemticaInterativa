@@ -15,6 +15,12 @@ import kotlin.math.hypot
 import kotlin.math.roundToInt
 
 fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a: Float, b: Float, c: Float,
+                                  showSideA: Boolean = true,
+                                  showSideB: Boolean = true,
+                                  showSideC: Boolean = true,
+                                  showAngleA: Boolean = true,
+                                  showAngleB: Boolean = true,
+                                  showAngleC: Boolean = true,
                                   pA: Offset, pB: Offset, pC: Offset, dpi: Float){
     val baseTextSize = 32f
     val paint = Paint().apply {
@@ -32,9 +38,9 @@ fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a
             paint
         )
     }
-    drawSideLabel("${((pC - pB).getDistance()/dpi * 2.54f).roundToInt()}", pB, pC, 15f, paint)
-    drawSideLabel("${((pA - pC).getDistance()/dpi * 2.54f).roundToInt()}", pA, pC, 15f, paint)
-    drawSideLabel("${((pB - pA).getDistance()/dpi * 2.54f).roundToInt()}", pA, pB, -15f, paint)
+    if(showSideA) drawSideLabel("${((pC - pB).getDistance()/dpi * 2.54f).roundToInt()}", pB, pC, 15f, paint)
+    if(showSideB) drawSideLabel("${((pA - pC).getDistance()/dpi * 2.54f).roundToInt()}", pA, pC, 15f, paint)
+    if(showSideC) drawSideLabel("${((pB - pA).getDistance()/dpi * 2.54f).roundToInt()}", pA, pB, -15f, paint)
 
     fun angleFromSides(opposite: Float, side1: Float, side2: Float): Float {
         val cosVal = ((side1 * side1 + side2 * side2 - opposite * opposite) /
@@ -80,9 +86,9 @@ fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a
 
     // Draw the small arcs near vertices
     val arcRadius = 40f * scale
-    drawAngleArc(pA, pB, pC, angleA, arcRadius)
-    drawAngleArc(pB, pA, pC, angleB, arcRadius)
-    drawAngleArc(pC, pA, pB, angleC, arcRadius)
+    if(showAngleA) drawAngleArc(pA, pB, pC, angleA, arcRadius)
+    if(showAngleB) drawAngleArc(pB, pA, pC, angleB, arcRadius)
+    if(showAngleC) drawAngleArc(pC, pA, pB, angleC, arcRadius)
 
     // --- Draw the angle labels INSIDE the triangle, following its rotation ---
     val newCentroid = (pA + pB + pC) / 3f
@@ -98,19 +104,19 @@ fun DrawScope.drawLabelsAndAngles(textColor: Color, scale: Float, tilt: Float, a
     val labelPosC = pC.moveToward(newCentroid, labelFraction)
 
 
-    drawContext.canvas.nativeCanvas.drawText(
+    if(showAngleA) drawContext.canvas.nativeCanvas.drawText(
         "${angleA.roundToInt()}°",
         labelPosA.x,
         labelPosA.y,
         paint
     )
-    drawContext.canvas.nativeCanvas.drawText(
+    if(showAngleB) drawContext.canvas.nativeCanvas.drawText(
         "${angleB.roundToInt()}°",
         labelPosB.x,
         labelPosB.y,
         paint
     )
-    drawContext.canvas.nativeCanvas.drawText(
+    if(showAngleC) drawContext.canvas.nativeCanvas.drawText(
         "${angleC.roundToInt()}°",
         labelPosC.x,
         labelPosC.y,

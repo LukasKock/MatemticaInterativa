@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,6 +63,19 @@ fun SimilarTriangles(
     initialScale2: Float = 1f,
     initialTilt1: Float = -1f,
     initialTilt2: Float = -1f,
+    showSideA1: Boolean = true,
+    showSideB1: Boolean = true,
+    showSideC1: Boolean = true,
+    showAngleA1: Boolean = true,
+    showAngleB1: Boolean = true,
+    showAngleC1: Boolean = true,
+    showSideA2: Boolean = true,
+    showSideB2: Boolean = true,
+    showSideC2: Boolean = true,
+    showAngleA2: Boolean = true,
+    showAngleB2: Boolean = true,
+    showAngleC2: Boolean = true,
+    questionText: AnnotatedString,
     areTrianglesSimilar: Boolean,
     explanationCorrect: String,
     explanationFalse: String,
@@ -130,12 +144,11 @@ fun SimilarTriangles(
 
     val titleText = when {
         showSuccess  ->
-            "Os triângulos são semelhantes!"
-        wereYesOrNoButtonsPressed -> "Atividade terminada"
-        wasCongratsMessageShowed -> "Agora responda: Os triângulos são semelhantes?"
+            AnnotatedString("Os triângulos são semelhantes!")
+        wereYesOrNoButtonsPressed -> AnnotatedString("Atividade terminada")
+        wasCongratsMessageShowed -> AnnotatedString("Agora responda: Os triângulos são semelhantes?")
         else ->
-            "Os triângulos a seguir são semelhantes? " +
-                    "Mova, aumente e/ou diminua-os até que fiquem sobrepostos"
+            questionText
     }
 
     val density = LocalDensity.current
@@ -263,12 +276,18 @@ fun SimilarTriangles(
                 fun drawTriangle1(){
                     drawTriangle(pA1,pB1,pC1,triangle3Color,triangle4Color,triangleOutlineColor,
                         triangleOutlineColorSelected, isTriangle1Selected)
-                    drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1, pA1, pB1, pC1, dpi)
+                    drawLabelsAndAngles(textColor, scale1, tilt1,a1, b1, c1,
+                        showSideA1, showSideB1, showSideC1,
+                        showAngleA1, showAngleB1, showAngleC1,
+                        pA1, pB1, pC1, dpi)
                 }
                 fun drawTriangle2() {
                     drawTriangle(pA2,pB2,pC2,triangle2Color,triangle1Color,triangleOutlineColor,
                         triangleOutlineColorSelected, isTriangle2Selected)
-                    drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2, pA2, pB2, pC2, dpi)
+                    drawLabelsAndAngles(textColor, scale2, tilt2, a2, b2, c2,
+                        showSideA2, showSideB2, showSideC2,
+                        showAngleA2, showAngleB2, showAngleC2,
+                        pA2, pB2, pC2, dpi)
                 }
 
                 if(isTriangle1Selected){
@@ -367,7 +386,7 @@ fun SimilarTriangles(
 @Composable
 private fun PortraitLayout(
     backgroundColor: Color,
-    text: String,
+    text: AnnotatedString,
     textColor: Color,
     content: @Composable () -> Unit,
     buttonsContent: @Composable () -> Unit,
@@ -402,7 +421,7 @@ private fun PortraitLayout(
 @Composable
 private fun LandscapeLayout(
     backgroundColor: Color,
-    text: String,
+    text: AnnotatedString,
     textColor: Color,
     content: @Composable () -> Unit,
     buttonsContent: @Composable () -> Unit,
