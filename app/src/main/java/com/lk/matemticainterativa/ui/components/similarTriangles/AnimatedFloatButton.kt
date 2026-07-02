@@ -7,9 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,7 +33,8 @@ fun AnimatedFloatButton(
     initialTilt1: Float,
     initialTilt2: Float,
     onTiltChange: (Float) -> Unit,
-    visible: Boolean
+    visible: Boolean,
+    onReset: () -> Unit
 ) {
     if(!visible) return
 
@@ -78,8 +77,16 @@ fun AnimatedFloatButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.End
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        Button(modifier = Modifier.padding(8.dp),
+            onClick = onReset) {
+            Text(
+                text = "Reset",
+                fontSize = 14.sp
+            )
+        }
         Button(
             modifier = if(isLandscape) Modifier.padding(0.dp, 26.dp, 8.dp, 0.dp)
             else Modifier.padding(0.dp),

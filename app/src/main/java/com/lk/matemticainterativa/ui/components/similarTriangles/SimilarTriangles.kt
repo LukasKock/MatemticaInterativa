@@ -45,7 +45,6 @@ import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
 import com.lk.matemticainterativa.ui.components.questionfeedback.AnswerFeedbackPanel
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
 import com.lk.matemticainterativa.ui.modes.EnableImmersiveMode
-import okhttp3.internal.wait
 
 @Composable
 fun SimilarTriangles(
@@ -312,7 +311,19 @@ fun SimilarTriangles(
                         isTriangle2Selected -> tilt2 = newTilt
                     }
                 },
-                visible = true
+                visible = true,
+                onReset = {
+                    tilt1 = initialTilt1
+                    tilt2 = initialTilt2
+                    rotation1 = initialRotation1
+                    rotation2 = initialRotation2
+                    scale1 = initialScale1
+                    scale2 = initialScale2
+                    panOffset1 = initialOffset1
+                    panOffset2 = initialOffset2
+                    isTriangle1Selected = false
+                    isTriangle2Selected = false
+                }
             )
 
 

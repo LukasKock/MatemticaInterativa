@@ -10,7 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.lk.matemticainterativa.ui.components.cartesianPlane.CartesianPlane
-import com.lk.matemticainterativa.ui.components.CombinedTest.CartesianWithDistance
 import com.lk.matemticainterativa.ui.components.similarTriangles.SimilarTriangles
 import com.lk.matemticainterativa.ui.components.vectors.VectorPoints
 import com.lk.matemticainterativa.ui.components.vectors.Vectors
@@ -134,10 +133,11 @@ fun AppNav(){
                 questionText = buildAnnotatedString {
                     append("Os triângulos a seguir são semelhantes? ")
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Mova, aumente e/ou diminua-os até que fiquem sobrepostos")
+                        append("Dê um \"flip\" se for necessário")
                     }
                 },
-                explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque ele possui dois ângulos homólogos",
+                explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque ele possui dois ângulos congruentes "
+                + "(verifique isso na posição inicial)",
                 explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais",
                 navController = navController)
         }
