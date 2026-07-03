@@ -60,12 +60,12 @@ fun AppNav(){
                 questionText = buildAnnotatedString {
                     append("Os triângulos a seguir são semelhantes? ")
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Mova, aumente e/ou diminua-os até que fiquem sobrepostos")
+                        append("Mova, aumente e/ou diminua-os até que fiquem sobrepostos.")
                     }
                 },
                 areTrianglesSimilar = true,
                 explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque ele possui os três ângulos congruentes. "
-                + "Note que seus ângulos e lados são congruentes quando os triângulos estão sobrepostos",
+                + "Note que seus ângulos e lados são congruentes quando os triângulos estão sobrepostos.",
                 explanationFalse = "Os triângulos são semelhantes porque seus ângulos são congruentes e seus lados são homólogos.",
                 navController = navController)
         }
@@ -97,12 +97,12 @@ fun AppNav(){
                 questionText = buildAnnotatedString {
                     append("Os triângulos a seguir são semelhantes? ")
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Os lados de 4 e 6 cm são paralelos")
+                        append("Os lados de 4 e 6 cm são paralelos.")
                     }
                 },
                 areTrianglesSimilar = true,
-                explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes pelo caso A.L.A",
-                explanationFalse = "Os triângulos são semelhantes pelo caso A.L.A. Mova-os e verifique que um se \"encaixa\" no outro.",
+                explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes pelo caso A.L.A..",
+                explanationFalse = "Os triângulos são semelhantes pelo caso A.L.A.. Mova-os e verifique que um se \"encaixa\" no outro.",
                 navController = navController)
         }
         triangleActivityNumber++
@@ -133,12 +133,12 @@ fun AppNav(){
                 questionText = buildAnnotatedString {
                     append("Os triângulos a seguir são semelhantes? ")
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Dê um \"flip\" se for necessário")
+                        append("Dê um \"flip\" se for necessário.")
                     }
                 },
                 explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque ele possui dois ângulos congruentes "
-                + "(verifique isso na posição inicial)",
-                explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais",
+                + "(verifique isso na posição inicial).",
+                explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais.",
                 navController = navController)
         }
         triangleActivityNumber++
@@ -168,19 +168,21 @@ fun AppNav(){
                     questionText = buildAnnotatedString {
                         append("Os triângulos a seguir são semelhantes? ")
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("Mova, aumente e/ou diminua-os até que fiquem sobrepostos")
+                            append("Tente sobrepor um no outro.")
                         }
                     },
                 areTrianglesSimilar = false,
-                explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque seus ângulos são diferentes",
-                explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes",
+                explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque seus três ângulos são diferentes. "
+                    + "Veja que não é possível sobrepor um no outro.",
+                explanationFalse = "Os triângulos não são semelhantes porque seus três ângulos são diferentes. " +
+                        "Veja que não é possível sobrepor um no outro.",
                     navController = navController)
         }
         triangleActivityNumber++
         composable("triangles/${triangleActivityNumber}"){
             SimilarTriangles(
                 a1 = 1040f, b1 = 1040f, c1 = 650f,
-                a2 = 800f, b2 = 800f, c2 = 500f,
+                a2 = 520f, b2 = 520f, c2 = 325f,
                 initialOffset1 = Offset(-150f, -200f),
                 initialOffset2 = Offset(150f, 200f),
                 initialRotation1 = 0f,
@@ -192,24 +194,23 @@ fun AppNav(){
 //                showSideA1 = false,
 //                showSideB1 = false,
 //                showSideC1 = false,
-//                showAngleA1 = false,
-//                showAngleB1 = false,
-//                showAngleC1 = false,
+                showAngleA1 = false,
+                showAngleB1 = false,
+                showAngleC1 = false,
 //                showSideA2 = false,
 //                showSideB2 = false,
 //                showSideC2 = false,
-//                showAngleA2 = false,
-//                showAngleB2 = false,
-//                showAngleC2 = false,
+                showAngleA2 = false,
+                showAngleB2 = false,
+                showAngleC2 = false,
                 questionText = buildAnnotatedString {
-                    append("Os triângulos a seguir são semelhantes? ")
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Mova, aumente e/ou diminua-os até que fiquem sobrepostos")
-                    }
+                    append("Os triângulos a seguir são semelhantes?")
                 },
                 areTrianglesSimilar = true,
-                explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes porque ele possui dois ângulos homólogos",
-                explanationFalse = "Os triângulos são semelhantes porque seus ângulos são iguais",
+                explanationCorrect = "Parabéns, você acertou. Os triângulos são semelhantes pelo caso L.L.L. (lado-lado-lado). "
+                + "A razão de proporção é dois",
+                explanationFalse = "Os triângulos são semelhantes pelo caso L.L.L. (lado-lado-lado). "
+                        + "A razão de proporção é dois",
                 navController = navController)
         }
         triangleActivityNumber++
@@ -225,27 +226,26 @@ fun AppNav(){
                 initialScale2 = 1f,
                 initialTilt1 = 1f,
                 initialTilt2 = 1f,
-//                showSideA1 = false,
-//                showSideB1 = false,
-//                showSideC1 = false,
-//                showAngleA1 = false,
-//                showAngleB1 = false,
+                showSideA1 = false,
+                showSideB1 = false,
+                showSideC1 = false,
+                showAngleA1 = false,
+                showAngleB1 = false,
 //                showAngleC1 = false,
-//                showSideA2 = false,
-//                showSideB2 = false,
-//                showSideC2 = false,
+                showSideA2 = false,
+                showSideB2 = false,
+                showSideC2 = false,
 //                showAngleA2 = false,
-//                showAngleB2 = false,
-//                showAngleC2 = false,
+                showAngleB2 = false,
+                showAngleC2 = false,
                 questionText = buildAnnotatedString {
                     append("Os triângulos a seguir são semelhantes? ")
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Mova, aumente e/ou diminua-os até que fiquem sobrepostos")
-                    }
                 },
                 areTrianglesSimilar = false,
-                explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque seus ângulos são diferentes",
-                explanationFalse = "Os triângulos não são semelhantes porque seus ângulos são diferentes",
+                explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque possui dois ângulos diferentes, "
+                + "então o terceiro só pode ser diferente também.",
+                explanationFalse = "Os triângulos não são semelhantes porque possui dois ângulos diferentes, "
+                        + "então o terceiro só pode ser diferente também.",
                 navController = navController)
         }
         composable("vectors/") { VectorsSubMenuScreen(navController) }
