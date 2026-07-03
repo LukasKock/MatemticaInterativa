@@ -153,7 +153,12 @@ fun SimilarTriangles(
     val density = LocalDensity.current
     val dpi = density.density * 160f
 
-    BackHandler(enabled = true) { navController.navigate("triangles/")}
+    BackHandler(enabled = true) {
+        navController.navigate("triangles/")
+        showSuccess = false
+        wasCongratsMessageShowed = true
+        wereYesOrNoButtonsPressed = true
+    }
     @Composable
     fun TriangleCanvasContent()
     {
