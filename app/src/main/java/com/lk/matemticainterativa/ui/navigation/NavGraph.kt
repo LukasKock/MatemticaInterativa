@@ -30,6 +30,8 @@ fun AppNav(){
             val username = backStackEntry.arguments?.getString("username") ?: "Usuário não encontrado"
             MainScreen(username = username, navController = navController)
         }
+
+        //Triangle Activities:
         composable("triangles/"){
             TrianglesSubMenuScreen(navController)
         }
@@ -248,6 +250,43 @@ fun AppNav(){
                         + "então o terceiro só pode ser diferente também.",
                 navController = navController)
         }
+        triangleActivityNumber++
+        composable("triangles/${triangleActivityNumber}"){
+            SimilarTriangles(
+                a1 = 480f, b1 = 480f, c1 = 480f,
+                a2 = 400f, b2 = 500f, c2 = 400f,
+                initialOffset1 = Offset(-200f, -150f),
+                initialOffset2 = Offset(270f, 0f),
+                initialRotation1 = -20f,
+                initialRotation2 = -20f,
+                initialScale1 = 1f,
+                initialScale2 = 1f,
+                initialTilt1 = 1f,
+                initialTilt2 = -1f,
+//                showSideA1 = false,
+//                showSideB1 = false,
+//                showSideC1 = false,
+//                showAngleA1 = false,
+//                showAngleB1 = false,
+//                showAngleC1 = false,
+//                showSideA2 = false,
+//                showSideB2 = false,
+//                showSideC2 = false,
+//                showAngleA2 = false,
+//                showAngleB2 = false,
+//                showAngleC2 = false,
+                questionText = buildAnnotatedString {
+                    append("Os triângulos a seguir são semelhantes? ")
+                },
+                areTrianglesSimilar = false,
+                explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque possui dois ângulos diferentes, "
+                        + "então o terceiro só pode ser diferente também.",
+                explanationFalse = "Os triângulos não são semelhantes porque possui dois ângulos diferentes, "
+                        + "então o terceiro só pode ser diferente também.",
+                navController = navController)
+        }
+
+        //Vectors Activities:
         composable("vectors/") { VectorsSubMenuScreen(navController) }
         composable("vectors/${vectorActivityNumber}"){ Vectors(
             vector1 = VectorPoints(Offset(0f, 0f), Offset(350f, -350f)),
@@ -388,6 +427,8 @@ fun AppNav(){
             k2 = -2f,
             navController = navController
         ) }
+
+        //Cartesian Plane Activity (mudar)
         composable("cartesian/") { CartesianPlane(moveEnabled = false) }
     }
 }
