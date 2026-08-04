@@ -244,9 +244,9 @@ fun AppNav(){
                     append("Os triângulos a seguir são semelhantes? ")
                 },
                 areTrianglesSimilar = false,
-                explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque possui dois ângulos diferentes, "
+                explanationCorrect = "Parabéns, você acertou. Os triângulos não são semelhantes porque possui um ângulo igual mas o outro diferente, "
                 + "então o terceiro só pode ser diferente também.",
-                explanationFalse = "Os triângulos não são semelhantes porque possui dois ângulos diferentes, "
+                explanationFalse = "Os triângulos não são semelhantes porque possui um ângulo igual mas o outro diferente, "
                         + "então o terceiro só pode ser diferente também.",
                 navController = navController)
         }
