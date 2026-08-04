@@ -190,14 +190,21 @@ fun SimilarTriangles(
                                 }
                             }
                         }
+
                         if(isTriangle1Selected) {
-                            rotation1 += gestureRotate
-                            scale1 = (scale1 * gestureZoom).coerceIn(0.3f, 6f)
-                            panOffset1 += pan // Accumulate the pan gesture
+                            if(gestureRotate != 0f && gestureZoom != 1f){
+                                rotation1 += gestureRotate
+                                scale1 = (scale1 * gestureZoom).coerceIn(0.3f, 6f)
+                            } else{
+                                panOffset1 += pan // Accumulate the pan gesture
+                            }
                         } else if(isTriangle2Selected){
-                            rotation2 += gestureRotate
-                            scale2 = (scale2 * gestureZoom).coerceIn(0.3f, 6f)
-                            panOffset2 += pan // Accumulate the pan gesture
+                            if(gestureRotate != 0f && gestureZoom != 1f){
+                                rotation2 += gestureRotate
+                                scale2 = (scale2 * gestureZoom).coerceIn(0.3f, 6f)
+                            } else{
+                                panOffset2 += pan // Accumulate the pan gesture
+                            }
                         }else{
                             return@detectTransformGestures
                         }
