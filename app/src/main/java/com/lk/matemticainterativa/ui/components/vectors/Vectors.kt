@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,12 +27,15 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.lk.matemticainterativa.ui.components.auxiliary.NextQuestionButton
 import com.lk.matemticainterativa.ui.components.questionfeedback.BalloonAnimation
+import com.lk.matemticainterativa.ui.modes.EnableImmersiveMode
 import kotlin.math.abs
 
 @Composable
@@ -57,14 +62,26 @@ fun Vectors(vector1: VectorPoints,
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
-    var vector1 by remember { mutableStateOf(vector1) }
-    var vector2 by remember { mutableStateOf(vector2) }
-    var initialized by remember { mutableStateOf(false) }
+    val vector1Saver = listSaver(
+        save = { listOf(it.startPoint.x, it.startPoint.y, it.endPoint.x, it.endPoint.y, ) },
+        restore = { VectorPoints(Offset(it[0], it[1]), Offset(it[2], it[3])) }
+    )
+    val vector2Saver = listSaver(
+        save = { listOf(it.startPoint.x, it.startPoint.y, it.endPoint.x, it.endPoint.y, ) },
+        restore = { VectorPoints(Offset(it[0], it[1]), Offset(it[2], it[3])) }
+    )
+    val resultVectorSaver = listSaver(
+        save = { listOf(it.startPoint.x, it.startPoint.y, it.endPoint.x, it.endPoint.y, ) },
+        restore = { VectorPoints(Offset(it[0], it[1]), Offset(it[2], it[3])) }
+    )
+    var vector1 by rememberSaveable(stateSaver = vector1Saver) { mutableStateOf(vector1) }
+    var vector2 by rememberSaveable(stateSaver = vector2Saver) { mutableStateOf(vector2) }
+    var initialized by rememberSaveable { mutableStateOf(false) }
 
     var name1 by remember { mutableStateOf(name1) }
     var name2 by remember { mutableStateOf(name2) }
 
-    var resultVector by remember { mutableStateOf(VectorPoints(startPoint = Offset.Zero, endPoint = Offset.Zero)) }
+    var resultVector by rememberSaveable(stateSaver = resultVectorSaver) { mutableStateOf(VectorPoints(startPoint = Offset.Zero, endPoint = Offset.Zero)) }
 
     var selectedVector by remember { mutableStateOf<Int?>(null) }
 
@@ -105,7 +122,10 @@ fun Vectors(vector1: VectorPoints,
     val backgroundColor = if(isDark)  Color(0xFF121212) else Color(0xFFFFFFFF)
     val textColor = if (isDark) Color(0xFFE0E0E0) else Color.Black
 
-    val titleText = "Faça a soma dos vetores abaixo:"
+    val titleText = when{
+        isPortrait -> "Faça a soma dos vetores abaixo:"
+        else ->  "Faça a soma dos vetores ao lado:"
+    }
 
     val onInvertVector = {
         if(selectedVector == 1){
@@ -399,6 +419,22 @@ fun Vectors(vector1: VectorPoints,
                         startPoint = resultVectorCenter + initialVector2.startPoint,
                         endPoint = resultVectorCenter +initialVector2.endPoint
                     )
+//
+//                    val offsetDown = 80f
+//                    if(!isPortrait){
+//                        vector1 = vector1.copy(
+//                            startPoint = Offset(vector1.startPoint.x, vector1.startPoint.y + offsetDown),
+//                            endPoint = Offset(vector1.endPoint.x, vector1.endPoint.y + offsetDown)
+//                        )
+//                        vector2 = vector2.copy(
+//                            startPoint = Offset(vector2.startPoint.x, vector2.startPoint.y + offsetDown),
+//                            endPoint = Offset(vector2.endPoint.x, vector2.endPoint.y + offsetDown)
+//                        )
+//                        resultVector = resultVector.copy(
+//                            startPoint = Offset(resultVector.startPoint.x, resultVector.startPoint.y + offsetDown),
+//                            endPoint = Offset(resultVector.endPoint.x, resultVector.endPoint.y + offsetDown)
+//                        )
+//                    }
                     initialized = true
                 }
                 //Draw the vectors:
@@ -469,20 +505,21 @@ fun Vectors(vector1: VectorPoints,
             textColor = textColor,
             backgroundColor = backgroundColor,
             invertVectorButton = {
-                Box(modifier = Modifier.fillMaxSize()){
-                    Button(
-                        modifier = Modifier.padding(60.dp).align(Alignment.BottomCenter),
-                        onClick = { onInvertVector() }
-                    ) {
-                        Text("Inverter vetor")
-                    }
-                }
+                InvertVectorButton(!isTaskCompleted, onInvertVector)
             },
             content = { VectorsContent() },
             nextQuestionButton = { NextQuestionButton(isTaskCompleted, navController) })
     }
     else{
-        LandscapeLayout ( content = { VectorsContent() } )
+        LandscapeLayout (
+            text = titleText,
+            textColor = textColor,
+            backgroundColor = backgroundColor,
+            invertVectorButton = {
+                InvertVectorButton(!isTaskCompleted, onInvertVector)
+            },
+            content = { VectorsContent() },
+            nextQuestionButton = { NextQuestionButton(isTaskCompleted, navController) })
     }
 
 }
@@ -494,11 +531,11 @@ private fun PortraitLayout(
     textColor: Color,
     invertVectorButton: @Composable () -> Unit,
     content: @Composable () -> Unit,
-    nextQuestionButton: @Composable () -> Unit){
-
-
+    nextQuestionButton: @Composable () -> Unit
+){
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(backgroundColor)
     ) {
         Spacer(modifier = Modifier.height(30.dp))
@@ -509,9 +546,6 @@ private fun PortraitLayout(
             textAlign = TextAlign.Center,
             color = textColor
         )
-
-
-
         Box(modifier = Modifier.fillMaxSize()){
             content()
             invertVectorButton()
@@ -521,9 +555,44 @@ private fun PortraitLayout(
 }
 
 @Composable
-private fun LandscapeLayout(content: @Composable () -> Unit){
-    Row(modifier = Modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize()){
+private fun LandscapeLayout(
+    backgroundColor: Color,
+    text: String,
+    textColor: Color,
+    invertVectorButton: @Composable () -> Unit,
+    content: @Composable () -> Unit,
+    nextQuestionButton: @Composable () -> Unit
+){
+    EnableImmersiveMode()
+
+    Row(modifier = Modifier
+        .fillMaxSize()
+        .background(backgroundColor)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(0.35f)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ){
+            Column {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = text,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    color = textColor
+                )
+                invertVectorButton()
+                nextQuestionButton()
+            }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(0.65f)
+        ){
             content()
         }
     }
