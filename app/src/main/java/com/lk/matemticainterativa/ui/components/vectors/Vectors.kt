@@ -36,6 +36,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +61,8 @@ fun Vectors(vector1: VectorPoints,
 
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+    val context = LocalContext.current
 
     val vector1Saver = listSaver(
         save = { listOf(it.startPoint.x, it.startPoint.y, it.endPoint.x, it.endPoint.y, ) },
@@ -137,7 +140,7 @@ fun Vectors(vector1: VectorPoints,
             isVector2Inverted = !isVector2Inverted
         }
         else if(selectedVector == 3){
-            Toast.makeText(null, "Não é possível inverter o vetor resultante",
+            Toast.makeText(context, "Não é possível inverter o vetor resultante",
                 Toast.LENGTH_SHORT).show()
         }
     }
