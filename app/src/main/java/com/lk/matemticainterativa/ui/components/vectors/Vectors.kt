@@ -1,6 +1,7 @@
 package com.lk.matemticainterativa.ui.components.vectors
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -13,15 +14,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -77,6 +76,7 @@ fun Vectors(vector1: VectorPoints,
     var vector1 by rememberSaveable(stateSaver = vector1Saver) { mutableStateOf(vector1) }
     var vector2 by rememberSaveable(stateSaver = vector2Saver) { mutableStateOf(vector2) }
     var initialized by rememberSaveable { mutableStateOf(false) }
+    var isFirstLandscapeRotate by rememberSaveable { mutableStateOf(false) }
 
     var name1 by remember { mutableStateOf(name1) }
     var name2 by remember { mutableStateOf(name2) }
@@ -91,11 +91,11 @@ fun Vectors(vector1: VectorPoints,
     val initialVector1 = vector1
     val initialVector2 = vector2
 
-    var isVector1Inverted by remember { mutableStateOf(false) }
-    var isVector2Inverted by remember { mutableStateOf(false) }
+    var isVector1Inverted by rememberSaveable { mutableStateOf(false) }
+    var isVector2Inverted by rememberSaveable { mutableStateOf(false) }
 
-    var vector1ScaleStep by remember { mutableIntStateOf(3) }
-    var vector2ScaleStep by remember { mutableIntStateOf(3) }
+    var vector1ScaleStep by rememberSaveable { mutableIntStateOf(3) }
+    var vector2ScaleStep by rememberSaveable { mutableIntStateOf(3) }
 
     val scales = listOf(
         0.25f,
@@ -135,6 +135,10 @@ fun Vectors(vector1: VectorPoints,
         else if(selectedVector == 2){
             vector2 = invertVectorKeepStart(vector2)
             isVector2Inverted = !isVector2Inverted
+        }
+        else if(selectedVector == 3){
+            Toast.makeText(null, "Não é possível inverter o vetor resultante",
+                Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -419,22 +423,6 @@ fun Vectors(vector1: VectorPoints,
                         startPoint = resultVectorCenter + initialVector2.startPoint,
                         endPoint = resultVectorCenter +initialVector2.endPoint
                     )
-//
-//                    val offsetDown = 80f
-//                    if(!isPortrait){
-//                        vector1 = vector1.copy(
-//                            startPoint = Offset(vector1.startPoint.x, vector1.startPoint.y + offsetDown),
-//                            endPoint = Offset(vector1.endPoint.x, vector1.endPoint.y + offsetDown)
-//                        )
-//                        vector2 = vector2.copy(
-//                            startPoint = Offset(vector2.startPoint.x, vector2.startPoint.y + offsetDown),
-//                            endPoint = Offset(vector2.endPoint.x, vector2.endPoint.y + offsetDown)
-//                        )
-//                        resultVector = resultVector.copy(
-//                            startPoint = Offset(resultVector.startPoint.x, resultVector.startPoint.y + offsetDown),
-//                            endPoint = Offset(resultVector.endPoint.x, resultVector.endPoint.y + offsetDown)
-//                        )
-//                    }
                     initialized = true
                 }
                 //Draw the vectors:
@@ -484,6 +472,17 @@ fun Vectors(vector1: VectorPoints,
                 if(calculateDeltaStartStartFloat(vector1,resultVector)){
                     drawSnapVectorsLineStartStart(vector1, resultVector)
                 }
+            }
+            LaunchedEffect(configuration.orientation) {
+                if(isFirstLandscapeRotate) return@LaunchedEffect
+
+                val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+                if(!isPortrait){
+                    vector1 = pullVectorUp(vector1)
+                    vector2 = pullVectorUp(vector2)
+                    resultVector = pullVectorUp(resultVector)
+                }
+                isFirstLandscapeRotate = true
             }
 
         }
