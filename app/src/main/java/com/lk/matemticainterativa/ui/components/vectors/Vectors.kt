@@ -135,17 +135,21 @@ fun Vectors(vector1: VectorPoints,
     }
 
     val onInvertVector = {
-        if(selectedVector == 1){
-            vector1 = invertVectorKeepStart(vector1)
-            isVector1Inverted = !isVector1Inverted
-        }
-        else if(selectedVector == 2){
-            vector2 = invertVectorKeepStart(vector2)
-            isVector2Inverted = !isVector2Inverted
-        }
-        else if(selectedVector == 3){
-            Toast.makeText(context, "Não é possível inverter o vetor resultante",
-                Toast.LENGTH_SHORT).show()
+        when (selectedVector) {
+            1 -> {
+                vector1 = invertVectorKeepStart(vector1)
+                isVector1Inverted = !isVector1Inverted
+            }
+            2 -> {
+                vector2 = invertVectorKeepStart(vector2)
+                isVector2Inverted = !isVector2Inverted
+            }
+            3 -> {
+                Toast.makeText(
+                    context, "Não é possível inverter o vetor resultante",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
