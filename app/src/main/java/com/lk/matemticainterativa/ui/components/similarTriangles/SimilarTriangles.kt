@@ -34,10 +34,12 @@ import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -138,6 +140,7 @@ fun SimilarTriangles(
     var showFeedback by remember { mutableStateOf(false) }
     var isUserAnswerCorrect by remember { mutableStateOf(false) } //Shouldn't this be controlled inside the YesOrNoButtons?
 
+    var canvasSize by remember { mutableStateOf(IntSize.Zero)}
 
 
 
@@ -165,6 +168,8 @@ fun SimilarTriangles(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .onSizeChanged{size ->
+                    canvasSize = size}
                 .pointerInput(Unit) {
                     detectTransformGestures { centroid, pan, gestureZoom, gestureRotate ->
                         if(!isInMovingMode){
@@ -190,20 +195,28 @@ fun SimilarTriangles(
                                 }
                             }
                         }
+                        val canvasWidth = canvasSize.width.toFloat()
+                        val canvasHeight = canvasSize.height.toFloat()
 
                         if(isTriangle1Selected) {
                             if(gestureRotate != 0f && gestureZoom != 1f){
                                 rotation1 += gestureRotate
                                 scale1 = (scale1 * gestureZoom).coerceIn(0.3f, 6f)
                             } else{
-                                panOffset1 += pan // Accumulate the pan gesture
+                                panOffset1 = Offset(
+                                    x = (panOffset1.x + pan.x).coerceIn(-canvasWidth/2, canvasWidth/2),
+                                    y = (panOffset1.y + pan.y).coerceIn(-canvasHeight/2, canvasHeight/2)
+                                )
                             }
                         } else if(isTriangle2Selected){
                             if(gestureRotate != 0f && gestureZoom != 1f){
                                 rotation2 += gestureRotate
                                 scale2 = (scale2 * gestureZoom).coerceIn(0.3f, 6f)
                             } else{
-                                panOffset2 += pan // Accumulate the pan gesture
+                                panOffset2 = Offset(
+                                    x = (panOffset2.x + pan.x).coerceIn(-canvasWidth/2, canvasWidth/2),
+                                    y = (panOffset2.y + pan.y).coerceIn(-canvasHeight/2, canvasHeight/2)
+                                )
                             }
                         }else{
                             return@detectTransformGestures

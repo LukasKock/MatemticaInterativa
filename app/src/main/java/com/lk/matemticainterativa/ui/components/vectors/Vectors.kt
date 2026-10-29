@@ -35,9 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -119,6 +121,8 @@ fun Vectors(vector1: VectorPoints,
 
     var zoomAccumulator by remember { mutableFloatStateOf(1f) }
 
+    var canvasSize by remember { mutableStateOf(IntSize.Zero)}
+
     BackHandler(enabled = true) { navController.navigate("vectors/") }
 
     val isDark = isSystemInDarkTheme()
@@ -149,6 +153,8 @@ fun Vectors(vector1: VectorPoints,
     fun VectorsContent(){
         Box(modifier = Modifier
             .fillMaxSize()
+            .onSizeChanged{size ->
+                canvasSize = size}
             .pointerInput(Unit) {
                 awaitEachGesture {
 
@@ -267,7 +273,10 @@ fun Vectors(vector1: VectorPoints,
                             val threshold = 17f
                             when(selectedVector){
                                 1 -> {
-                                    vector1 = vector1.copy(startPoint = vector1.startPoint + dragAmount,endPoint = vector1.endPoint + dragAmount)
+                                    vector1 = vector1.copy(
+                                        startPoint = vector1.startPoint + calculateConstrainedBounds(vector1, dragAmount, canvasSize),
+                                        endPoint = vector1.endPoint + calculateConstrainedBounds(vector1, dragAmount, canvasSize)
+                                    )
                                     val delta1 = calculateDeltaStartEnd(vector1, vector2)
                                     val delta2 = calculateDeltaStartEnd(vector2, vector1)
                                     val delta3 = calculateDeltaStartStart(vector2, vector1)
@@ -300,7 +309,10 @@ fun Vectors(vector1: VectorPoints,
                                     }
                                 }
                                 2 ->{
-                                    vector2 = vector2.copy(startPoint = vector2.startPoint + dragAmount, endPoint = vector2.endPoint + dragAmount)
+                                    vector2 = vector2.copy(
+                                        startPoint = vector2.startPoint + calculateConstrainedBounds(vector2, dragAmount, canvasSize),
+                                        endPoint = vector2.endPoint + calculateConstrainedBounds(vector2, dragAmount, canvasSize)
+                                    )
                                     val delta1 = calculateDeltaStartEnd(vector2, vector1)
                                     val delta2 = calculateDeltaStartEnd(vector1, vector2)
                                     val delta3 = calculateDeltaStartStart(vector1, vector2)
@@ -333,7 +345,10 @@ fun Vectors(vector1: VectorPoints,
                                     }
                                 }
                                 3 -> {
-                                    resultVector = resultVector.copy(startPoint = resultVector.startPoint + dragAmount, endPoint = resultVector.endPoint + dragAmount)
+                                    resultVector = resultVector.copy(
+                                        startPoint = resultVector.startPoint + calculateConstrainedBounds(resultVector, dragAmount, canvasSize),
+                                        endPoint = resultVector.endPoint + calculateConstrainedBounds(resultVector, dragAmount, canvasSize)
+                                    )
                                     val delta1 = calculateDeltaStartStart(vector2, resultVector)
                                     val delta2 = calculateDeltaStartStart(vector1, resultVector)
                                     val delta3 = calculateDeltaStartEnd(resultVector, vector1)
